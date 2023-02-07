@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:the_specials_app/screens/first_page/translation_first_page.dart';
+import 'package:the_specials_app/shared/components/btns/btns_login_create.dart';
 import 'package:the_specials_app/shared/components/logo.dart';
 import 'package:the_specials_app/shared/styles/colors.dart';
 
@@ -28,48 +30,40 @@ class _FirstPageState extends State<FirstPage> {
               // ...
             )),
         body: Padding(
-          padding: const EdgeInsets.all(10.0),
+          padding: const EdgeInsets.all(25.0),
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   const Logo(),
-                  ElevatedButton(
-                    onPressed: () {},
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.transparent,
-                      elevation: 0,
-                    ),
-                    child: const Text(
-                      'login',
-                      style: TextStyle(
-                          color: DefaultColors.blueBrand, fontSize: 20),
-                    ),
-                  ),
                 ],
               ),
               RichText(
-                text: const TextSpan(
-                  text: 'conheça aqui alguém tão',
-                  style: TextStyle(
+                textDirection: TextDirection.rtl,
+                text: TextSpan(
+                  text: meetPeople.i18n,
+                  style: const TextStyle(
                       color: DefaultColors.greyMedium,
                       fontSize: 30,
                       fontWeight: FontWeight.w500),
                   children: [
                     TextSpan(
-                        text: ' especial',
-                        style: TextStyle(color: DefaultColors.purpleBrand)),
-                    TextSpan(text: ' quanto'),
+                        text: special.i18n,
+                        style: const TextStyle(color: DefaultColors.purpleBrand)),
+                    TextSpan(text: as.i18n),
                     TextSpan(
-                        text: ' você',
-                        style: TextStyle(color: DefaultColors.blueBrand))
+                        text: you.i18n,
+                        style: const TextStyle(color: DefaultColors.blueBrand))
                   ],
                 ),
               ),
+              ButtonsLoginCreate(),
             ],
           ),
         ),
+
       ),
     );
   }
