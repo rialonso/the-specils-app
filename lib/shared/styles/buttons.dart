@@ -11,12 +11,14 @@ class ButtonPrimary extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-      onPressed: () {
-        onPressed;
-      },
+      onPressed: onPressed,
       style: ElevatedButton.styleFrom(
           minimumSize: const Size.fromHeight(40),
-          backgroundColor: DefaultColors.purpleBrand),
+          backgroundColor: DefaultColors.purpleBrand,
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10.0)
+        ),
+      ),
       child: Text(
         texto,
         style: const TextStyle(fontSize: 18),
@@ -36,13 +38,14 @@ class ButtonSecondary extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-      onPressed: () {
-        onPressed;
-      },
+      onPressed: onPressed,
       style: ElevatedButton.styleFrom(
           minimumSize: const Size.fromHeight(40),
           backgroundColor: Colors.white,
           side: const BorderSide(width: 1.0, color: DefaultColors.blueBrand),
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10.0)
+        ),
       ),
       child: Text(
         texto,

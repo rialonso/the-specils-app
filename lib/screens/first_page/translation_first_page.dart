@@ -11,12 +11,12 @@ extension Localization on String {
       "pt_br": "conheça aqui alguém tão"
     },
     as: {
-      "en_us": " as",
+      "en_us": " like",
       "pt_br": " quanto",
     },
     special: {
-      "en_us": " special",
-      "pt_br": " especial",
+      "en_us": " disabled",
+      "pt_br": " deficiente físico",
     },
     you: {
       "en_us": " you",

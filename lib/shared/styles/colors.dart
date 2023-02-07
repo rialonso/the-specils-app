@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 final ThemeData defaultColorsTheme = ThemeData(
     brightness: Brightness.light,
     primaryColorBrightness: Brightness.light,
-    accentColor: DefaultColors.blueBrand[500],
+    accentColor: DefaultColors.purpleBrand,
+    primarySwatch: Colors.deepPurple,
     accentColorBrightness: Brightness.light
 );
 
@@ -32,6 +33,14 @@ class DefaultColors {
     _greyMedium,
     <int, Color>{
       500: Color(_greyMedium),
+    },
+  );
+  static const _greySoft = 0xFFC4C4C4;
+
+  static const MaterialColor greySoft = MaterialColor(
+    _greySoft,
+    <int, Color>{
+      500: Color(_greySoft),
     },
   );
 }
