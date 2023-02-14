@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:the_specials_app/screens/login/translate_login.dart';
+import 'package:the_specials_app/screens/suggestion_matchs/suggestion_matchs.dart';
 import 'package:the_specials_app/shared/blocs/login_bloc.dart';
 import 'package:the_specials_app/shared/components/btns/btns_login_create.dart';
 import 'package:the_specials_app/shared/components/header_logged_out/header_logged_out.dart';
 import 'package:the_specials_app/shared/services/factory/login_factory.dart';
+import 'package:the_specials_app/shared/state_management/logged_user_data/logged_user_data.dart';
 import 'package:the_specials_app/shared/styles/buttons.dart';
 import 'package:the_specials_app/shared/styles/colors.dart';
 
@@ -25,9 +28,12 @@ class _LoginState extends State<Login> {
     });
   }
 
-  Future<void> _signin() async {
+  Future<void> _signin(dynamic data) async {
     await _bloc.postLogin(LoginFactory(
         email: emailController.text, password: passwordController.text));
+
+    Navigator.push(context, MaterialPageRoute(builder: (context) => SuggestionMatchs(dataD: data)));
+
   }
 
   TextEditingController emailController = TextEditingController();
@@ -35,9 +41,9 @@ class _LoginState extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder(
-      stream: _bloc.loginStream,
-      builder: (context, snapshot) => Scaffold(
+    return GetBuilder <LoggedUserDataController>(
+      init: LoggedUserDataController(),
+      builder: (_) => Scaffold(
         appBar: PreferredSize(
             preferredSize: const Size.fromHeight(0.0), // here the desired height
             child: AppBar(
@@ -97,7 +103,8 @@ class _LoginState extends State<Login> {
                     ),
                     const SizedBox(height: 30),
                     ButtonPrimary(onPressed: () {
-                      _signin();
+                      _signin(_.data);
+                      print(_.data);
                     }, texto: btnSignin.i18n),
                     ButtonSecondary(
                         onPressed: () {

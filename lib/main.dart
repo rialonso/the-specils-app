@@ -3,6 +3,7 @@ import 'package:i18n_extension/i18n_widget.dart';
 import 'package:the_specials_app/screens/first_page/first_page.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:the_specials_app/screens/login/login.dart';
+import 'package:the_specials_app/screens/suggestion_matchs/suggestion_matchs.dart';
 import 'package:the_specials_app/shared/styles/colors.dart';
 
 void main() {
@@ -19,6 +20,7 @@ class MyApp extends StatelessWidget {
       theme: defaultColorsTheme,
       routes: {
         '/login': (context) => const Login(),
+        '/suggestion-matchs': (context) => const SuggestionMatchs(),
       },
       localizationsDelegates: const [
         GlobalMaterialLocalizations.delegate,
