@@ -26,18 +26,17 @@ class _SuggestionMatchs extends State<SuggestionMatchs> {
   }
 
   createSuggestionCards (dynamic suggestionData) {
-    // var textEditingControllers = <SuggestionCards>[];
     List<Widget> suggestionCardsWidget = [];
-    // var list = List.generate(suggestionData.data, (i) =>i + 1 );
-    // print(list);
-    // print(suggestionData);
-    suggestionData.data.forEach((suggestionCardData) {
-      // print(i);
-      // var textEditingController = new SuggestionCards(suggestionCardsData: suggestionCardsData,);
-      // textEditingControllers.add(textEditingController);
+    var allCards = suggestionData?.data;
+    List<SuggestionData> cardsToShow;
+    allCards.length > 3
+        ? cardsToShow = suggestionData.data.removeRange(2, suggestionData.data.length)
+        : cardsToShow = allCards;
+
+    cardsToShow.forEach((suggestionCardData) {
       return suggestionCardsWidget.add(SuggestionCards(suggestionCardsData: suggestionCardData));
     });
-    print(suggestionCardsWidget);
+    // print(suggestionCardsWidget);
     return suggestionCardsWidget;
   }
 
@@ -61,7 +60,7 @@ class _SuggestionMatchs extends State<SuggestionMatchs> {
             )),
         body: Padding(
           padding: const EdgeInsets.all(25.0),
-          child: Column(
+          child: Stack(
             children: [
               // SuggestionCards(suggestionCardsData: suggestionCardsData),
               Stack(
