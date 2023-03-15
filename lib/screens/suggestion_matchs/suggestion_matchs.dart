@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:the_specials_app/screens/suggestion_matchs/translate_suggestion_matchs.dart';
 import 'package:the_specials_app/shared/blocs/suggestion_cards_bloc.dart';
+import 'package:the_specials_app/shared/components/menu_logged/menu_logged.dart';
 import 'package:the_specials_app/shared/components/suggestion_card.dart';
 import 'package:the_specials_app/shared/state_management/logged_user_data/logged_user_data.dart';
 import 'package:the_specials_app/shared/state_management/suggestion_cards/suggestion_cards.dart';
@@ -51,27 +52,36 @@ class _SuggestionMatchs extends State<SuggestionMatchs> {
   Widget build(BuildContext context) {
     return GetBuilder<SuggestionCardsController>(
       init: SuggestionCardsController(),
-      builder: (_) => Scaffold(
-        appBar: PreferredSize(
-            preferredSize: const Size.fromHeight(0.0),
-            // here the desired height
-            child: AppBar(
-              backgroundColor: Colors.transparent,
-              elevation: 0,
-              // ...
-            )),
-        body: Padding(
-          padding: const EdgeInsets.all(25.0),
-          child: Stack(
-            alignment: Alignment.bottomCenter,
-            children: [
-              // SuggestionCards(suggestionCardsData: suggestionCardsData),
-              Stack(
-                 children:  createSuggestionCards(suggestionCardsData),
-              ),
-              ],
+      builder: (_) => Container(
+        decoration: const BoxDecoration(
+            gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [Color(0xFFD0E0FD), Color(0xFFE8D9FD)])
+        ),
+        child: Scaffold(
+          backgroundColor: Colors.transparent,
+          appBar: PreferredSize(
+              preferredSize: const Size.fromHeight(0.0),
+              // here the desired height
+              child: AppBar(
+                backgroundColor: Colors.transparent,
+                elevation: 0,
+                // ...
+              )),
+          body: Padding(
+            padding: const EdgeInsets.all(25.0),
+            child: Column(
+              children: [
+                Stack(
+                   children:  createSuggestionCards(suggestionCardsData),
+                ),
 
+
+              ],
+            ),
           ),
+          bottomNavigationBar:  const MenuLogged(),
         ),
       ),
     );
