@@ -1,16 +1,10 @@
-import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:the_specials_app/screens/suggestion_matchs/translate_suggestion_matchs.dart';
 import 'package:the_specials_app/shared/blocs/suggestion_cards_bloc.dart';
 import 'package:the_specials_app/shared/components/menu_logged/menu_logged.dart';
 import 'package:the_specials_app/shared/components/suggestion_card.dart';
-import 'package:the_specials_app/shared/state_management/logged_user_data/logged_user_data.dart';
 import 'package:the_specials_app/shared/state_management/suggestion_cards/suggestion_cards.dart';
-import 'package:the_specials_app/shared/styles/buttons.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:the_specials_app/shared/styles/colors.dart';
 
 class SuggestionMatchs extends StatefulWidget {
   const SuggestionMatchs({super.key});
