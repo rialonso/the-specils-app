@@ -2,12 +2,14 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:the_specials_app/shared/blocs/login_bloc.dart';
+import 'package:the_specials_app/screens/suggestion_matchs/translate_suggestion_matchs.dart';
 import 'package:the_specials_app/shared/blocs/suggestion_cards_bloc.dart';
 import 'package:the_specials_app/shared/components/suggestion_card.dart';
 import 'package:the_specials_app/shared/state_management/logged_user_data/logged_user_data.dart';
 import 'package:the_specials_app/shared/state_management/suggestion_cards/suggestion_cards.dart';
 import 'package:the_specials_app/shared/styles/buttons.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:the_specials_app/shared/styles/colors.dart';
 
 class SuggestionMatchs extends StatefulWidget {
   const SuggestionMatchs({super.key});
@@ -61,16 +63,14 @@ class _SuggestionMatchs extends State<SuggestionMatchs> {
         body: Padding(
           padding: const EdgeInsets.all(25.0),
           child: Stack(
+            alignment: Alignment.bottomCenter,
             children: [
               // SuggestionCards(suggestionCardsData: suggestionCardsData),
               Stack(
                  children:  createSuggestionCards(suggestionCardsData),
               ),
-              ButtonPrimary(onPressed: () async {
-                // await waitSuggestionCards();
-                var d = await suggestionCardsController.getSuggestionCards();
-                print(d.toJson());
-            }, texto: 'ss')],
+              ],
+
           ),
         ),
       ),
