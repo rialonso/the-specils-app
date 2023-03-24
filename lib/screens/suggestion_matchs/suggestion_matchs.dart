@@ -25,7 +25,7 @@ class _SuggestionMatchsState extends State<SuggestionMatchs> {
   final SuggestionCardsBloc _suggestionBloc = SuggestionCardsBloc();
 
   waitSuggestionCards() async {
-    print(suggestionCardsController.savedSuggestionCardsData?.toJson());
+    // print(suggestionCardsController.savedSuggestionCardsData?.toJson());
 
     // await _suggestionBloc.getSuggestionCards();
 
@@ -38,22 +38,7 @@ class _SuggestionMatchsState extends State<SuggestionMatchs> {
   teste() {
     return Text('loading');
   }
-  // createSuggestionCards (dynamic suggestionData) {
-  //   List<Widget> suggestionCardsWidget = [];
-  //   var allCards = suggestionData?.data;
-  //   List<SuggestionData> cardsToShow;
-  //   print(suggestionData.data.removeRange(2, suggestionData.data.length));
-  //   allCards?.length >= 3
-  //       ? cardsToShow = suggestionData.data.removeRange(3, suggestionData.data.length)
-  //       : cardsToShow = allCards;
-  //   print(cardsToShow);
-  //
-  //   cardsToShow?.forEach((suggestionCardData) {
-  //     print(suggestionCardData);
-  //     return suggestionCardsWidget.add(SuggestionCards(suggestionCardsData: suggestionCardData));
-  //   });
-  //   return  suggestionCardsWidget;
-  // }
+
   @override
   void initState() {
     super.initState();
@@ -101,7 +86,7 @@ class _SuggestionMatchsState extends State<SuggestionMatchs> {
 
 
         ),
-        bottomNavigationBar:  const MenuLogged(),
+        bottomNavigationBar:  const MenuLogged(routeSuggestion: true),
       ),
     );
 
