@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:the_specials_app/shared/styles/colors.dart';
-
+class DefaultSizes {
+  static const double defaultButton = 50;
+}
 class ButtonPrimary extends StatelessWidget {
   final VoidCallback onPressed;
   final String texto;
@@ -13,7 +16,7 @@ class ButtonPrimary extends StatelessWidget {
     return ElevatedButton(
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
-          minimumSize: const Size.fromHeight(40),
+          minimumSize: const Size.fromHeight(DefaultSizes.defaultButton),
           backgroundColor: DefaultColors.purpleBrand,
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10.0)
@@ -40,7 +43,7 @@ class ButtonSecondary extends StatelessWidget {
     return ElevatedButton(
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
-          minimumSize: const Size.fromHeight(40),
+          minimumSize: const Size.fromHeight(DefaultSizes.defaultButton),
           backgroundColor: Colors.white,
           side: const BorderSide(width: 1.0, color: DefaultColors.blueBrand),
         shape: RoundedRectangleBorder(
@@ -50,6 +53,143 @@ class ButtonSecondary extends StatelessWidget {
       child: Text(
         texto,
         style: const TextStyle(fontSize: 18, color: DefaultColors.blueBrand),
+      ),
+    );
+  }
+}
+
+class ButtonLike extends StatelessWidget {
+  final VoidCallback onPressed;
+
+  const ButtonLike(
+      {Key? key, required this.onPressed})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton(
+      onPressed: onPressed,
+      style: ElevatedButton.styleFrom(
+        minimumSize: const Size.fromHeight(60),
+        backgroundColor: DefaultColors.greenSoft,
+        side: const BorderSide(width: 1.0, color: DefaultColors.greenSoft),
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10.0)
+        ),
+      ),
+      child: SvgPicture.asset(
+        'assets/images/favorite.svg',
+        width: 35,
+        height: 35,
+        color: DefaultColors.redDefault,
+      ),
+    );
+  }
+}
+class ButtonDislike extends StatelessWidget {
+  final VoidCallback onPressed;
+
+  const ButtonDislike(
+      {Key? key, required this.onPressed})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton(
+      onPressed: onPressed,
+      style: ElevatedButton.styleFrom(
+        minimumSize: const Size.fromHeight(60),
+        backgroundColor: DefaultColors.redSoft,
+        side: const BorderSide(width: 1.0, color: DefaultColors.redSoft),
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10.0)
+        ),
+      ),
+      child: SvgPicture.asset(
+        'assets/images/heart_broken.svg',
+        width: 35,
+        height: 35,
+        color: Colors.white,
+      ),
+    );
+  }
+}
+class ButtonMenu extends StatelessWidget {
+  final VoidCallback onPressed;
+  final String image;
+  final Color colorIcon;
+  const ButtonMenu(
+      {Key? key, required this.onPressed, required this.image, this.colorIcon = DefaultColors.greyMedium})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton(
+      onPressed: onPressed,
+      style: ElevatedButton.styleFrom(
+        minimumSize: const Size.fromHeight(60),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        onPrimary: DefaultColors.purpleBrand,
+        side: const BorderSide(width: 1.0, color:  Colors.transparent),
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10.0)
+        ),
+      ),
+      child: SvgPicture.asset(
+        'assets/images/$image.svg',
+        width: 35,
+        height: 35,
+        color: colorIcon,
+      ),
+    );
+  }
+}
+class ButtonSettings extends StatelessWidget {
+  final VoidCallback onPressed;
+  final String text;
+  final String icon;
+
+  const ButtonSettings(
+      {Key? key, required this.onPressed, required this.text, required this.icon})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton(
+      onPressed: onPressed,
+      style: ElevatedButton.styleFrom(
+        minimumSize: const Size.fromHeight(60),
+        backgroundColor: Colors.white,
+        side: const BorderSide(width: 1.0, color: Colors.white),
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10.0)
+        ),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(30.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+
+          children: [
+            SvgPicture.asset(
+              'assets/images/$icon.svg',
+              width: 50,
+              height: 50,
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            Text(
+              text,
+              style: const TextStyle(
+                  fontSize: 20,
+                  color: DefaultColors.greyMedium,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

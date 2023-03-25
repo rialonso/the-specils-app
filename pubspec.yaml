@@ -43,6 +43,7 @@ dependencies:
   get: ^4.6.5
   sqflite: ^2.2.4+1
   shared_preferences: ^2.0.17
+  blurrycontainer: ^1.0.2
 
 dev_dependencies:
   flutter_test:

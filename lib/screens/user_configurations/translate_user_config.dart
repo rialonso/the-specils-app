@@ -1,17 +1,28 @@
 import "package:i18n_extension/i18n_extension.dart";
-const btnCreateAccount = "btnCreateAccount";
-const btnLogin = "btnLogin";
+const btnSettingsUpdateProfile = "btnSettingsUpdateProfile";
+const btnPreferences = "btnPreferences";
+const btnChangePassword = "btnChangePassword";
+const btnLogout = "btnLogout";
 
 extension Localization on String {
   static const _t = Translations.from("en_us", {
-    btnCreateAccount: {
-      "en_us": "Create account",
-      "pt_br": "Criar conta",
+    btnSettingsUpdateProfile: {
+      "en_us": "Ny profile",
+      "pt_br": "Meu perfil",
     },
-    btnLogin: {
-      "en_us": "Login",
-      "pt_br": "Entrar",
+    btnPreferences: {
+      "en_us": "Preferences",
+      "pt_br": "Preferências",
     },
+    btnChangePassword: {
+      "en_us": "Change password",
+      "pt_br": "Alterar senha",
+    },
+    btnLogout: {
+      "en_us": "Logout",
+      "pt_br": "Sair",
+    },
+
   });
 
   String get i18n => localize(this, _t);

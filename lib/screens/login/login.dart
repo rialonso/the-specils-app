@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:the_specials_app/screens/login/translate_login.dart';
 import 'package:the_specials_app/screens/suggestion_matchs/suggestion_matchs.dart';
-import 'package:the_specials_app/shared/blocs/login_bloc.dart';
-import 'package:the_specials_app/shared/components/btns/btns_login_create.dart';
+import 'package:the_specials_app/shared/blocs/suggestion_cards_bloc.dart';
 import 'package:the_specials_app/shared/components/header_logged_out/header_logged_out.dart';
+import 'package:the_specials_app/shared/services/apis/consume_apis.dart';
 import 'package:the_specials_app/shared/services/factory/login_factory.dart';
 import 'package:the_specials_app/shared/state_management/logged_user_data/logged_user_data.dart';
 import 'package:the_specials_app/shared/styles/buttons.dart';
@@ -19,8 +19,9 @@ class Login extends StatefulWidget {
 
 class _LoginState extends State<Login> {
   bool _passwordVisible = true;
+  final _service = ConsumeApisService();
 
-  final LoginBloc _bloc = LoginBloc();
+  final SuggestionCardsBloc _suggestionBloc = SuggestionCardsBloc();
 
   void _toggle() {
     setState(() {
@@ -29,10 +30,17 @@ class _LoginState extends State<Login> {
   }
 
   Future<void> _signin(dynamic data) async {
-    await _bloc.postLogin(LoginFactory(
+    await _service.postLoginApi(LoginFactory(
         email: emailController.text, password: passwordController.text));
+    await _suggestionBloc.getSuggestionCards();
 
-    Navigator.push(context, MaterialPageRoute(builder: (context) => SuggestionMatchs(dataD: data)));
+    // ignore: use_build_context_synchronously
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => SuggestionMatchs()
+        )
+    );
 
   }
 
@@ -104,8 +112,9 @@ class _LoginState extends State<Login> {
                     const SizedBox(height: 30),
                     ButtonPrimary(onPressed: () {
                       _signin(_.data);
-                      print(_.data);
                     }, texto: btnSignin.i18n),
+                    const SizedBox(height: 15),
+
                     ButtonSecondary(
                         onPressed: () {
                           // print(_bloc.saida);

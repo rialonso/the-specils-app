@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:the_specials_app/shared/values/preferences_keys.dart';
@@ -22,15 +21,26 @@ class LoggedUserDataController extends GetxController {
   }
   getUserData() async{
     UserData savedUserData = await _getSavedUserData();
-    return savedUserData.toString();
+    return savedUserData;
   }
-
+  getToken() async{
+    String? token = await _getToken();
+    return token;
+  }
   Future<UserData> _getSavedUserData() async{
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? jsonUserData = prefs.getString(PreferencesKeys.userDataLogged);
-    Map<String,dynamic> mapUser = json.decode(jsonUserData!);
+    Map<String,dynamic> mapUser = jsonDecode(jsonUserData!);
     UserData user = UserData.fromJson(mapUser);
     return user;
+  }
+  Future<String?> _getToken() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? jsonUserData = prefs.getString(PreferencesKeys.userDataLogged);
+    Map<String,dynamic> mapUser = jsonDecode(jsonUserData!);
+    UserData user = UserData.fromJson(mapUser);
+    return user.access_token;
+
   }
 }
 
