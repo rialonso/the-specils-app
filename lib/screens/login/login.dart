@@ -6,6 +6,7 @@ import 'package:the_specials_app/shared/blocs/suggestion_cards_bloc.dart';
 import 'package:the_specials_app/shared/components/header_logged_out/header_logged_out.dart';
 import 'package:the_specials_app/shared/services/apis/consume_apis.dart';
 import 'package:the_specials_app/shared/services/factory/login_factory.dart';
+import 'package:the_specials_app/shared/services/functions/functions.dart';
 import 'package:the_specials_app/shared/state_management/logged_user_data/logged_user_data.dart';
 import 'package:the_specials_app/shared/styles/buttons.dart';
 import 'package:the_specials_app/shared/styles/colors.dart';
@@ -30,17 +31,22 @@ class _LoginState extends State<Login> {
   }
 
   Future<void> _signin(dynamic data) async {
-    await _service.postLoginApi(LoginFactory(
+    dynamic responseLogin = await _service.postLoginApi(LoginFactory(
         email: emailController.text, password: passwordController.text));
-    await _suggestionBloc.getSuggestionCards();
+    if(responseLogin.toJson()['status']) {
+      await _suggestionBloc.getSuggestionCards();
+      // ignore: use_build_context_synchronously
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => SuggestionMatchs()
+          )
+      );
+    } else {
+      Functions().openSnackBar(context, DefaultColors.redDefault, snackBarErrorSavedLogin.i18n, buttonSnackBarLogin.i18n);
 
-    // ignore: use_build_context_synchronously
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => SuggestionMatchs()
-        )
-    );
+    }
+
 
   }
 

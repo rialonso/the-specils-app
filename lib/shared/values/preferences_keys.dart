@@ -5,5 +5,6 @@ class PreferencesKeys {
   static const allSuggestionCardsToShow = 'ALL_SUGGESTION_CARDs';
 
   static const likeDislikeResponse = 'LIKE_DISLIKE_RESPONSE';
+  static const userProfileData = 'USER_PROFILE_DATA';
 
 }

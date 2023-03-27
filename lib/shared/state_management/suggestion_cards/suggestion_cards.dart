@@ -23,17 +23,14 @@ class SuggestionCardsController extends GetxController {
   getSuggestionCards() async{
       SuggestionCardsData savedSuggestionCards = await _getSuggestionCards();
       savedSuggestionCardsData = savedSuggestionCards;
-      print(savedSuggestionCards.data?.length);
       return savedSuggestionCards;
   }
   changeDataSuggestionCards(data) {
     savedSuggestionCardsData?.data = data.cast<SuggestionData>();
-    print(savedSuggestionCardsData);
     saveSuggestionCards(savedSuggestionCardsData!);
   }
   createSuggestionCards (dynamic suggestionData) {
     List<Widget> suggestionCardsWidget = [];
-    print(suggestionData);
     var allCards = suggestionData.data;
     List<SuggestionData> cardsToShow;
     print(allCards.removeRange(1, allCards.length));
@@ -41,7 +38,6 @@ class SuggestionCardsController extends GetxController {
         ? cardsToShow = allCards.removeRange(1, allCards.length).cast<SuggestionData>()
         : cardsToShow = allCards;
     cardsToShow.forEach((suggestionCardData) {
-      print(suggestionCardData);
       return suggestionCardsWidget.add(SuggestionCards(suggestionCardsData: suggestionCardData));
     });
     saveSuggestionCardsToShow(cardsToShow);

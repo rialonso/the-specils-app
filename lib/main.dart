@@ -4,6 +4,7 @@ import 'package:the_specials_app/screens/change_password/change_password.dart';
 import 'package:the_specials_app/screens/first_page/first_page.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:the_specials_app/screens/login/login.dart';
+import 'package:the_specials_app/screens/profile/profile.dart';
 import 'package:the_specials_app/screens/suggestion_matchs/suggestion_matchs.dart';
 import 'package:the_specials_app/screens/user_configurations/user_config.dart';
 import 'package:the_specials_app/shared/styles/colors.dart';
@@ -26,6 +27,8 @@ class MyApp extends StatelessWidget {
         RoutesApp.suggestionCards: (context) =>  SuggestionMatchs(),
         RoutesApp.userConfig: (context) => const UserConfig(),
         RoutesApp.changePassword: (context) => const ChangePassword(),
+        RoutesApp.profile: (context) => const Profile(),
+
       },
 
       localizationsDelegates: const [

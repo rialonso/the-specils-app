@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:the_specials_app/screens/user_configurations/translate_user_config.dart';
 import 'package:the_specials_app/shared/components/menu_logged/menu_logged.dart';
+import 'package:the_specials_app/shared/services/apis/consume_apis.dart';
+import 'package:the_specials_app/shared/state_management/logged_user_data/logged_user_data.dart';
 import 'package:the_specials_app/shared/state_management/state_manament.dart';
 import 'package:the_specials_app/shared/styles/buttons.dart';
 import 'package:the_specials_app/shared/styles/colors.dart';
@@ -14,7 +16,9 @@ class UserConfig extends StatefulWidget {
 }
 
 class _UserConfigState extends State<UserConfig> {
-  final statemanagementAll = Get.put<StateManagementAllController>(StateManagementAllController());
+  final stateManagementAll = Get.put<StateManagementAllController>(StateManagementAllController());
+  final _service = ConsumeApisService();
+  final loggedUserData = Get.put<LoggedUserDataController>(LoggedUserDataController());
 
   @override
   Widget build(BuildContext context) {
@@ -56,7 +60,11 @@ class _UserConfigState extends State<UserConfig> {
               Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  ButtonSettings(onPressed: (){}, text: btnSettingsUpdateProfile.i18n, icon: 'account_circle',),
+                  ButtonSettings(onPressed: () async{
+                    UserData userData = await loggedUserData.getUserData();
+                    await _service.getProfile(userData.data?.id);
+                    Navigator.pushNamed(context, RoutesApp.profile);
+                  }, text: btnSettingsUpdateProfile.i18n, icon: 'account_circle',),
                   const SizedBox(
                     height: 20, //<-- SEE HERE
                   ),
@@ -71,7 +79,7 @@ class _UserConfigState extends State<UserConfig> {
                     height: 20, //<-- SEE HERE
                   ),
                   ButtonSettings(onPressed: (){
-                  statemanagementAll.clearAll();
+                  StateManagementAllController().clearAll();
                   Navigator.pushNamed(context, RoutesApp.login);
                   }, text: btnLogout.i18n, icon: 'logout',),
 

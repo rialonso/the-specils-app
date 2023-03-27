@@ -7,6 +7,8 @@ const errorPassword = "errorPassword";
 const btnSignin = "btnSignin";
 const createAccount = "createAccount";
 const rememberPassword = "rememberPassword";
+const snackBarErrorSavedLogin = "snackBarErrorSavedLogin";
+const buttonSnackBarLogin = "buttonSnackBarLogin";
 
 extension Localization on String {
   static const _t = Translations.from("en_us", {
@@ -42,6 +44,14 @@ extension Localization on String {
       "en_us": "Remember my password",
       "pt_br": "Lembrar minha senha"
     },
+    snackBarErrorSavedLogin: {
+      "en_us": "Invalid credentials",
+      "pt_br": 'Credenciais inválidas',
+    },
+    buttonSnackBarLogin: {
+      "en_us": "Ok",
+      "pt_br": 'Entendi',
+    }
   });
 
   String get i18n => localize(this, _t);

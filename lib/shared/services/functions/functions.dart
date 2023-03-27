@@ -48,4 +48,17 @@ class Functions {
       ),
     );
   }
+  transformAge(userBirthdate) {
+    DateTime currentDate = DateTime.now();
+    String birthDateStr = userBirthdate as String;
+    DateTime? birthDate = DateTime.tryParse(birthDateStr);
+    var year =  birthDate?.year;
+    var month = birthDate?.month;
+    var day = birthDate?.day;
+    var age = currentDate.year - year!;
+    if (currentDate.month < month! || (currentDate.month < month! == month && currentDate.day < day!)) {
+      age--;
+    }
+    return age;
+  }
 }

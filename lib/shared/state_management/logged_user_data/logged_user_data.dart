@@ -17,10 +17,12 @@ class LoggedUserDataController extends GetxController {
   }
   void saveUserData(UserData userData) async{
     SharedPreferences prefs = await SharedPreferences.getInstance();
+    // print(userData.toJson());
     prefs.setString(PreferencesKeys.userDataLogged, json.encode(userData.toJson()));
   }
   getUserData() async{
     UserData savedUserData = await _getSavedUserData();
+    // print(savedUserData.toJson());
     return savedUserData;
   }
   getToken() async{

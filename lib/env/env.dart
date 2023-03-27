@@ -6,5 +6,6 @@ class Env {
   static const String suggestionCards = 'api/cards';
   static const String likeDislike = 'api/likes';
   static const String updateProfile = 'api/users/update/';
+  static const String getProfile = 'api/users/';
 
 }

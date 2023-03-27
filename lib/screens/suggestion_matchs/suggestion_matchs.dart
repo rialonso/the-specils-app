@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:the_specials_app/shared/blocs/suggestion_cards_bloc.dart';
 import 'package:the_specials_app/shared/components/menu_logged/menu_logged.dart';
 import 'package:the_specials_app/shared/components/suggestion_card.dart';
+import 'package:the_specials_app/shared/state_management/logged_user_data/logged_user_data.dart';
 import 'package:the_specials_app/shared/state_management/suggestion_cards/suggestion_cards.dart';
 
 
@@ -16,6 +17,7 @@ class SuggestionMatchs extends StatefulWidget {
 
 class _SuggestionMatchsState extends State<SuggestionMatchs> {
   final suggestionCardsController = Get.put<SuggestionCardsController>(SuggestionCardsController());
+  final loggedUserDataController = Get.put<LoggedUserDataController>(LoggedUserDataController());
 
   SuggestionCardsController s = Get.find<SuggestionCardsController>();
 
@@ -25,15 +27,14 @@ class _SuggestionMatchsState extends State<SuggestionMatchs> {
   final SuggestionCardsBloc _suggestionBloc = SuggestionCardsBloc();
 
   waitSuggestionCards() async {
-    // print(suggestionCardsController.savedSuggestionCardsData?.toJson());
-
-    // await _suggestionBloc.getSuggestionCards();
-
     if(suggestionCardsController.savedSuggestionCardsData == null) {
       suggestionCardsData = await suggestionCardsController.getSuggestionCards();
       await _suggestionBloc.getSuggestionCards();
     }
     return suggestionCardsData;
+  }
+  waitGetUserData() async {
+    await loggedUserDataController.getUserData();
   }
   teste() {
     return Text('loading');
@@ -49,6 +50,7 @@ class _SuggestionMatchsState extends State<SuggestionMatchs> {
   void didUpdateWidget(SuggestionMatchs oldWidget) {
     super.didUpdateWidget(oldWidget);
     waitSuggestionCards();
+    waitGetUserData();
   }
 
   @override
