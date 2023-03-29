@@ -150,7 +150,7 @@ class _EditAboutMeState extends State<EditAboutMe> {
                         ),
                         ReactiveDropdownField<String>(
                             formControlName: 'gender',
-                            hint: Text(labelHitGender.i18n),
+                            hint: Text(labelHitSexeualOrientation.i18n),
                             items: listSexualOrientation(Localizations.localeOf(context))
                         ),
                       ],

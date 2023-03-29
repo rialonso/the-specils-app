@@ -3,7 +3,7 @@ const editAboutMeTitle = "editAboutMeTitle";
 const labelHitOccupation = "labelHitOccupation";
 const requiredMsg = "requiredMsg";
 const labelHitGender = "labelHitGender";
-
+const labelHitSexeualOrientation = "labelHitSexeualOrientation";
 extension Localization on String {
   static const _t = Translations.from("en_us", {
     editAboutMeTitle: {
@@ -21,6 +21,10 @@ extension Localization on String {
     labelHitGender: {
       "en_us": "Gender",
       "pt_br": "Gênero"
+    },
+    labelHitSexeualOrientation: {
+      "en_us": "Sexual orientation",
+      "pt_br": "Orientação sexual"
     }
   });
 
