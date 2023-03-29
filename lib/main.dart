@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:i18n_extension/i18n_widget.dart';
 import 'package:the_specials_app/screens/change_password/change_password.dart';
+import 'package:the_specials_app/screens/edit_about_me/edit_about_me.dart';
 import 'package:the_specials_app/screens/first_page/first_page.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:the_specials_app/screens/login/login.dart';
@@ -62,6 +63,7 @@ class _MyAppState extends State<MyApp> {
         RoutesApp.userConfig: (context) => const UserConfig(),
         RoutesApp.changePassword: (context) => const ChangePassword(),
         RoutesApp.profile: (context) => const Profile(),
+        RoutesApp.editAboutMe: (context) => const EditAboutMe(),
 
       },
 

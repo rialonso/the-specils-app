@@ -6,6 +6,7 @@ import 'package:the_specials_app/shared/components/icon_text/icon_text.dart';
 import 'package:the_specials_app/shared/state_management/user_data_profile/user_data_profile.dart';
 import 'package:the_specials_app/shared/styles/colors.dart';
 import 'package:get/get.dart';
+import 'package:the_specials_app/shared/values/routes.dart';
 
 class ContainerProfileInfos extends StatefulWidget {
   const ContainerProfileInfos({Key? key}) : super(key: key);
@@ -143,7 +144,7 @@ class _ContainerProfileInfosState extends State<ContainerProfileInfos> {
               color: DefaultColors.greyMedium,
               iconSize: 25,
               onPressed: () {
-                // Navigator.pushNamed(context, RoutesApp.userConfig);
+                Navigator.pushNamed(context, RoutesApp.editAboutMe);
               },
             ),
           ],

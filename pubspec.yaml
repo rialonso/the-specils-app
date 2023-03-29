@@ -44,6 +44,7 @@ dependencies:
   sqflite: ^2.2.4+1
   shared_preferences: ^2.0.17
   blurrycontainer: ^1.0.2
+  reactive_forms: ^14.1.0
 
 dev_dependencies:
   flutter_test:
