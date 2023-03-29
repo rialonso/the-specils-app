@@ -7,7 +7,7 @@ const btnLogout = "btnLogout";
 extension Localization on String {
   static const _t = Translations.from("en_us", {
     btnSettingsUpdateProfile: {
-      "en_us": "Ny profile",
+      "en_us": "My profile",
       "pt_br": "Meu perfil",
     },
     btnPreferences: {

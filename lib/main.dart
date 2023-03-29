@@ -1,4 +1,7 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:i18n_extension/i18n_widget.dart';
 import 'package:the_specials_app/screens/change_password/change_password.dart';
 import 'package:the_specials_app/screens/first_page/first_page.dart';
@@ -7,19 +10,50 @@ import 'package:the_specials_app/screens/login/login.dart';
 import 'package:the_specials_app/screens/profile/profile.dart';
 import 'package:the_specials_app/screens/suggestion_matchs/suggestion_matchs.dart';
 import 'package:the_specials_app/screens/user_configurations/user_config.dart';
+import 'package:the_specials_app/shared/state_management/logged_user_data/logged_user_data.dart';
+import 'package:the_specials_app/shared/state_management/state_manament.dart';
 import 'package:the_specials_app/shared/styles/colors.dart';
 import 'package:the_specials_app/shared/values/routes.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class MyApp extends StatefulWidget {
+  MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  final loggedUserData = Get.put<LoggedUserDataController>(LoggedUserDataController());
+
+  final stateManagementAll = Get.put<StateManagementAllController>(StateManagementAllController());
+
+  final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
+  verifyLoggedUserData() async {
+    UserData userData = await loggedUserData.getUserData();
+    // if (userData?.status == null) {
+    //   return '';
+    // }
+    if(userData?.status == true) {
+      stateManagementAll.clearAll();
+      Navigator.pushNamed(Get.key.currentContext as BuildContext, RoutesApp.login);
+    }
+  }
+
+  @override
+  void didUpdateWidget(MyApp oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    verifyLoggedUserData();
+  }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      navigatorKey: navigatorKey,
       title: 'The specials',
       theme: defaultColorsTheme,
       routes: {

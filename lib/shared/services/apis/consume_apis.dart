@@ -124,6 +124,7 @@ class ConsumeApisService {
   }
   getProfile(userId) async {
     try {
+      print('${Env.baseURL}${Env.getProfile}$userId');
       Response response = await dio.get(
         '${Env.baseURL}${Env.getProfile}$userId',
         options: Options(headers: {
@@ -132,7 +133,7 @@ class ConsumeApisService {
       );
       if(response.statusCode == 200) {
         print(response.data);
-        UserData user = UserData.fromJson(response.data);
+        UserDataProfile user = UserDataProfile.fromJson(response.data);
         userDataProfileController.saveProfileUserData(user);
         return user;
       }

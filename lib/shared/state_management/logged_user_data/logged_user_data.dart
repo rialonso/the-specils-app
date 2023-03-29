@@ -1,10 +1,15 @@
 import 'dart:convert';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:the_specials_app/shared/state_management/state_manament.dart';
 import 'package:the_specials_app/shared/values/preferences_keys.dart';
+import 'package:the_specials_app/shared/values/routes.dart';
 
 class LoggedUserDataController extends GetxController {
   static LoggedUserDataController get to => Get.find();
+  final stateManagementAll = Get.put<StateManagementAllController>(StateManagementAllController());
+
   dynamic status = false;
   dynamic data;
   dynamic access_token = '';
@@ -17,11 +22,16 @@ class LoggedUserDataController extends GetxController {
   }
   void saveUserData(UserData userData) async{
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    // print(userData.toJson());
     prefs.setString(PreferencesKeys.userDataLogged, json.encode(userData.toJson()));
   }
   getUserData() async{
-    UserData savedUserData = await _getSavedUserData();
+    UserData savedUserData = await _getSavedUserData(); // if (userData?.status == null) {
+    //   return '';
+    // }
+    // if(savedUserData?.status == true) {
+    //   stateManagementAll.clearAll();
+    //   Navigator.pushNamed(Get.key.currentContext as BuildContext, RoutesApp.login);
+    // }
     // print(savedUserData.toJson());
     return savedUserData;
   }
