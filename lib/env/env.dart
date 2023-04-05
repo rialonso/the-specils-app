@@ -7,5 +7,9 @@ class Env {
   static const String likeDislike = 'api/likes';
   static const String updateProfile = 'api/users/update/';
   static const String getProfile = 'api/users/';
+  static const String getICDs = 'api/cid';
+  static const String getMedicalProcedures = 'api/medical-procedures';
+  static const String getHospitals = 'api/hospitals';
+  static const String getDrugs = 'api/drugs';
 
 }

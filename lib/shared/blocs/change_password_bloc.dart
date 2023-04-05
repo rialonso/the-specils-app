@@ -11,7 +11,7 @@ class ChangePasswordBloc{
   Sink get changePasswordSink => _controlador.sink;
 
   postChangePassword(parms, userId) async {
-    return await _service.postChangePassword(parms, userId).then(changePasswordSink.add);
+    return await _service.postUpdateProfile(parms, userId).then(changePasswordSink.add);
   }
   void dispose() {
     changePasswordSink.close();

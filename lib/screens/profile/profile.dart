@@ -1,18 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:the_specials_app/env/env.dart';
 import 'package:the_specials_app/screens/profile/profile_translate.dart';
-import 'package:the_specials_app/shared/components/card_pictures_profile/card_pictures_profile.dart';
 import 'package:the_specials_app/shared/components/container_profile_infos/container_profile_infos.dart';
 import 'package:the_specials_app/shared/components/container_profile_pictures/container_profile_pictures.dart';
 import 'package:the_specials_app/shared/services/apis/consume_apis.dart';
 import 'package:the_specials_app/shared/services/functions/functions.dart';
-import 'package:the_specials_app/shared/state_management/logged_user_data/logged_user_data.dart';
 import 'package:the_specials_app/shared/state_management/user_data_profile/user_data_profile.dart';
 import 'package:get/get.dart';
-import 'package:the_specials_app/shared/styles/buttons.dart';
 import 'package:the_specials_app/shared/styles/colors.dart';
-import 'package:the_specials_app/shared/values/preferences_keys.dart';
 import 'package:the_specials_app/shared/values/routes.dart';
 
 class Profile extends StatefulWidget {

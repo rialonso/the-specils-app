@@ -44,7 +44,7 @@ class _ChangePasswordState extends State<ChangePassword> {
       password: newPasswordController.text,
     );
     UserData userData = await userDataController.getUserData();
-    var response = await _service.postChangePassword(userData.data?.id, dataChangePassword);
+    var response = await _service.postUpdateProfile(userData.data?.id, dataChangePassword);
     if(response.toJson()['status']) {
       Functions().openSnackBar(context, DefaultColors.greenSoft, snackBarSuccessSaved.i18n, buttonSnackBar.i18n);
       Navigator.pushNamed(context, RoutesApp.userConfig);

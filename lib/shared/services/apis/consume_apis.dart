@@ -4,7 +4,10 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:get/get.dart' as GET;
 import 'package:the_specials_app/env/env.dart';
+import 'package:the_specials_app/shared/interfaces/responses/response_drugs.dart';
+import 'package:the_specials_app/shared/interfaces/responses/response_medical_procedures.dart';
 import 'package:the_specials_app/shared/services/functions/functions.dart';
+import 'package:the_specials_app/shared/state_management/cids/cids.dart';
 import 'package:the_specials_app/shared/state_management/invalid_credentials.dart';
 import 'package:the_specials_app/shared/state_management/like_dislike/likedislike_data.dart';
 import 'package:the_specials_app/shared/state_management/suggestion_cards/suggestion_cards.dart';
@@ -99,7 +102,8 @@ class ConsumeApisService {
   getToken() async {
     return await LoggedUserDataController().getToken();
   }
-  postChangePassword(userId, params) async {
+  postUpdateProfile(userId, params) async {
+    print(params);
     var token = await LoggedUserDataController().getToken();
     Response response = await dio.post(
         '${Env.baseURL}${Env.updateProfile}$userId',
@@ -145,5 +149,55 @@ class ConsumeApisService {
 
 
   }
-
+  getCids({queryParameters}) async {
+    var token = await LoggedUserDataController().getToken();
+    Response response = await dio.get(
+        '${Env.baseURL}${Env.getICDs}',
+        queryParameters: queryParameters,
+        options: Options(headers: {
+          HttpHeaders.contentTypeHeader: Env.baseApplicationJson,
+          HttpHeaders.acceptHeader: Env.baseApplicationJson,
+          'Authorization': 'Bearer $token',
+        })
+    );
+    if(response.statusCode == 200) {
+      Cids cids = Cids.fromJson(response.data);
+      print(cids.toJson());
+      return cids;
+    }
+  }
+  getMedicalProcedures({queryParameters}) async {
+    var token = await LoggedUserDataController().getToken();
+    Response response = await dio.get(
+        '${Env.baseURL}${Env.getMedicalProcedures}',
+        queryParameters: queryParameters,
+        options: Options(headers: {
+          HttpHeaders.contentTypeHeader: Env.baseApplicationJson,
+          HttpHeaders.acceptHeader: Env.baseApplicationJson,
+          'Authorization': 'Bearer $token',
+        })
+    );
+    if(response.statusCode == 200) {
+      ResponseListMedicalProcedures medicalProcedures = ResponseListMedicalProcedures.fromJson(response.data);
+      print(medicalProcedures.toJson());
+      return medicalProcedures;
+    }
+  }
+  getDrugs({queryParameters}) async {
+    var token = await LoggedUserDataController().getToken();
+    Response response = await dio.get(
+        '${Env.baseURL}${Env.getDrugs}',
+        queryParameters: queryParameters,
+        options: Options(headers: {
+          HttpHeaders.contentTypeHeader: Env.baseApplicationJson,
+          HttpHeaders.acceptHeader: Env.baseApplicationJson,
+          'Authorization': 'Bearer $token',
+        })
+    );
+    if(response.statusCode == 200) {
+      ResponseDrugs medicalProcedures = ResponseDrugs.fromJson(response.data);
+      print(medicalProcedures.toJson());
+      return medicalProcedures;
+    }
+  }
 }

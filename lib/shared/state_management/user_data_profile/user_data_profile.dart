@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:the_specials_app/shared/interfaces/responses/response_drugs.dart';
 import 'package:the_specials_app/shared/values/preferences_keys.dart';
 
 class UserDataProfileController extends GetxController {
@@ -16,7 +17,6 @@ class UserDataProfileController extends GetxController {
   getProfileUserData() async{
     UserDataProfile savedUserData = await _getSavedProfileUserData();
     savedUserDataProfile = savedUserData;
-    print(savedUserDataProfile?.data?.name);
     userDataUpdated(true);
     update();
     return savedUserData;
@@ -522,7 +522,7 @@ class MyDrugs {
   int? drugId;
   String? createdAt;
   String? updatedAt;
-  Drug? drug;
+  DrgusData? drug;
 
   MyDrugs(
       {this.id,
@@ -538,7 +538,7 @@ class MyDrugs {
     drugId = json['drug_id'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
-    drug = json['drug'] != null ? new Drug.fromJson(json['drug']) : null;
+    drug = json['drug'] != null ? new DrgusData.fromJson(json['drug']) : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -555,42 +555,6 @@ class MyDrugs {
   }
 }
 
-class Drug {
-  int? id;
-  String? name;
-  String? nameEn;
-  String? country;
-  String? codeiso2;
-  String? codeiso3;
-
-  Drug(
-      {this.id,
-        this.name,
-        this.nameEn,
-        this.country,
-        this.codeiso2,
-        this.codeiso3});
-
-  Drug.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    name = json['name'];
-    nameEn = json['name_en'];
-    country = json['country'];
-    codeiso2 = json['codeiso2'];
-    codeiso3 = json['codeiso3'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['name'] = this.name;
-    data['name_en'] = this.nameEn;
-    data['country'] = this.country;
-    data['codeiso2'] = this.codeiso2;
-    data['codeiso3'] = this.codeiso3;
-    return data;
-  }
-}
 
 class MedicalProcedures {
   int? id;
