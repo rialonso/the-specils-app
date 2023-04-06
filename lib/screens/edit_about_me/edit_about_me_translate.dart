@@ -14,6 +14,10 @@ const snackBarBtnOk = "snackBarBtnOk";
 const labelHintSelect = "labelHintSelect";
 const labelHintCids = "labelHintCids";
 const labelHintMedicalProcedures = "labelHintMedicalProcedures";
+const labelHintDrugs = "labelHintDrugs";
+const labelHintHospitals = "labelHintHospitals";
+
+const buttonSave = "buttonSave";
 
 
 extension Localization on String {
@@ -69,6 +73,18 @@ extension Localization on String {
     labelHintMedicalProcedures: {
       "en_us": "medical procedures",
       "pt_br": 'procedimentos médicos',
+    },
+    labelHintDrugs: {
+      "en_us": "drugs",
+      "pt_br": 'medicamentos',
+    },
+    labelHintHospitals: {
+      "en_us": "hospitals",
+      "pt_br": 'hospitais',
+    },
+    buttonSave: {
+      "en_us": "Save",
+      "pt_br": 'Salvar',
     },
   });
 

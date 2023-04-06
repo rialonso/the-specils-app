@@ -5,6 +5,7 @@ import 'package:reactive_forms/reactive_forms.dart';
 import 'package:the_specials_app/screens/edit_about_me/edit_about_me_translate.dart';
 import 'package:the_specials_app/screens/edit_about_me/list_value_use_dropdown.dart';
 import 'package:the_specials_app/shared/interfaces/responses/response_drugs.dart';
+import 'package:the_specials_app/shared/interfaces/responses/response_hospitals.dart';
 import 'package:the_specials_app/shared/interfaces/responses/response_medical_procedures.dart';
 import 'package:the_specials_app/shared/services/apis/consume_apis.dart';
 import 'package:the_specials_app/shared/services/functions/functions.dart';
@@ -17,6 +18,7 @@ import 'package:the_specials_app/shared/values/languages.dart';
 import 'package:the_specials_app/shared/values/routes.dart';
 import 'package:get/get.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
+import 'package:geolocator/geolocator.dart';
 
 class EditAboutMe extends StatefulWidget {
   const EditAboutMe({Key? key}) : super(key: key);
@@ -33,6 +35,8 @@ class _EditAboutMeState extends State<EditAboutMe> {
   late Cids listCids;
   late ResponseListMedicalProcedures listMedicalProcedures;
   late ResponseDrugs listDrugs;
+  late ResponseHospitals listHospitals;
+
 
   final showLists = false.obs;
   final form = FormGroup({
@@ -48,6 +52,7 @@ class _EditAboutMeState extends State<EditAboutMe> {
   List<Cid> _listCidsToShow = [];
   List<MedicalProceduresData> _listMedicalProceduresToShow = [];
   List<DrgusData> _listDrugs = [];
+  List<HospitalsData> _listHospitals = [];
 
   listGenders(Locale locale) {
     List<DropdownMenuItem<String>> list = [];
@@ -105,31 +110,47 @@ class _EditAboutMeState extends State<EditAboutMe> {
   }
 
   getListWithUseMultipleSelection() async {
+    final userData = profileUserDataController.savedUserDataProfile?.data;
     listCids = await _service.getCids();
     listMedicalProcedures = await _service.getMedicalProcedures();
     listDrugs = await _service.getDrugs();
+    listHospitals = await _service.getHospitals(
+      queryParameters: {
+        "lat": userData?.lat,
+        "lng": userData?.lng
+      }
+    );
+    print(listHospitals.toJson());
 
     setState(() {
       List<Cid> localCids = [];
       List<MedicalProceduresData> localMedicalProcedures = [];
       List<DrgusData> localDrugs = [];
+      List<HospitalsData> localHospitals = [];
 
       profileUserDataController.savedUserDataProfile?.data?.myCids
           ?.forEach((element) {
         localCids.add(listCids.data?.firstWhere((cid) => cid.id == element.cid?.id) as Cid);
       });
-      _listCidsToShow = localCids;
       profileUserDataController.savedUserDataProfile?.data?.medicalProcedures
           ?.forEach((element) {
         localMedicalProcedures.add(listMedicalProcedures.data?.firstWhere((medicalProcedure) => medicalProcedure.id == element.medicalProcedures?.id) as MedicalProceduresData);
       });
-      _listMedicalProceduresToShow = localMedicalProcedures;
       profileUserDataController.savedUserDataProfile?.data?.myDrugs
           ?.forEach((element) {
         localDrugs.add(listDrugs.data?.firstWhere((drug) => drug.id == element.drug?.id) as DrgusData);
       });
-      print(localDrugs);
+      profileUserDataController.savedUserDataProfile?.data?.myHospitals
+          ?.forEach((element) {
+        localHospitals.add(listHospitals.data?.firstWhere((hospital) => hospital.id == element.hospital?.id) as HospitalsData);
+      });
+
+
+      _listCidsToShow = localCids;
+      _listMedicalProceduresToShow = localMedicalProcedures;
       _listDrugs = localDrugs;
+      _listHospitals = localHospitals;
+
     });
 
     showLists(true);
@@ -158,14 +179,6 @@ class _EditAboutMeState extends State<EditAboutMe> {
     }
   }
 
-  selectedCids() {
-
-    // profileUserDataController.savedUserDataProfile?.data?.medicalProcedures
-    //     ?.forEach((element) {
-    //   _listMedicalProceduresToShow.add(element.medicalProcedures);
-    // });
-    // return _listCidsToShow;
-  }
   validateLanguageReturnCid(Cid cid) {
     if(Localizations.localeOf(context).toString() == Languages.enUS) {
       return cid.descriptionEn;
@@ -297,8 +310,8 @@ class _EditAboutMeState extends State<EditAboutMe> {
         height: 20,
       ),
       MultiSelectBottomSheetField(
-        title: Text(labelHintMedicalProcedures.i18n),
-        buttonText: Text('${labelHintSelect.i18n} ${labelHintMedicalProcedures.i18n}'),
+        title: Text(labelHintDrugs.i18n),
+        buttonText: Text('${labelHintSelect.i18n} ${labelHintDrugs.i18n}'),
         buttonIcon: const Icon(Icons.arrow_drop_down),
         listType: MultiSelectListType.LIST,
         searchable: true,
@@ -319,17 +332,59 @@ class _EditAboutMeState extends State<EditAboutMe> {
           });
         },
       ),
+      const SizedBox(
+        height: 20,
+      ),
+      MultiSelectBottomSheetField(
+        title: Text(labelHintHospitals.i18n),
+        buttonText: Text('${labelHintSelect.i18n} ${labelHintHospitals.i18n}'),
+        buttonIcon: const Icon(Icons.arrow_drop_down),
+        listType: MultiSelectListType.LIST,
+        searchable: true,
+        chipDisplay: MultiSelectChipDisplay(
+          scroll: true,
+          icon: const Icon(Icons.close),
+          onTap: (value){
+            setState(() {
+              _listHospitals.remove(value);
+
+            });
+          },
+        ),
+        initialValue: _listHospitals,
+        selectedItemsTextStyle: const TextStyle(color: DefaultColors.blueBrand),
+        items: listHospitals.data
+            ?.map((hospital) => MultiSelectItem<HospitalsData>(
+            hospital, hospital.name as String))
+            .toList() as List<MultiSelectItem<dynamic>>,
+        onConfirm: (values) {
+          _listHospitals.clear();
+          values.forEach((element) {
+            _listHospitals.add(element);
+          });
+        },
+      ),
+
     ];
 
     return Column(children: listWidgets);
   }
-
+  getGeolocation() async {
+    bool servicestatus = await Geolocator.isLocationServiceEnabled();
+    if(servicestatus){
+      print("GPS service is enabled");
+    }else{
+      print("GPS service is disabled.");
+    }
+  }
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    getGeolocation();
     getDataSetValueForm();
     getListWithUseMultipleSelection();
+
   }
 
   @override
@@ -479,7 +534,7 @@ class _EditAboutMeState extends State<EditAboutMe> {
                         onPressed: () {
                           updateAboutMe();
                         },
-                        texto: 'Salvar')
+                        texto: buttonSave.i18n)
                   ],
                 )
               ],

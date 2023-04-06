@@ -5,6 +5,7 @@ import 'package:dio/dio.dart';
 import 'package:get/get.dart' as GET;
 import 'package:the_specials_app/env/env.dart';
 import 'package:the_specials_app/shared/interfaces/responses/response_drugs.dart';
+import 'package:the_specials_app/shared/interfaces/responses/response_hospitals.dart';
 import 'package:the_specials_app/shared/interfaces/responses/response_medical_procedures.dart';
 import 'package:the_specials_app/shared/services/functions/functions.dart';
 import 'package:the_specials_app/shared/state_management/cids/cids.dart';
@@ -195,9 +196,24 @@ class ConsumeApisService {
         })
     );
     if(response.statusCode == 200) {
-      ResponseDrugs medicalProcedures = ResponseDrugs.fromJson(response.data);
-      print(medicalProcedures.toJson());
-      return medicalProcedures;
+      ResponseDrugs drugs = ResponseDrugs.fromJson(response.data);
+      return drugs;
+    }
+  }
+  getHospitals({queryParameters}) async {
+    var token = await LoggedUserDataController().getToken();
+    Response response = await dio.get(
+        '${Env.baseURL}${Env.getHospitals}',
+        queryParameters: queryParameters,
+        options: Options(headers: {
+          HttpHeaders.contentTypeHeader: Env.baseApplicationJson,
+          HttpHeaders.acceptHeader: Env.baseApplicationJson,
+          'Authorization': 'Bearer $token',
+        })
+    );
+    if(response.statusCode == 200) {
+      ResponseHospitals hospitals = ResponseHospitals.fromJson(response.data);
+      return hospitals;
     }
   }
 }

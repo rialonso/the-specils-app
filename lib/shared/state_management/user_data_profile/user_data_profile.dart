@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:the_specials_app/shared/interfaces/responses/response_drugs.dart';
+import 'package:the_specials_app/shared/interfaces/responses/response_hospitals.dart';
 import 'package:the_specials_app/shared/values/preferences_keys.dart';
 
 class UserDataProfileController extends GetxController {
@@ -440,7 +441,7 @@ class MyHospitals {
   int? hospitalId;
   String? createdAt;
   String? updatedAt;
-  Hospital? hospital;
+  HospitalsData? hospital;
 
   MyHospitals(
       {this.id,
@@ -457,7 +458,7 @@ class MyHospitals {
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
     hospital = json['hospital'] != null
-        ? new Hospital.fromJson(json['hospital'])
+        ? new HospitalsData.fromJson(json['hospital'])
         : null;
   }
 
