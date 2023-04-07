@@ -1,10 +1,16 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:the_specials_app/shared/interfaces/responses/response_hospitals.dart';
+import 'package:the_specials_app/shared/services/apis/consume_apis.dart';
+import 'package:the_specials_app/shared/services/factory/location_lat_lng_factory.dart';
 import 'package:the_specials_app/shared/state_management/invalid_credentials.dart';
 import 'package:the_specials_app/shared/state_management/logged_user_data/logged_user_data.dart';
 
 class Functions {
+  final _service = ConsumeApisService();
+  late dynamic listHospitals;
   mapUserData(String stringUserData) {
     try {
       Map<String,dynamic> mapUser = jsonDecode(stringUserData!);
@@ -61,4 +67,49 @@ class Functions {
     }
     return age;
   }
+  Future<bool> validateLocationAndGetLocation() async {
+    bool servicestatus = await Geolocator.isLocationServiceEnabled();
+    if(servicestatus){
+      print("GPS service is enabled");
+      LocationPermission permission = await Geolocator.checkPermission();
+      print(permission);
+      if (permission == LocationPermission.denied) {
+        permission = await Geolocator.requestPermission();
+        if (permission == LocationPermission.denied) {
+          print('Location permissions are denied');
+          return false;
+        }else if(permission == LocationPermission.deniedForever){
+          print("'Location permissions are permanently denied");
+          return false;
+        }else{
+          print("GPS Location service is granted");
+          return true;
+        }
+      }else{
+        print("GPS Location permission granted.");
+        return true;
+      }
+    }else{
+      print("GPS service is disabled.");
+      return false;
+    }
+
+  }
+  Future<dynamic> getCurrentLocation() async{
+    bool locationAble = await validateLocationAndGetLocation();
+    if(locationAble) {
+      Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+      return position;
+    }
+  }
+ Future<dynamic> getHospitals(FactoryLocationLatLng position) async{
+    print(position);
+     listHospitals = _service.getHospitals(
+        queryParameters: {
+          "lat": position.lat,
+          "lng": position.lng
+        }
+    );
+     return listHospitals;
+ }
 }

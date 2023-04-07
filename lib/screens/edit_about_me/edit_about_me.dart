@@ -6,6 +6,7 @@ import 'package:the_specials_app/shared/interfaces/responses/response_drugs.dart
 import 'package:the_specials_app/shared/interfaces/responses/response_hospitals.dart';
 import 'package:the_specials_app/shared/interfaces/responses/response_medical_procedures.dart';
 import 'package:the_specials_app/shared/services/apis/consume_apis.dart';
+import 'package:the_specials_app/shared/services/factory/location_lat_lng_factory.dart';
 import 'package:the_specials_app/shared/services/functions/functions.dart';
 import 'package:the_specials_app/shared/state_management/cids/cids.dart';
 import 'package:the_specials_app/shared/state_management/logged_user_data/logged_user_data.dart';
@@ -106,61 +107,15 @@ class _EditAboutMeState extends State<EditAboutMe> {
     await profileUserDataController.getProfileUserData();
     form.value = profileUserDataController.savedUserDataProfile?.data?.toJson();
   }
-  Future<bool> validateLocationAndGetLocation() async {
-    bool servicestatus = await Geolocator.isLocationServiceEnabled();
-    if(servicestatus){
-      print("GPS service is enabled");
-      LocationPermission permission = await Geolocator.checkPermission();
-      print(permission);
-      if (permission == LocationPermission.denied) {
-        permission = await Geolocator.requestPermission();
-        if (permission == LocationPermission.denied) {
-          print('Location permissions are denied');
-          return false;
-
-        }else if(permission == LocationPermission.deniedForever){
-          print("'Location permissions are permanently denied");
-          return false;
-        }else{
-          print("GPS Location service is granted");
-          return true;
-        }
-      }else{
-        print("GPS Location permission granted.");
-        return true;
-      }
-    }else{
-      print("GPS service is disabled.");
-      return false;
-    }
-
-  }
   Future<bool> getHosptalsWitCurrentLocation() async {
     final userData = profileUserDataController.savedUserDataProfile?.data;
     if(userData?.lng != null && userData?.lat != null) {
-      listHospitals = await _service.getHospitals(
-          queryParameters: {
-            "lat": userData?.lat,
-            "lng": userData?.lng
-          }
-      );
+      listHospitals = await Functions().getHospitals(FactoryLocationLatLng(lat: userData?.lat, lng: userData?.lng));
       return true;
-
     }else {
-      bool locationAble = await validateLocationAndGetLocation();
-      if(locationAble) {
-        Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-        print(position.latitude);
-
-        listHospitals = await _service.getHospitals(
-            queryParameters: {
-              "lat": position.latitude,
-              "lng": position.longitude
-            }
-        );
-        print(listHospitals.toJson());
-      }
-      return true;
+      Position position = await Functions().getCurrentLocation();
+      listHospitals = await Functions().getHospitals(FactoryLocationLatLng(lat: position.latitude, lng: position.longitude));
+      return false;
     }
   }
   getListWithUseMultipleSelection() async {
