@@ -115,6 +115,7 @@ class _EditAboutMeState extends State<EditAboutMe> {
     }else {
       Position position = await Functions().getCurrentLocation();
       listHospitals = await Functions().getHospitals(FactoryLocationLatLng(lat: position.latitude, lng: position.longitude));
+
       return false;
     }
   }
@@ -401,7 +402,6 @@ class _EditAboutMeState extends State<EditAboutMe> {
     super.initState();
     getDataSetValueForm();
     getListWithUseMultipleSelection();
-
   }
 
   @override
@@ -561,15 +561,4 @@ class _EditAboutMeState extends State<EditAboutMe> {
       ),
     );
   }
-}
-
-
-class Animal {
-  final int id;
-  final String name;
-
-  Animal({
-    required this.id,
-    required this.name,
-  });
 }
