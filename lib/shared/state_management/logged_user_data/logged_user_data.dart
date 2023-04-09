@@ -9,7 +9,7 @@ import 'package:the_specials_app/shared/values/routes.dart';
 class LoggedUserDataController extends GetxController {
   static LoggedUserDataController get to => Get.find();
   final stateManagementAll = Get.put<StateManagementAllController>(StateManagementAllController());
-
+  UserData? savedUserData;
   dynamic status = false;
   dynamic data;
   dynamic access_token = '';
@@ -25,7 +25,7 @@ class LoggedUserDataController extends GetxController {
     prefs.setString(PreferencesKeys.userDataLogged, json.encode(userData.toJson()));
   }
   getUserData() async{
-    UserData savedUserData = await _getSavedUserData(); // if (userData?.status == null) {
+    savedUserData = await _getSavedUserData(); // if (userData?.status == null) {
     //   return '';
     // }
     // if(savedUserData?.status == true) {

@@ -7,6 +7,7 @@ import 'package:the_specials_app/screens/change_password/change_password.dart';
 import 'package:the_specials_app/screens/edit_about_me/edit_about_me.dart';
 import 'package:the_specials_app/screens/first_page/first_page.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:the_specials_app/screens/liked_me/liked_me.dart';
 import 'package:the_specials_app/screens/login/login.dart';
 import 'package:the_specials_app/screens/profile/profile.dart';
 import 'package:the_specials_app/screens/suggestion_matchs/suggestion_matchs.dart';
@@ -64,6 +65,7 @@ class _MyAppState extends State<MyApp> {
         RoutesApp.changePassword: (context) => const ChangePassword(),
         RoutesApp.profile: (context) => const Profile(),
         RoutesApp.editAboutMe: (context) => const EditAboutMe(),
+        RoutesApp.likedMe: (context) => const LikedMe(),
 
       },
 

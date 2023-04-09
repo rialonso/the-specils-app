@@ -3,11 +3,14 @@ import 'package:the_specials_app/screens/suggestion_matchs/suggestion_matchs.dar
 import 'package:the_specials_app/screens/user_configurations/user_config.dart';
 import 'package:the_specials_app/shared/styles/buttons.dart';
 import 'package:the_specials_app/shared/styles/colors.dart';
+import 'package:the_specials_app/shared/values/routes.dart';
 
 class MenuLogged extends StatefulWidget {
-  const MenuLogged({Key? key, this.routeSuggestion = false,  this.routeUserConfig = false}) : super(key: key);
+  const MenuLogged({Key? key, this.routeSuggestion = false,  this.routeUserConfig = false, this.routeLikedMe = false}) : super(key: key);
   final routeSuggestion;
   final routeUserConfig;
+  final routeLikedMe;
+
   @override
   State<MenuLogged> createState() => _MenuLoggedState();
 }
@@ -33,7 +36,9 @@ class _MenuLoggedState extends State<MenuLogged> {
               }, image: 'contact_page', colorIcon: changeColorRuteActive(widget.routeSuggestion))
           ),
           Flexible(
-              child: ButtonMenu(onPressed: () => {}, image: 'favorite')
+              child: ButtonMenu(onPressed: () => {
+                Navigator.pushNamed(context, RoutesApp.likedMe)
+              }, image: 'favorite', colorIcon: changeColorRuteActive(widget.routeLikedMe))
           ),
           Flexible(
               child: ButtonMenu(onPressed: () => {}, image: 'chat_bubble')

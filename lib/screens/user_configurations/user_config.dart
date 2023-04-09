@@ -47,10 +47,10 @@ class _UserConfigState extends State<UserConfig> {
              Container(
                width: MediaQuery.of(context).size.width,
                margin: const EdgeInsets.only(bottom: 20),
-               child: const Text(
-                  'Settings',
+               child: Text(
+                  settingsTitle.i18n,
                   textDirection: TextDirection.ltr,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 30,
                     color: DefaultColors.greyMedium,
                     fontWeight: FontWeight.w800,

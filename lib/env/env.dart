@@ -11,5 +11,6 @@ class Env {
   static const String getMedicalProcedures = 'api/medical-procedures';
   static const String getHospitals = 'api/hospitals';
   static const String getDrugs = 'api/drugs';
+  static const String getLikedMe = 'api/liked-me';
 
 }

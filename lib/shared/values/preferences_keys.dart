@@ -6,5 +6,6 @@ class PreferencesKeys {
 
   static const likeDislikeResponse = 'LIKE_DISLIKE_RESPONSE';
   static const userProfileData = 'USER_PROFILE_DATA';
+  static const likedMe = 'LIKED_ME';
 
 }

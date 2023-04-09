@@ -6,11 +6,13 @@ import 'package:get/get.dart' as GET;
 import 'package:the_specials_app/env/env.dart';
 import 'package:the_specials_app/shared/interfaces/responses/response_drugs.dart';
 import 'package:the_specials_app/shared/interfaces/responses/response_hospitals.dart';
+import 'package:the_specials_app/shared/interfaces/responses/response_liked_me.dart';
 import 'package:the_specials_app/shared/interfaces/responses/response_medical_procedures.dart';
 import 'package:the_specials_app/shared/services/functions/functions.dart';
 import 'package:the_specials_app/shared/state_management/cids/cids.dart';
 import 'package:the_specials_app/shared/state_management/invalid_credentials.dart';
 import 'package:the_specials_app/shared/state_management/like_dislike/likedislike_data.dart';
+import 'package:the_specials_app/shared/state_management/liked_me/liked_me.dart';
 import 'package:the_specials_app/shared/state_management/suggestion_cards/suggestion_cards.dart';
 import 'package:the_specials_app/shared/state_management/user_data_profile/user_data_profile.dart';
 
@@ -20,6 +22,7 @@ class ConsumeApisService {
   SuggestionCardsController suggestionCardsController = GET.Get.put(SuggestionCardsController());
   LoggedUserDataController loggedUserDataController = GET.Get.put(LoggedUserDataController());
   UserDataProfileController userDataProfileController = GET.Get.put(UserDataProfileController());
+  LikedMeController likedMeController = GET.Get.put(LikedMeController());
 
 
   Dio dio = new Dio();
@@ -214,6 +217,23 @@ class ConsumeApisService {
     if(response.statusCode == 200) {
       ResponseHospitals hospitals = ResponseHospitals.fromJson(response.data);
       return hospitals;
+    }
+  }
+  getLikedMe({queryParameters}) async {
+    var token = await LoggedUserDataController().getToken();
+    Response response = await dio.get(
+        '${Env.baseURL}${Env.getLikedMe}',
+        queryParameters: queryParameters,
+        options: Options(headers: {
+          HttpHeaders.contentTypeHeader: Env.baseApplicationJson,
+          HttpHeaders.acceptHeader: Env.baseApplicationJson,
+          'Authorization': 'Bearer $token',
+        })
+    );
+    if(response.statusCode == 200) {
+      ResponseLikedMe likedMe = ResponseLikedMe.fromJson(response.data);
+      likedMeController.saveLikeMe(likedMe);
+      return likedMe;
     }
   }
 }
