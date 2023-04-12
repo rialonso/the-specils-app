@@ -5,10 +5,13 @@ import 'package:the_specials_app/env/env.dart';
 import 'package:the_specials_app/screens/suggestion_matchs/translate_suggestion_matchs.dart';
 import 'package:the_specials_app/shared/blocs/likedislike_bloc.dart';
 import 'package:the_specials_app/shared/blocs/suggestion_cards_bloc.dart';
+import 'package:the_specials_app/shared/services/apis/consume_apis.dart';
 import 'package:the_specials_app/shared/services/factory/like_dislike_factory.dart';
 import 'package:the_specials_app/shared/state_management/logged_user_data/logged_user_data.dart';
+import 'package:the_specials_app/shared/state_management/user_data_profile/user_data_profile.dart';
 import 'package:the_specials_app/shared/styles/buttons.dart';
 import 'package:the_specials_app/shared/styles/colors.dart';
+import 'package:the_specials_app/shared/values/routes.dart';
 import '../state_management/suggestion_cards/suggestion_cards.dart';
 import 'package:get/get.dart';
 
@@ -22,6 +25,8 @@ class SuggestionCards extends StatefulWidget {
 class _SuggestionCardsState extends State<SuggestionCards> {
   final LikeDislikeBloc _likeDislikeBloc = LikeDislikeBloc();
   final SuggestionCardsBloc _suggestionCardsBloc = SuggestionCardsBloc();
+  final profileUserDataController = Get.put<UserDataProfileController>(UserDataProfileController());
+  final _service = ConsumeApisService();
 
   LoggedUserDataController loggedUserDataController = Get.put(LoggedUserDataController());
   final suggestionCardsController = Get.put<SuggestionCardsController>(SuggestionCardsController());
@@ -45,6 +50,11 @@ class _SuggestionCardsState extends State<SuggestionCards> {
       age--;
     }
     return age;
+  }
+  openOtherProfile() async {
+    int userId = widget.suggestionCardsData.id as int;
+    await _service.getOtherProfile(userId);
+    Navigator.pushNamed(context, RoutesApp.othersProfiles);
   }
   @override
   Widget build(BuildContext context) => ClipRRect(
@@ -77,38 +87,48 @@ class _SuggestionCardsState extends State<SuggestionCards> {
 
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    Row(
-                      children: [
-                        Text(
-                          '${widget.suggestionCardsData.name}, ${transformAge()}',
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 24,
-                            fontWeight: FontWeight.w700,
+                    InkWell(
+                      onTap: () {
+                        openOtherProfile();
+                      },
+                      child: Column(
+                        children: [
+                          Row(
+                            children: [
+                              Text(
+                                '${widget.suggestionCardsData.name}, ${transformAge()}',
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                                textAlign: TextAlign.left,
+                              ),
+                            ],
                           ),
-                          textAlign: TextAlign.left,
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 20),
-                    Row(
-                      children: [
-                        SvgPicture.asset(
-                          'assets/images/mode_of_travel.svg',
-                          width: 30,
-                          height: 30,
-                          color: Colors.white,
-                        ),
-                        const SizedBox(width: 10),
-                        Text(
-                          '${widget.suggestionCardsData.distance?.toStringAsFixed(1)} ${kmFromYou.i18n}',
-                          style: const TextStyle(
-                            fontSize: 20,
-                            color: Colors.white,
+                          const SizedBox(height: 20),
+                          Row(
+                            children: [
+                              SvgPicture.asset(
+                                'assets/images/mode_of_travel.svg',
+                                width: 30,
+                                height: 30,
+                                color: Colors.white,
+                              ),
+                              const SizedBox(width: 10),
+                              Text(
+                                '${widget.suggestionCardsData.distance?.toStringAsFixed(1)} ${kmFromYou.i18n}',
+                                style: const TextStyle(
+                                  fontSize: 20,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ],
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
+
                     const SizedBox(height: 20),
                     Row(
 

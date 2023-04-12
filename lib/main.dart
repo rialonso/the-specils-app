@@ -9,6 +9,7 @@ import 'package:the_specials_app/screens/first_page/first_page.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:the_specials_app/screens/liked_me/liked_me.dart';
 import 'package:the_specials_app/screens/login/login.dart';
+import 'package:the_specials_app/screens/others_profile/others_profile.dart';
 import 'package:the_specials_app/screens/profile/profile.dart';
 import 'package:the_specials_app/screens/suggestion_matchs/suggestion_matchs.dart';
 import 'package:the_specials_app/screens/user_configurations/user_config.dart';
@@ -66,6 +67,7 @@ class _MyAppState extends State<MyApp> {
         RoutesApp.profile: (context) => const Profile(),
         RoutesApp.editAboutMe: (context) => const EditAboutMe(),
         RoutesApp.likedMe: (context) => const LikedMe(),
+        RoutesApp.othersProfiles: (context) => const OthersProfile(),
 
       },
 

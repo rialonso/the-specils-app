@@ -6,5 +6,6 @@ class RoutesApp {
   static const profile = '/profile';
   static const editAboutMe = '/edit-about-me';
   static const likedMe = '/liked-me';
+  static const othersProfiles = '/others-profile';
 
 }

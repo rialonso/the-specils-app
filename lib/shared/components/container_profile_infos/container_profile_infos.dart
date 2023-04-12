@@ -123,6 +123,25 @@ class _ContainerProfileInfosState extends State<ContainerProfileInfos> {
 
   }
   @override
+  void didChangeDependencies() {
+    // TODO: implement didChangeDependencies
+    super.didChangeDependencies();
+    print('did2');
+
+  }
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    print('nit');
+  }
+  @override
+  void didUpdateWidget(covariant ContainerProfileInfos oldWidget) {
+    // TODO: implement didUpdateWidget
+    super.didUpdateWidget(oldWidget);
+    print('did');
+  }
+  @override
   Widget build(BuildContext context) {
     return Column(
       children: [
@@ -177,9 +196,9 @@ class _ContainerProfileInfosState extends State<ContainerProfileInfos> {
                         padding: const EdgeInsets.all(8.0),
                         child: Column(
                           children: [
-                            validateData(Icons.work, profileUserDataController.savedUserDataProfile?.data?.occupation as String),
-                            validateData(Icons.person_pin, profileUserDataController.savedUserDataProfile?.data?.gender as String),
-                            validateData(Icons.loyalty, profileUserDataController.savedUserDataProfile?.data?.sexualOrientation as String)
+                            validateData(Icons.work, profileUserDataController.savedUserDataProfile!.data!.occupation as String),
+                            validateData(Icons.person_pin, profileUserDataController.savedUserDataProfile!.data!.gender as String),
+                            validateData(Icons.loyalty, profileUserDataController.savedUserDataProfile!.data!.sexualOrientation as String)
 
 
                           ],

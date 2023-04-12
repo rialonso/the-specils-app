@@ -241,3 +241,35 @@ class ButtonSimulateInputSelect extends StatelessWidget {
     );
   }
 }
+class ButtonCarousel extends StatelessWidget {
+  final VoidCallback onPressed;
+  final String texto;
+
+  const ButtonCarousel({Key? key, required this.onPressed, required this.texto})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: double.infinity,
+      child: ElevatedButton(
+        onPressed: onPressed,
+        style: ElevatedButton.styleFrom(
+          elevation: 0.0,
+          shadowColor: Colors.transparent,
+          backgroundColor: Colors.transparent,
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10.0)
+          ),
+          padding: EdgeInsets.zero,
+        ),
+        child:  Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(texto),
+          ],
+        ),
+      ),
+    );
+  }
+}

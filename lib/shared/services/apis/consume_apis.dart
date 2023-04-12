@@ -13,6 +13,7 @@ import 'package:the_specials_app/shared/state_management/cids/cids.dart';
 import 'package:the_specials_app/shared/state_management/invalid_credentials.dart';
 import 'package:the_specials_app/shared/state_management/like_dislike/likedislike_data.dart';
 import 'package:the_specials_app/shared/state_management/liked_me/liked_me.dart';
+import 'package:the_specials_app/shared/state_management/other_profile_data/other_profile_data.dart';
 import 'package:the_specials_app/shared/state_management/suggestion_cards/suggestion_cards.dart';
 import 'package:the_specials_app/shared/state_management/user_data_profile/user_data_profile.dart';
 
@@ -22,6 +23,8 @@ class ConsumeApisService {
   SuggestionCardsController suggestionCardsController = GET.Get.put(SuggestionCardsController());
   LoggedUserDataController loggedUserDataController = GET.Get.put(LoggedUserDataController());
   UserDataProfileController userDataProfileController = GET.Get.put(UserDataProfileController());
+  OtherProfileDataController otherProfileDataController = GET.Get.put(OtherProfileDataController());
+
   LikedMeController likedMeController = GET.Get.put(LikedMeController());
 
 
@@ -153,6 +156,30 @@ class ConsumeApisService {
 
 
   }
+  getOtherProfile(userId) async {
+    try {
+      print('${Env.baseURL}${Env.getProfile}$userId');
+      Response response = await dio.get(
+        '${Env.baseURL}${Env.getProfile}$userId',
+        options: Options(headers: {
+          HttpHeaders.acceptHeader: Env.baseApplicationJson,
+        }),
+      );
+      if(response.statusCode == 200) {
+        print(response.data);
+        UserDataProfile user = UserDataProfile.fromJson(response.data);
+        await otherProfileDataController.saveProfileUserData(user);
+        return user;
+      }
+    } catch (e){
+      print(e);
+    } finally {
+
+    }
+
+
+  }
+
   getCids({queryParameters}) async {
     var token = await LoggedUserDataController().getToken();
     Response response = await dio.get(
