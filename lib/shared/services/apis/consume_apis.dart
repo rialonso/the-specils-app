@@ -166,7 +166,6 @@ class ConsumeApisService {
         }),
       );
       if(response.statusCode == 200) {
-        print(response.data);
         UserDataProfile user = UserDataProfile.fromJson(response.data);
         await otherProfileDataController.saveProfileUserData(user);
         return user;

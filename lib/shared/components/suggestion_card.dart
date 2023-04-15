@@ -8,6 +8,7 @@ import 'package:the_specials_app/shared/blocs/suggestion_cards_bloc.dart';
 import 'package:the_specials_app/shared/services/apis/consume_apis.dart';
 import 'package:the_specials_app/shared/services/factory/like_dislike_factory.dart';
 import 'package:the_specials_app/shared/state_management/logged_user_data/logged_user_data.dart';
+import 'package:the_specials_app/shared/state_management/other_profile_data/other_profile_data.dart';
 import 'package:the_specials_app/shared/state_management/user_data_profile/user_data_profile.dart';
 import 'package:the_specials_app/shared/styles/buttons.dart';
 import 'package:the_specials_app/shared/styles/colors.dart';
@@ -25,7 +26,8 @@ class SuggestionCards extends StatefulWidget {
 class _SuggestionCardsState extends State<SuggestionCards> {
   final LikeDislikeBloc _likeDislikeBloc = LikeDislikeBloc();
   final SuggestionCardsBloc _suggestionCardsBloc = SuggestionCardsBloc();
-  final profileUserDataController = Get.put<UserDataProfileController>(UserDataProfileController());
+  final otherProfileUserDataController = Get.put<OtherProfileDataController>(OtherProfileDataController());
+
   final _service = ConsumeApisService();
 
   LoggedUserDataController loggedUserDataController = Get.put(LoggedUserDataController());
@@ -54,6 +56,7 @@ class _SuggestionCardsState extends State<SuggestionCards> {
   openOtherProfile() async {
     int userId = widget.suggestionCardsData.id as int;
     await _service.getOtherProfile(userId);
+    await otherProfileUserDataController.getProfileUserData();
     Navigator.pushNamed(context, RoutesApp.othersProfiles);
   }
   @override
@@ -95,14 +98,16 @@ class _SuggestionCardsState extends State<SuggestionCards> {
                         children: [
                           Row(
                             children: [
-                              Text(
-                                '${widget.suggestionCardsData.name}, ${transformAge()}',
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 24,
-                                  fontWeight: FontWeight.w700,
+                              Flexible(
+                                child: Text(
+                                  '${widget.suggestionCardsData.name}, ${transformAge()}',
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                  textAlign: TextAlign.left,
                                 ),
-                                textAlign: TextAlign.left,
                               ),
                             ],
                           ),

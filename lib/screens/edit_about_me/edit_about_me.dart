@@ -201,7 +201,7 @@ class _EditAboutMeState extends State<EditAboutMe> {
       await profileUserDataController.getProfileUserData();
       Functions().openSnackBar(context, DefaultColors.greenSoft,
           snackBarSuccessProfileUpdate.i18n, snackBarBtnOk.i18n);
-      Navigator.pushNamed(context, RoutesApp.profile);
+      Navigator.popUntil(context, ModalRoute.withName(RoutesApp.profile));
     } else {
       Functions().openSnackBar(context, DefaultColors.redDefault,
           snackBarErrorProfileUpdate.i18n, snackBarBtnOk.i18n);
@@ -436,7 +436,7 @@ class _EditAboutMeState extends State<EditAboutMe> {
                       color: DefaultColors.blueBrand,
                       iconSize: 35,
                       onPressed: () {
-                        Navigator.pushNamed(context, RoutesApp.profile);
+                        Navigator.pop(context);
                       },
                     ),
                     const SizedBox(

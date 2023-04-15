@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_image_slideshow/flutter_image_slideshow.dart';
 import 'package:get/get.dart';
 import 'package:the_specials_app/env/env.dart';
+import 'package:the_specials_app/shared/components/container_other_profile_infos/container_other_profile_infos.dart';
+import 'package:the_specials_app/shared/components/container_profile_infos/container_profile_infos.dart';
+import 'package:the_specials_app/shared/services/functions/functions.dart';
 import 'package:the_specials_app/shared/state_management/other_profile_data/other_profile_data.dart';
 import 'package:the_specials_app/shared/state_management/user_data_profile/user_data_profile.dart';
 import 'package:the_specials_app/shared/styles/buttons.dart';
@@ -69,12 +72,12 @@ class _OthersProfileState extends State<OthersProfile> {
 
           children: [
             Container(
-              height: 10,
-              width: 10,
+              height: 13,
+              width: 13,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 color: currentPos == index
-                  ? const Color.fromRGBO(255, 255, 255, 0.9)
+                  ? DefaultColors.purpleBrand
                     : const Color.fromRGBO(255, 255, 255, 0.4),
               ),
               child: const Align(
@@ -164,6 +167,42 @@ class _OthersProfileState extends State<OthersProfile> {
                           )
 
                         ],
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(15),
+                        child: Column(
+                          children: [
+                            Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    '${otherProfileDataController.savedUserDataProfile?.data?.name as String}, ${Functions().transformAge(otherProfileDataController.savedUserDataProfile?.data?.birthdate)}',
+                                    style: const TextStyle(
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.w700,
+                                      color: DefaultColors.greyMedium,
+
+                                    ),
+                                  ),
+                                ]
+                            ),
+                            Text(
+                              otherProfileDataController.savedUserDataProfile?.data?.about != '' && otherProfileDataController.savedUserDataProfile?.data?.about != null? otherProfileDataController.savedUserDataProfile?.data?.about as String : '',
+                              style: const TextStyle(
+                                  fontSize: 18,
+                                  color: DefaultColors.blueBrand
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            const ContainerOtherProfileInfos()
+                          ],
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 10,
                       ),
                     ],
                   ),

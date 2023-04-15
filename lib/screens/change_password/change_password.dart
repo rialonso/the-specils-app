@@ -86,7 +86,7 @@ class _ChangePasswordState extends State<ChangePassword> {
                     color: DefaultColors.blueBrand,
                     iconSize: 35,
                     onPressed: () {
-                      Navigator.pushNamed(context, RoutesApp.userConfig);
+                      Navigator.pop(context);
                     },
                   ),
 

@@ -105,3 +105,6 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+pusher_client:
+  git:
+    url: git://github.com/thijskuilman/pusher_client.git

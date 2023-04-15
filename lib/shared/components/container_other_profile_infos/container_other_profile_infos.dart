@@ -3,25 +3,27 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:the_specials_app/shared/components/container_profile_infos/container_profile_infos_translate.dart';
 import 'package:the_specials_app/shared/components/icon_text/icon_text.dart';
+import 'package:the_specials_app/shared/state_management/other_profile_data/other_profile_data.dart';
 import 'package:the_specials_app/shared/state_management/user_data_profile/user_data_profile.dart';
 import 'package:the_specials_app/shared/styles/colors.dart';
 import 'package:get/get.dart';
 import 'package:the_specials_app/shared/values/routes.dart';
 
-class ContainerProfileInfos extends StatefulWidget {
-  const ContainerProfileInfos({Key? key}) : super(key: key);
+class ContainerOtherProfileInfos extends StatefulWidget {
+  const ContainerOtherProfileInfos({Key? key}) : super(key: key);
 
   @override
-  State<ContainerProfileInfos> createState() => _ContainerProfileInfosState();
+  State<ContainerOtherProfileInfos> createState() => _ContainerOtherProfileInfosState();
 }
 
-class _ContainerProfileInfosState extends State<ContainerProfileInfos> {
-  final profileUserDataController = Get.put<UserDataProfileController>(UserDataProfileController());
-
+class _ContainerOtherProfileInfosState extends State<ContainerOtherProfileInfos> {
+  final profileUserDataController = Get.put<OtherProfileDataController>(OtherProfileDataController());
+  Data? otherProfileData;
   validateData(IconData icon, String textShow) {
     if(textShow != '' && textShow != null) {
       return IconText(iconShow: icon, textShow: textShow,);
     }
+    return SizedBox();
   }
   returnListWidgetText(List<MyCids>? cids, Locale locale) {
     List<Widget> suggestionCardsWidget = [];
@@ -120,6 +122,7 @@ class _ContainerProfileInfosState extends State<ContainerProfileInfos> {
         ),
       );
     }
+    return SizedBox();
 
   }
   @override
@@ -133,10 +136,11 @@ class _ContainerProfileInfosState extends State<ContainerProfileInfos> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    otherProfileData = profileUserDataController.savedUserDataProfile!.data;
     print('nit');
   }
   @override
-  void didUpdateWidget(covariant ContainerProfileInfos oldWidget) {
+  void didUpdateWidget(covariant ContainerOtherProfileInfos oldWidget) {
     // TODO: implement didUpdateWidget
     super.didUpdateWidget(oldWidget);
     print('did');
@@ -145,40 +149,15 @@ class _ContainerProfileInfosState extends State<ContainerProfileInfos> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              profileInfosTitle.i18n,
-              style: const TextStyle(
-                  fontSize: 25,
-                  fontWeight: FontWeight.w700,
-                  color: DefaultColors.greyMedium
-              ),
-            ),
-            IconButton(
-              icon: const Icon(Icons.edit_rounded),
-              padding: EdgeInsets.zero,
-              constraints: const BoxConstraints(),
-              color: DefaultColors.greyMedium,
-              iconSize: 25,
-              onPressed: () {
-                Navigator.pushNamed(context, RoutesApp.editAboutMe);
-              },
-            ),
-          ],
-        ),
-        const SizedBox(
-          height: 20,
-        ),
+
         Container(
             width: MediaQuery.of(context).size.width,
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: Colors.transparent,
               borderRadius: BorderRadius.circular(10),
             ),
             child: Padding(
-              padding: const EdgeInsets.all(10),
+              padding: const EdgeInsets.all(0),
               child: Column(
                 children: [
                   Column(
@@ -196,9 +175,9 @@ class _ContainerProfileInfosState extends State<ContainerProfileInfos> {
                         padding: const EdgeInsets.all(8.0),
                         child: Column(
                           children: [
-                            validateData(Icons.work, profileUserDataController.savedUserDataProfile!.data!.occupation as String),
-                            validateData(Icons.person_pin, profileUserDataController.savedUserDataProfile!.data!.gender as String),
-                            validateData(Icons.loyalty, profileUserDataController.savedUserDataProfile!.data!.sexualOrientation as String)
+                            validateData(Icons.work, otherProfileData?.occupation != '' && otherProfileData?.occupation != null? otherProfileData?.occupation as String: ''),
+                            validateData(Icons.person_pin, otherProfileData?.gender != '' && otherProfileData?.gender != null? otherProfileData?.gender as String: ''),
+                            validateData(Icons.loyalty, otherProfileData?.sexualOrientation != '' && otherProfileData?.sexualOrientation != null? otherProfileData?.sexualOrientation as String: '')
 
 
                           ],

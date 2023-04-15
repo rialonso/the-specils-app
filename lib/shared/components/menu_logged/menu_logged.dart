@@ -6,10 +6,11 @@ import 'package:the_specials_app/shared/styles/colors.dart';
 import 'package:the_specials_app/shared/values/routes.dart';
 
 class MenuLogged extends StatefulWidget {
-  const MenuLogged({Key? key, this.routeSuggestion = false,  this.routeUserConfig = false, this.routeLikedMe = false}) : super(key: key);
+  const MenuLogged({Key? key, this.routeSuggestion = false,  this.routeUserConfig = false, this.routeLikedMe = false, this.personsChats = false}) : super(key: key);
   final routeSuggestion;
   final routeUserConfig;
   final routeLikedMe;
+  final personsChats;
 
   @override
   State<MenuLogged> createState() => _MenuLoggedState();
@@ -41,11 +42,13 @@ class _MenuLoggedState extends State<MenuLogged> {
               }, image: 'favorite', colorIcon: changeColorRuteActive(widget.routeLikedMe))
           ),
           Flexible(
-              child: ButtonMenu(onPressed: () => {}, image: 'chat_bubble')
+              child: ButtonMenu(onPressed: () => {
+                Navigator.pushNamed(context, RoutesApp.listPersonsChats)
+              }, image: 'chat_bubble',colorIcon: changeColorRuteActive(widget.personsChats))
           ),
           Flexible(
               child: ButtonMenu(onPressed: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context)=> UserConfig()));
+                Navigator.push(context, MaterialPageRoute(builder: (context)=> const UserConfig()));
               }, image: 'manage_accounts', colorIcon: changeColorRuteActive(widget.routeUserConfig))
           ),
         ],
