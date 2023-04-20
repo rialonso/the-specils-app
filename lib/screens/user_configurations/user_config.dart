@@ -68,7 +68,9 @@ class _UserConfigState extends State<UserConfig> {
                   const SizedBox(
                     height: 20, //<-- SEE HERE
                   ),
-                  ButtonSettings(onPressed: (){}, text: btnPreferences.i18n, icon: 'interests',),
+                  ButtonSettings(onPressed: (){
+                    Navigator.pushNamed(context, RoutesApp.filterPreferences);
+                  }, text: btnPreferences.i18n, icon: 'interests',),
                   const SizedBox(
                     height: 20, //<-- SEE HERE
                   ),

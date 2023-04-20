@@ -18,6 +18,7 @@ class UserDataProfileController extends GetxController {
   getProfileUserData() async{
     UserDataProfile savedUserData = await _getSavedProfileUserData();
     savedUserDataProfile = savedUserData;
+    print(savedUserData.data?.maxDistance);
     userDataUpdated(true);
     update();
     return savedUserData;
@@ -74,7 +75,7 @@ class Data {
   double? lng;
   int? ageMin;
   int? ageMax;
-  int? maxDistance;
+  dynamic maxDistance;
   String? createdAt;
   String? updatedAt;
   bool? automaticLocation;
