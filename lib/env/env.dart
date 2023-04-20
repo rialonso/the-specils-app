@@ -16,5 +16,5 @@ class Env {
   static const int webSocketPort = 6001;
   static const String webSocketCluster = 'devows';
   static const String webSocketEventChat = 'new-message';
-  static const String webSocketChannelChat = 'match';
+  static const String webSocketChannelChat = 'match.';
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pusher_client/pusher_client.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:the_specials_app/env/env.dart';
 import 'package:the_specials_app/shared/components/menu_logged/menu_logged.dart';
@@ -13,7 +14,34 @@ class ListPersonsChats extends StatefulWidget {
 }
 
 class _ListPersonsChatsState extends State<ListPersonsChats> {
+  bool fd = false;
+  getChat() {
+    var pusher = PusherClient(
+      '1hfEn3KQ0G',
+      PusherOptions(
+        // if local on android use 10.0.2.2\
+        cluster: Env.webSocketCluster,
+        host: Env.webSocketURL,
+        encrypted: true,
+        wssPort: Env.webSocketPort,
+        wsPort:  Env.webSocketPort,
 
+      ),
+      enableLogging: false,
+    );
+    var channel = pusher.subscribe('${Env.webSocketChannelChat}1234');
+    pusher.onConnectionStateChange((state) {
+      print("previousState: ${state?.previousState}, currentState: ${state?.currentState}");
+    });
+    print(fd);
+    pusher.onConnectionError((error) {
+      print("error: ${error?.message}");
+    });
+    channel.bind(Env.webSocketEventChat, (event) {
+      fd = true;
+      print(event);
+    });
+  }
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -38,6 +66,7 @@ class _ListPersonsChatsState extends State<ListPersonsChats> {
               // ...
             )),
         body: ButtonPrimary(onPressed: () async{
+          getChat();
         }, texto: 'cht'),
         bottomNavigationBar:  const MenuLogged(personsChats: true),
 

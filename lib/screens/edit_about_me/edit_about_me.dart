@@ -194,7 +194,7 @@ class _EditAboutMeState extends State<EditAboutMe> {
     }
     // print({...form.value, 'disability': {'cids': newArrayValue}});
     var responseUpdateProfile =
-        await _service.postUpdateProfile(userId, {...form.value});
+        await _service.postUpdateProfile(userId, {...form.value, 'disability': {'my_cids': newArrayValue}});
     print(responseUpdateProfile.toJson);
     if (responseUpdateProfile.toJson()['status']) {
       await _service.getProfile(userId);

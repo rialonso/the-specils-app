@@ -342,8 +342,8 @@ class ProfilePicture {
 
 class Target {
   int? id;
-  Null? stripeId;
-  Null? subscriptionsId;
+  dynamic? stripeId;
+  dynamic? subscriptionsId;
   String? planType;
   String? name;
   int? active;
@@ -355,9 +355,9 @@ class Target {
   String? sexualOrientation;
   String? targetGender;
   String? type;
-  Null? emailVerifiedAt;
-  Null? oldId;
-  Null? notificationToken;
+  dynamic? emailVerifiedAt;
+  dynamic? oldId;
+  dynamic? notificationToken;
   double? lat;
   double? lng;
   int? ageMin;
@@ -366,7 +366,7 @@ class Target {
   String? createdAt;
   String? updatedAt;
   bool? automaticLocation;
-  Null? disabilityDescription;
+  dynamic? disabilityDescription;
   String? occupation;
   String? about;
   String? addressDescription;
@@ -375,21 +375,21 @@ class Target {
   bool? prejudice;
   bool? showAge;
   bool? showDistance;
-  Null? thingsIUse;
-  Null? illicitDrugs;
+  dynamic? thingsIUse;
+  dynamic? illicitDrugs;
   String? relationshipType;
   String? targetAccountType;
   bool? notificationMessage;
   bool? notificationMatch;
   bool? notificationLike;
-  Null? os;
-  Null? model;
-  Null? osVersion;
-  Null? reasonCancelPlan;
-  Null? reasonCancelAccount;
+  dynamic? os;
+  dynamic? model;
+  dynamic? osVersion;
+  dynamic? reasonCancelPlan;
+  dynamic? reasonCancelAccount;
   int? legacyUser;
-  Null? subscriptionOrderId;
-  Null? deletedAt;
+  dynamic? subscriptionOrderId;
+  dynamic? deletedAt;
   List<ProfilePicture>? profilePicture;
 
   Target(

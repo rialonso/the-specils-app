@@ -118,7 +118,7 @@ class _LikedMeState extends State<LikedMe> {
                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                children: [
                                  Text(
-                                   likedMeCard?.user?.name as String,
+                                   likedMeCard?.user?.name != null ? likedMeCard?.user?.name : '',
                                    style: const TextStyle(
                                      color: Colors.white,
                                      fontSize: 15,
@@ -189,36 +189,38 @@ class _LikedMeState extends State<LikedMe> {
             )),
         body:  Padding(
           padding: const EdgeInsets.all(25.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                width: MediaQuery.of(context).size.width,
-                margin: const EdgeInsets.only(bottom: 20),
-                child: Text(
-                  likedMeTitle.i18n,
-                  textDirection: TextDirection.ltr,
-                  style: const TextStyle(
-                    fontSize: 30,
-                    color: DefaultColors.greyMedium,
-                    fontWeight: FontWeight.w800,
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  width: MediaQuery.of(context).size.width,
+                  margin: const EdgeInsets.only(bottom: 20),
+                  child: Text(
+                    likedMeTitle.i18n,
+                    textDirection: TextDirection.ltr,
+                    style: const TextStyle(
+                      fontSize: 30,
+                      color: DefaultColors.greyMedium,
+                      fontWeight: FontWeight.w800,
+                    ),
                   ),
                 ),
-              ),
 
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: GetBuilder<LikedMeController>(
-                    builder: (_) => likedMeController.likedMeUpdated.value
-                        ? Wrap(
-                          spacing: 10,
-                          runSpacing: 10,
-                          children: createLikedMeData(likedMeController.savedLikedMe),
-                        )
-                        : Text('false')
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: GetBuilder<LikedMeController>(
+                      builder: (_) => likedMeController.likedMeUpdated.value
+                          ? Wrap(
+                            spacing: 10,
+                            runSpacing: 10,
+                            children: createLikedMeData(likedMeController.savedLikedMe),
+                          )
+                          : Text('false')
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
 
 
