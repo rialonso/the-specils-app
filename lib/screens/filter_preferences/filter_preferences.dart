@@ -3,10 +3,13 @@ import 'package:get/get.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:the_specials_app/screens/edit_about_me/list_value_use_dropdown.dart';
 import 'package:the_specials_app/screens/filter_preferences/translate_filter_preferences.dart';
+import 'package:the_specials_app/shared/services/apis/consume_apis.dart';
 import 'package:the_specials_app/shared/services/functions/functions.dart';
 import 'package:the_specials_app/shared/state_management/logged_user_data/logged_user_data.dart';
 import 'package:the_specials_app/shared/state_management/user_data_profile/user_data_profile.dart';
+import 'package:the_specials_app/shared/styles/buttons.dart';
 import 'package:the_specials_app/shared/styles/colors.dart';
+import 'package:the_specials_app/shared/values/routes.dart';
 
 class FilterPreferences extends StatefulWidget {
   const FilterPreferences({Key? key}) : super(key: key);
@@ -21,8 +24,12 @@ class _FilterPreferencesState extends State<FilterPreferences> {
   final form = FormGroup({
     'target_gender': FormControl<String>(validators: [Validators.required]),
     'relationship_type': FormControl<String>(validators: [Validators.required]),
+    'age_min': FormControl<double>(validators: [Validators.required]),
+    'age_max': FormControl<double>(validators: [Validators.required]),
 
   });
+  final _service = ConsumeApisService();
+
   double _currentLocationValue = 10;
   double _currentAgeMin = 18;
   double _currentAgeMax = 100;
@@ -155,83 +162,118 @@ class _FilterPreferencesState extends State<FilterPreferences> {
     return Padding(
       padding: const EdgeInsets.all(15),
       child: Column(
-        children: [
-          widgetTitleSubAndIcon(Icons.calendar_month, ageTitle.i18n, ageSubTitle.i18n),
-          Slider(
-            value: _currentAgeMin < 18 || _currentAgeMin > 100 ? 18: _currentAgeMin,
-            min: 18,
-            max: 120,
-            divisions: 100,
-            onChanged: (double value) {
-              setState(() {
-                _currentAgeMin = value;
-              });
-            },
-          ),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(
-                ' ${ageMin.i18n}${_currentAgeMin.round().toString()} ${years.i18n}',
-                style: const TextStyle(
-                    color: DefaultColors.greyMedium,
-                    fontWeight: FontWeight.w600
-                ),
+              widgetTitleSubAndIcon(Icons.calendar_month, ageTitle.i18n, ageSubTitle.i18n),
+
+              ReactiveSlider(
+                formControlName: 'age_min',
+                min: 18,
+                max: _currentAgeMax > 100? _currentAgeMax :100 ,
+                divisions: 100,
+                onChanged: (event) {
+                  setState(() {
+                    _currentAgeMin = event.value?.round()?.toDouble() as double;
+                  });
+                },
+              ),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    ' ${ageMin.i18n}${_currentAgeMin.round().toString()} ${years.i18n}',
+                    style: const TextStyle(
+                        color: DefaultColors.greyMedium,
+                        fontWeight: FontWeight.w600
+                    ),
+                  )
+                ],
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              ReactiveSlider(
+                formControlName: 'age_max',
+                min: 18,
+                max: _currentAgeMax > 100? _currentAgeMax :100 ,
+                divisions: 100,
+                onChanged: (event) {
+                  setState(() {
+                    _currentAgeMax = event.value?.round()?.toDouble() as double;
+                    // print(event.value?.round());
+                  });
+                },
+              ),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    ' ${ageMax.i18n} ${_currentAgeMax.round().toString()} ${years.i18n}',
+                    style: const TextStyle(
+                        color: DefaultColors.greyMedium,
+                        fontWeight: FontWeight.w600
+                    ),
+                  )
+                ],
               )
             ],
           ),
-          const SizedBox(
-            height: 10,
-          ),
-          Slider(
-            value: _currentAgeMax,
-            min: 18,
-            max: _currentAgeMax > 100 ? _currentAgeMax : 100,
-            divisions: 100,
-            onChanged: (double value) {
-              setState(() {
-                _currentAgeMax = value;
-              });
-            },
-          ),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                ' ${ageMax.i18n} ${_currentAgeMax.round().toString()} ${years.i18n}',
-                style: const TextStyle(
-                    color: DefaultColors.greyMedium,
-                    fontWeight: FontWeight.w600
-                ),
-              )
-            ],
-          )
-        ],
-      ),
-    );
+      );
   }
 
   returnCardsFilters() {
-    return Column(
-      children: [
-        boxFilterPreferences(widgetSearchRadius()),
-        const SizedBox(height: 20,),
-        boxFilterPreferences(widgetGenrePreferences()),
-        const SizedBox(height: 20,),
-        boxFilterPreferences(widgetAgeMinMax()),
-
-      ],
+    return ReactiveFormBuilder(
+        form: () => form,
+        builder: (BuildContext context, FormGroup formGroup, Widget? child) {
+        return Column(
+          children: [
+            boxFilterPreferences(widgetSearchRadius()),
+            const SizedBox(height: 20,),
+            boxFilterPreferences(widgetGenrePreferences()),
+            const SizedBox(height: 20,),
+            boxFilterPreferences(widgetAgeMinMax()),
+            const SizedBox(height: 20,),
+            ButtonPrimary(onPressed: () {
+              updatePreferences();
+            }, texto: btnSave.i18n,)
+          ],
+        );
+      },
     );
   }
   getProfileData() async {
     await profileUserDataController.getProfileUserData();
     _currentLocationValue = profileUserDataController.savedUserDataProfile?.data?.maxDistance.toDouble();
-    _currentAgeMin = profileUserDataController.savedUserDataProfile?.data?.ageMin?.toDouble() as double;
+    // _currentAgeMin = profileUserDataController.savedUserDataProfile?.data?.ageMin?.toDouble() as double;
     _currentAgeMax = profileUserDataController.savedUserDataProfile?.data?.ageMax?.toDouble() as double;
-    print('age min: ${_currentAgeMin}, ${_currentAgeMax}');
-    form.value = profileUserDataController.savedUserDataProfile?.data?.toJson();
+    print(profileUserDataController.savedUserDataProfile?.data?.ageMax);
+    form.control('target_gender').value = profileUserDataController.savedUserDataProfile?.data?.targetGender;
+    form.control('relationship_type').value = profileUserDataController.savedUserDataProfile?.data?.relationshipType;
+    form.control('age_min').value = profileUserDataController.savedUserDataProfile?.data?.ageMin?.toDouble();
+    form.control('age_max').value = profileUserDataController.savedUserDataProfile?.data?.ageMax?.toDouble();
+
+  }
+  updatePreferences() async {
+    var userId = profileUserDataController.savedUserDataProfile?.data?.id;
+    var responseUpdateProfile =
+    await _service.postUpdateProfile(userId, {
+      ...form.value,
+      'age_min': form.control('age_min').value?.round(),
+      'age_max': form.control('age_max').value?.round()
+
+    });
+    if (responseUpdateProfile.toJson()['status']) {
+      await _service.getProfile(userId);
+      await _service.getSuggestionCardsApi();
+      await profileUserDataController.getProfileUserData();
+      Functions().openSnackBar(context, DefaultColors.greenSoft,
+          snackBarSuccessPreferencesUpdated.i18n, snackBarBtnOk.i18n);
+      Navigator.pushNamed(context, RoutesApp.suggestionCards);
+    } else {
+      Functions().openSnackBar(context, DefaultColors.redDefault,
+          snackBarErrorPreferencesUpdated.i18n, snackBarBtnOk.i18n);
+    }
   }
   @override
   void initState() {

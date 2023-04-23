@@ -1,6 +1,7 @@
 import "package:i18n_extension/i18n_extension.dart";
 const btnCreateAccount = "btnCreateAccount";
 const btnLogin = "btnLogin";
+const btnSave = "btnSave";
 
 extension Localization on String {
   static const _t = Translations.from("en_us", {
@@ -11,7 +12,8 @@ extension Localization on String {
     btnLogin: {
       "en_us": "Login",
       "pt_br": "Entrar",
-    },
+    }
+
   });
 
   String get i18n => localize(this, _t);

@@ -13,6 +13,11 @@ const ageMin = "ageMin";
 const ageMax = "ageMax";
 const years = "years";
 
+const snackBarSuccessPreferencesUpdated = "snackBarSuccessProfileUpdate";
+const snackBarErrorPreferencesUpdated = "snackBarErrorProfileUpdate";
+const snackBarBtnOk = "snackBarBtnOk";
+
+const btnSave = 'btnSave';
 extension Localization on String {
   static const _t = Translations.from("en_us", {
     filterPreferencesTitle: {
@@ -66,6 +71,22 @@ extension Localization on String {
     years: {
       "en_us": "Years",
       "pt_br": "Anos"
+    },
+    snackBarSuccessPreferencesUpdated: {
+      "en_us": "Successfully saved data",
+      "pt_br": 'Dados salvos com sucesso',
+    },
+    snackBarBtnOk: {
+      "en_us": "Ok",
+      "pt_br": 'Entendi',
+    },
+    snackBarErrorPreferencesUpdated: {
+      "en_us": "Sorry, error saving data",
+      "pt_br": 'Desculpe, erro ao salvar dados',
+    },
+    btnSave: {
+      "en_us": "Save",
+      "pt_br": "Salvar",
     },
   });
 
