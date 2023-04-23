@@ -178,4 +178,53 @@ class ListValueDropdowns {
   "value2": "bisexual"
   }
   ];
+
+  final listRelationshipPt = [
+  {
+  "label": "Todos",
+  "value": "all"
+  },
+  {
+  "label": "Conhecer novas pessoas",
+  "value": "friendship_meet"
+  },
+  {
+  "label": "Fazer novos amigos",
+  "value": "friendship_friends"
+  },
+  {
+  "label": "Só sexo",
+  "value": "sex_none"
+  },
+  {
+  "label": "Deixar acontecer",
+  "value": "sex_happen"
+  },
+  {
+  "label": "Deixar acontecer",
+  "value": "sex_happen"
+  }
+  ];
+  final listRelationshipEn = [
+  {
+  "label": "All",
+  "value": "all"
+  },
+  {
+  "label": "Meet new people",
+  "value": "friendship_meet"
+  },
+  {
+  "label": "Want to make a new friends",
+  "value": "friendship_friends"
+  },
+  {
+  "label": "Only sex",
+  "value": "sex_none"
+  },
+  {
+  "label": "Let it happen",
+  "value": "sex_happen"
+  }
+  ];
 }

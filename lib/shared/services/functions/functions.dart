@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:the_specials_app/screens/edit_about_me/list_value_use_dropdown.dart';
 import 'package:the_specials_app/shared/interfaces/responses/response_hospitals.dart';
 import 'package:the_specials_app/shared/services/apis/consume_apis.dart';
 import 'package:the_specials_app/shared/services/factory/location_lat_lng_factory.dart';
@@ -112,4 +113,53 @@ class Functions {
     );
      return listHospitals;
  }
+  listGenders(Locale locale) {
+    List<DropdownMenuItem<String>> list = [];
+    if (locale.toString() == 'pt_BR') {
+      for (var item in ListValueDropdowns().listGendersPt) {
+        list.add(
+          DropdownMenuItem(
+            value: item['value'] as String,
+            child: Text(item['label'] as String),
+          ),
+        );
+      }
+    }
+    if (locale.toString() == 'en_US') {
+      for (var item in ListValueDropdowns().listGendersEn) {
+        list.add(
+          DropdownMenuItem(
+            value: item['value'] as String,
+            child: Text(item['label'] as String),
+          ),
+        );
+      }
+    }
+    return list;
+  }
+  listRelationShip(Locale locale) {
+    List<DropdownMenuItem<String>> list = [];
+    if (locale.toString() == 'pt_BR') {
+      for (var item in ListValueDropdowns().listRelationshipPt) {
+        list.add(
+          DropdownMenuItem(
+            value: item['value'] as String,
+            child: Text(item['label'] as String),
+          ),
+        );
+      }
+    }
+    if (locale.toString() == 'en_US') {
+      for (var item in ListValueDropdowns().listRelationshipEn) {
+        list.add(
+          DropdownMenuItem(
+            value: item['value'] as String,
+            child: Text(item['label'] as String),
+          ),
+        );
+      }
+    }
+    return list;
+  }
+
 }
