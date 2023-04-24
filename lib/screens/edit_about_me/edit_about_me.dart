@@ -188,13 +188,35 @@ class _EditAboutMeState extends State<EditAboutMe> {
 
   updateAboutMe() async {
     var userId = profileUserDataController.savedUserDataProfile?.data?.id;
-    final newArrayValue = [];
+    final newArrayValueCids = [];
+    final newArrayValueMedicalProcedures = [];
+    final newArrayValueDrugs = [];
+    final newArrayValueHosptals = [];
+
     for (var element in _listCidsToShow) {
-      newArrayValue.add(element);
+      newArrayValueCids.add(element);
+    }
+    for (var element in _listMedicalProceduresToShow) {
+      newArrayValueMedicalProcedures.add(element);
+    }
+    for (var element in _listDrugs) {
+      newArrayValueDrugs.add(element);
+    }
+    for (var element in _listHospitals) {
+      newArrayValueHosptals.add(element);
     }
     // print({...form.value, 'disability': {'cids': newArrayValue}});
     var responseUpdateProfile =
-        await _service.postUpdateProfile(userId, {...form.value, 'disability': {'my_cids': newArrayValue}});
+        await _service.postUpdateProfile(userId, {
+          ...form.value,
+          'disability': {
+            'cids': newArrayValueCids,
+            'medical_procedures': newArrayValueMedicalProcedures,
+            'medicament': newArrayValueDrugs,
+            'hospitals': newArrayValueHosptals,
+          }
+        }
+        );
     print(responseUpdateProfile.toJson);
     if (responseUpdateProfile.toJson()['status']) {
       await _service.getProfile(userId);

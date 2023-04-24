@@ -29,19 +29,50 @@ class _LoginState extends State<Login> {
       _passwordVisible = !_passwordVisible;
     });
   }
-
+  Future<void> _showMyDialog() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(titleLoginDevotee.i18n),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text(messageLoginDevotee.i18n),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('ok'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
   Future<void> _signin(dynamic data) async {
     dynamic responseLogin = await _service.postLoginApi(LoginFactory(
         email: emailController.text, password: passwordController.text));
     if(responseLogin.toJson()['status']) {
-      await _suggestionBloc.getSuggestionCards();
-      // ignore: use_build_context_synchronously
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => SuggestionMatchs()
-          )
-      );
+      print(responseLogin.toJson()?['data']?['account_type']);
+      if(responseLogin.toJson()?['data']?['account_type'] == 'special') {
+        await _suggestionBloc.getSuggestionCards();
+        // ignore: use_build_context_synchronously
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => SuggestionMatchs()
+            )
+        );
+      } else {
+        _showMyDialog();
+      }
+
     } else {
       Functions().openSnackBar(context, DefaultColors.redDefault, snackBarErrorSavedLogin.i18n, buttonSnackBarLogin.i18n);
 

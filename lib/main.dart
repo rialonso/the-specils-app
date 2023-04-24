@@ -1,4 +1,3 @@
-import 'dart:ffi';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -7,6 +6,7 @@ import 'package:the_specials_app/screens/change_password/change_password.dart';
 import 'package:the_specials_app/screens/edit_about_me/edit_about_me.dart';
 import 'package:the_specials_app/screens/filter_preferences/filter_preferences.dart';
 import 'package:the_specials_app/screens/first_page/first_page.dart';
+// ignore: depend_on_referenced_packages
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:the_specials_app/screens/liked_me/liked_me.dart';
 import 'package:the_specials_app/screens/list_persons_chats/list_persons_chats.dart';
@@ -21,11 +21,11 @@ import 'package:the_specials_app/shared/styles/colors.dart';
 import 'package:the_specials_app/shared/values/routes.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatefulWidget {
-  MyApp({super.key});
+  const MyApp({super.key});
 
   @override
   State<MyApp> createState() => _MyAppState();
@@ -43,7 +43,7 @@ class _MyAppState extends State<MyApp> {
     // if (userData?.status == null) {
     //   return '';
     // }
-    if(userData?.status == true) {
+    if(userData.status == true) {
       stateManagementAll.clearAll();
       Navigator.pushNamed(Get.key.currentContext as BuildContext, RoutesApp.login);
     }
@@ -85,7 +85,7 @@ class _MyAppState extends State<MyApp> {
         Locale('pt', "BR"),
       ],
       home: I18n(
-          child: FirstPage()
+          child: const FirstPage()
       ),
     );
   }
