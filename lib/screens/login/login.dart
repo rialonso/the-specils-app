@@ -59,7 +59,6 @@ class _LoginState extends State<Login> {
     dynamic responseLogin = await _service.postLoginApi(LoginFactory(
         email: emailController.text, password: passwordController.text));
     if(responseLogin.toJson()['status']) {
-      print(responseLogin.toJson()?['data']?['account_type']);
       if(responseLogin.toJson()?['data']?['account_type'] == 'special') {
         await _suggestionBloc.getSuggestionCards();
         // ignore: use_build_context_synchronously

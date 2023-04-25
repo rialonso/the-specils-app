@@ -210,9 +210,9 @@ class _EditAboutMeState extends State<EditAboutMe> {
         await _service.postUpdateProfile(userId, {
           ...form.value,
           'disability': {
-            'cids': newArrayValueCids,
+            'cid': newArrayValueCids,
             'medical_procedures': newArrayValueMedicalProcedures,
-            'medicament': newArrayValueDrugs,
+            'drugs': newArrayValueDrugs,
             'hospitals': newArrayValueHosptals,
           }
         }
