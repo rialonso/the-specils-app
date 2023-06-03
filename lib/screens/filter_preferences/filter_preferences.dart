@@ -22,15 +22,17 @@ class _FilterPreferencesState extends State<FilterPreferences> {
   final profileUserDataController =
     Get.put<UserDataProfileController>(UserDataProfileController());
   final form = FormGroup({
+
     'target_gender': FormControl<String>(validators: [Validators.required]),
     'relationship_type': FormControl<String>(validators: [Validators.required]),
+    'max_distance': FormControl<int>(validators: [Validators.required]),
     'age_min': FormControl<double>(validators: [Validators.required]),
     'age_max': FormControl<double>(validators: [Validators.required]),
 
   });
   final _service = ConsumeApisService();
 
-  double _currentLocationValue = 10;
+  int _currentLocationValue = 10;
   double _currentAgeMin = 18;
   double _currentAgeMax = 100;
 
@@ -92,13 +94,14 @@ class _FilterPreferencesState extends State<FilterPreferences> {
       child: Column(
         children: [
           widgetTitleSubAndIcon(Icons.mode_of_travel, localizationTitle.i18n, localizationSubTitle.i18n),
-          Slider(
-            value: _currentLocationValue,
+          ReactiveSlider(
+            formControlName: 'max_distance',
+            min: 10,
             max: 5000,
             divisions: 5000,
-            onChanged: (double value) {
+            onChanged: (event) {
               setState(() {
-                _currentLocationValue = value;
+                _currentLocationValue = event.value as int;
               });
             },
           ),
@@ -111,7 +114,7 @@ class _FilterPreferencesState extends State<FilterPreferences> {
 
               ),
               Text(
-                ' ${_currentLocationValue.round().toString()} km',
+                ' ${_currentLocationValue.toString()} km',
                 style: const TextStyle(
                   color: DefaultColors.blueBrand,
                   fontWeight: FontWeight.w600
@@ -200,7 +203,6 @@ class _FilterPreferencesState extends State<FilterPreferences> {
                 onChanged: (event) {
                   setState(() {
                     _currentAgeMax = event.value?.round()?.toDouble() as double;
-                    // print(event.value?.round());
                   });
                 },
               ),
@@ -244,12 +246,12 @@ class _FilterPreferencesState extends State<FilterPreferences> {
   }
   getProfileData() async {
     await profileUserDataController.getProfileUserData();
-    _currentLocationValue = profileUserDataController.savedUserDataProfile?.data?.maxDistance.toDouble();
+    _currentLocationValue = profileUserDataController.savedUserDataProfile?.data?.maxDistance.toInt();
     // _currentAgeMin = profileUserDataController.savedUserDataProfile?.data?.ageMin?.toDouble() as double;
     _currentAgeMax = profileUserDataController.savedUserDataProfile?.data?.ageMax?.toDouble() as double;
-    print(profileUserDataController.savedUserDataProfile?.data?.ageMax);
     form.control('target_gender').value = profileUserDataController.savedUserDataProfile?.data?.targetGender;
     form.control('relationship_type').value = profileUserDataController.savedUserDataProfile?.data?.relationshipType;
+    form.control('max_distance').value = profileUserDataController.savedUserDataProfile?.data?.maxDistance;
     form.control('age_min').value = profileUserDataController.savedUserDataProfile?.data?.ageMin?.toDouble();
     form.control('age_max').value = profileUserDataController.savedUserDataProfile?.data?.ageMax?.toDouble();
 

@@ -18,9 +18,11 @@ class ContainerProfileInfos extends StatefulWidget {
 class _ContainerProfileInfosState extends State<ContainerProfileInfos> {
   final profileUserDataController = Get.put<UserDataProfileController>(UserDataProfileController());
 
-  validateData(IconData icon, String textShow) {
+   validateData(IconData icon, textShow) {
     if(textShow != '' && textShow != null) {
       return IconText(iconShow: icon, textShow: textShow,);
+    } else {
+      return const Text('');
     }
   }
   returnListWidgetText(List<MyCids>? cids, Locale locale) {
@@ -196,9 +198,9 @@ class _ContainerProfileInfosState extends State<ContainerProfileInfos> {
                         padding: const EdgeInsets.all(8.0),
                         child: Column(
                           children: [
-                            validateData(Icons.work, profileUserDataController.savedUserDataProfile!.data!.occupation as String),
-                            validateData(Icons.person_pin, profileUserDataController.savedUserDataProfile!.data!.gender as String),
-                            validateData(Icons.loyalty, profileUserDataController.savedUserDataProfile!.data!.sexualOrientation as String)
+                            validateData(Icons.work, profileUserDataController.savedUserDataProfile!.data!.occupation),
+                            validateData(Icons.person_pin, profileUserDataController.savedUserDataProfile!.data!.gender),
+                            validateData(Icons.loyalty, profileUserDataController.savedUserDataProfile!.data!.sexualOrientation)
 
 
                           ],

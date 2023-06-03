@@ -158,7 +158,7 @@ class ConsumeApisService {
   }
   getOtherProfile(userId) async {
     try {
-      print('${Env.baseURL}${Env.getProfile}$userId');
+      // print('${Env.baseURL}${Env.getProfile}$userId');
       Response response = await dio.get(
         '${Env.baseURL}${Env.getProfile}$userId',
         options: Options(headers: {

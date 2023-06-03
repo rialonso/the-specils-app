@@ -36,7 +36,6 @@ class _EditAboutMeState extends State<EditAboutMe> {
   late ResponseDrugs listDrugs;
   late ResponseHospitals listHospitals;
 
-
   final showLists = false.obs;
   final form = FormGroup({
     'occupation': FormControl<String>(
@@ -107,18 +106,22 @@ class _EditAboutMeState extends State<EditAboutMe> {
     await profileUserDataController.getProfileUserData();
     form.value = profileUserDataController.savedUserDataProfile?.data?.toJson();
   }
+
   Future<bool> getHosptalsWitCurrentLocation() async {
     final userData = profileUserDataController.savedUserDataProfile?.data;
-    if(userData?.lng != null && userData?.lat != null) {
-      listHospitals = await Functions().getHospitals(FactoryLocationLatLng(lat: userData?.lat, lng: userData?.lng));
+    if (userData?.lng != null && userData?.lat != null) {
+      listHospitals = await Functions().getHospitals(
+          FactoryLocationLatLng(lat: userData?.lat, lng: userData?.lng));
       return true;
-    }else {
+    } else {
       Position position = await Functions().getCurrentLocation();
-      listHospitals = await Functions().getHospitals(FactoryLocationLatLng(lat: position.latitude, lng: position.longitude));
+      listHospitals = await Functions().getHospitals(FactoryLocationLatLng(
+          lat: position.latitude, lng: position.longitude));
 
       return false;
     }
   }
+
   getListWithUseMultipleSelection() async {
     listCids = await _service.getCids();
     listMedicalProcedures = await _service.getMedicalProcedures();
@@ -132,54 +135,45 @@ class _EditAboutMeState extends State<EditAboutMe> {
 
       profileUserDataController.savedUserDataProfile?.data?.myCids
           ?.forEach((element) {
-        localCids.add(
-            listCids.data?.firstWhere((cid) => cid.id == element.cid?.id,
-            orElse: () {
-              listCids.data?.add(element.cid as Cid);
-              return element.cid as Cid;
-            }
-
-            ) as Cid);
+        localCids.add(listCids.data
+            ?.firstWhere((cid) => cid.id == element.cid?.id, orElse: () {
+          listCids.data?.add(element.cid as Cid);
+          return element.cid as Cid;
+        }) as Cid);
       });
       profileUserDataController.savedUserDataProfile?.data?.medicalProcedures
           ?.forEach((element) {
-        localMedicalProcedures.add(
-            listMedicalProcedures.data?.firstWhere((medicalProcedure) => medicalProcedure.id == element.medicalProcedures?.id,
-                orElse: () {
-                  listMedicalProcedures.data?.add(element?.medicalProcedures as MedicalProceduresData);
-                  return element.medicalProcedures as MedicalProceduresData;
-                }
-
-            ) as MedicalProceduresData);
+        localMedicalProcedures.add(listMedicalProcedures.data?.firstWhere(
+            (medicalProcedure) =>
+                medicalProcedure.id == element.medicalProcedures?.id,
+            orElse: () {
+          listMedicalProcedures.data
+              ?.add(element?.medicalProcedures as MedicalProceduresData);
+          return element.medicalProcedures as MedicalProceduresData;
+        }) as MedicalProceduresData);
       });
       profileUserDataController.savedUserDataProfile?.data?.myDrugs
           ?.forEach((element) {
-        localDrugs.add(
-            listDrugs.data?.firstWhere((drug) => drug.id == element.drug?.id,
-            orElse: () {
-              listDrugs.data?.add(element?.drug as DrgusData);
-              return element.drug as DrgusData;
-          }
-        ) as DrgusData);
+        localDrugs.add(listDrugs.data
+            ?.firstWhere((drug) => drug.id == element.drug?.id, orElse: () {
+          listDrugs.data?.add(element?.drug as DrgusData);
+          return element.drug as DrgusData;
+        }) as DrgusData);
       });
       profileUserDataController.savedUserDataProfile?.data?.myHospitals
           ?.forEach((element) {
         localHospitals.add(listHospitals.data?.firstWhere(
-                (hospital) => hospital.id == element.hospital?.id,
-            orElse: () {
-                  listHospitals.data?.add(element?.hospital as HospitalsData);
-                  print(element?.hospital);
-                  return element.hospital as HospitalsData;
-            }
-        ) as HospitalsData);
+            (hospital) => hospital.id == element.hospital?.id, orElse: () {
+          listHospitals.data?.add(element?.hospital as HospitalsData);
+          print(element?.hospital);
+          return element.hospital as HospitalsData;
+        }) as HospitalsData);
       });
-
 
       _listCidsToShow = localCids;
       _listMedicalProceduresToShow = localMedicalProcedures;
       _listDrugs = localDrugs;
       _listHospitals = localHospitals;
-
     });
 
     showLists(true);
@@ -206,17 +200,15 @@ class _EditAboutMeState extends State<EditAboutMe> {
       newArrayValueHosptals.add(element);
     }
     // print({...form.value, 'disability': {'cids': newArrayValue}});
-    var responseUpdateProfile =
-        await _service.postUpdateProfile(userId, {
-          ...form.value,
-          'disability': {
-            'cid': newArrayValueCids,
-            'medical_procedures': newArrayValueMedicalProcedures,
-            'drugs': newArrayValueDrugs,
-            'hospitals': newArrayValueHosptals,
-          }
-        }
-        );
+    var responseUpdateProfile = await _service.postUpdateProfile(userId, {
+      ...form.value,
+      'disability': {
+        'cid': newArrayValueCids,
+        'medical_procedures': newArrayValueMedicalProcedures,
+        'drugs': newArrayValueDrugs,
+        'hospitals': newArrayValueHosptals,
+      }
+    });
     print(responseUpdateProfile.toJson);
     if (responseUpdateProfile.toJson()['status']) {
       await _service.getProfile(userId);
@@ -231,59 +223,60 @@ class _EditAboutMeState extends State<EditAboutMe> {
   }
 
   validateLanguageReturnCid(Cid cid) {
-    if(Localizations.localeOf(context).toString() == Languages.enUS) {
+    if (Localizations.localeOf(context).toString() == Languages.enUS) {
       return cid.descriptionEn;
     }
-    if(Localizations.localeOf(context).toString() == Languages.ptBR) {
+    if (Localizations.localeOf(context).toString() == Languages.ptBR) {
       return cid.description;
-
     }
-  // return cid.descriptionEn;
+    // return cid.descriptionEn;
   }
-  validateLanguageReturnMedicalProcedures(MedicalProceduresData medicalProcedures) {
-    if(Localizations.localeOf(context).toString() == Languages.enUS) {
+
+  validateLanguageReturnMedicalProcedures(
+      MedicalProceduresData medicalProcedures) {
+    if (Localizations.localeOf(context).toString() == Languages.enUS) {
       return medicalProcedures.nameEn;
     }
-    if(Localizations.localeOf(context).toString() == Languages.ptBR) {
+    if (Localizations.localeOf(context).toString() == Languages.ptBR) {
       return medicalProcedures.name;
-
     }
     // return cid.descriptionEn;
   }
+
   validateLanguageReturnDrug(DrgusData drug) {
-    if(Localizations.localeOf(context).toString() == Languages.enUS) {
+    if (Localizations.localeOf(context).toString() == Languages.enUS) {
       return drug.nameEn;
     }
-    if(Localizations.localeOf(context).toString() == Languages.ptBR) {
+    if (Localizations.localeOf(context).toString() == Languages.ptBR) {
       return drug.name;
-
     }
     // return cid.descriptionEn;
   }
-  searchItensCids() {
-    return listCids.data
-        ?.map((cid) {
-          return MultiSelectItem<Cid>(cid, validateLanguageReturnCid(cid) as String);
 
-        })
-        .toList() as List<MultiSelectItem<Cid>>;
+  searchItensCids() {
+    return listCids.data?.map((cid) {
+      return MultiSelectItem<Cid>(
+          cid, validateLanguageReturnCid(cid) as String);
+    }).toList() as List<MultiSelectItem<Cid>>;
   }
+
   itensSelectedsForChipDisplay() {
-    return _listCidsToShow.map((e) => MultiSelectItem(e, validateLanguageReturnCid(e) as String)).toList();
+    return _listCidsToShow
+        .map((e) => MultiSelectItem(e, validateLanguageReturnCid(e) as String))
+        .toList();
   }
+
   void _showMultiSelect(BuildContext context) async {
     await showModalBottomSheet(
       isScrollControlled: true, // required for min/max child size
       context: context,
       builder: (ctx) {
-        return  MultiSelectBottomSheet(
+        return MultiSelectBottomSheet(
           initialValue: _listCidsToShow,
-
           items: searchItensCids(),
           listType: MultiSelectListType.LIST,
           searchable: true,
           maxChildSize: 0.8,
-
           onConfirm: (values) {
             _listCidsToShow.clear();
             for (var element in values) {
@@ -294,6 +287,7 @@ class _EditAboutMeState extends State<EditAboutMe> {
       },
     );
   }
+
   returnListWidgetLists() {
     List<Widget> listWidgets = [
       // Column(
@@ -334,7 +328,8 @@ class _EditAboutMeState extends State<EditAboutMe> {
       ),
       MultiSelectBottomSheetField(
         title: Text(labelHintMedicalProcedures.i18n),
-        buttonText: Text('${labelHintSelect.i18n} ${labelHintMedicalProcedures.i18n}'),
+        buttonText:
+            Text('${labelHintSelect.i18n} ${labelHintMedicalProcedures.i18n}'),
         buttonIcon: const Icon(Icons.arrow_drop_down),
         listType: MultiSelectListType.LIST,
         searchable: true,
@@ -346,7 +341,9 @@ class _EditAboutMeState extends State<EditAboutMe> {
         selectedItemsTextStyle: const TextStyle(color: DefaultColors.blueBrand),
         items: listMedicalProcedures.data
             ?.map((medicalProcedure) => MultiSelectItem<MedicalProceduresData>(
-                medicalProcedure, validateLanguageReturnMedicalProcedures(medicalProcedure) as String))
+                medicalProcedure,
+                validateLanguageReturnMedicalProcedures(medicalProcedure)
+                    as String))
             .toList() as List<MultiSelectItem<dynamic>>,
         onConfirm: (values) {
           _listMedicalProceduresToShow.clear();
@@ -372,7 +369,7 @@ class _EditAboutMeState extends State<EditAboutMe> {
         selectedItemsTextStyle: const TextStyle(color: DefaultColors.blueBrand),
         items: listDrugs.data
             ?.map((drug) => MultiSelectItem<DrgusData>(
-            drug, validateLanguageReturnDrug(drug) as String))
+                drug, validateLanguageReturnDrug(drug) as String))
             .toList() as List<MultiSelectItem<dynamic>>,
         onConfirm: (values) {
           _listDrugs.clear();
@@ -393,10 +390,9 @@ class _EditAboutMeState extends State<EditAboutMe> {
         chipDisplay: MultiSelectChipDisplay(
           scroll: true,
           icon: const Icon(Icons.close),
-          onTap: (value){
+          onTap: (value) {
             setState(() {
               _listHospitals.remove(value);
-
             });
           },
         ),
@@ -404,7 +400,7 @@ class _EditAboutMeState extends State<EditAboutMe> {
         selectedItemsTextStyle: const TextStyle(color: DefaultColors.blueBrand),
         items: listHospitals.data
             ?.map((hospital) => MultiSelectItem<HospitalsData>(
-            hospital, hospital.name as String))
+                hospital, hospital.name as String))
             .toList() as List<MultiSelectItem<dynamic>>,
         onConfirm: (values) {
           _listHospitals.clear();
@@ -413,11 +409,11 @@ class _EditAboutMeState extends State<EditAboutMe> {
           }
         },
       ),
-
     ];
 
     return Column(children: listWidgets);
   }
+
   @override
   void initState() {
     // TODO: implement initState
@@ -521,8 +517,8 @@ class _EditAboutMeState extends State<EditAboutMe> {
                                     ),
                                     ReactiveDropdownField<String>(
                                         formControlName: 'sexual_orientation',
-                                        hint:
-                                            Text(labelHitSexeualOrientation.i18n),
+                                        hint: Text(
+                                            labelHitSexeualOrientation.i18n),
                                         items: listSexualOrientation(
                                             Localizations.localeOf(context))),
                                     const SizedBox(
