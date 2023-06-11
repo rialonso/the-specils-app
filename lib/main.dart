@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:i18n_extension/i18n_widget.dart';
 import 'package:the_specials_app/screens/change_password/change_password.dart';
 import 'package:the_specials_app/screens/edit_about_me/edit_about_me.dart';
+import 'package:the_specials_app/screens/edit_pictures/edit_pictures.dart';
 import 'package:the_specials_app/screens/filter_preferences/filter_preferences.dart';
 import 'package:the_specials_app/screens/first_page/first_page.dart';
 // ignore: depend_on_referenced_packages
@@ -72,6 +73,7 @@ class _MyAppState extends State<MyApp> {
         RoutesApp.othersProfiles: (context) => const OthersProfile(),
         RoutesApp.listPersonsChats: (context) => const ListPersonsChats(),
         RoutesApp.filterPreferences: (context) => const FilterPreferences(),
+        RoutesApp.editPictures: (context) => const EditPictures(),
 
       },
 

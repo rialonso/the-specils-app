@@ -33,9 +33,16 @@ class ButtonPrimary extends StatelessWidget {
 class ButtonSecondary extends StatelessWidget {
   final VoidCallback onPressed;
   final String texto;
-
+  final BorderSide? borderSide;
+  final double? elevation;
   const ButtonSecondary(
-      {Key? key, required this.onPressed, required this.texto})
+      {
+        Key? key,
+        required this.onPressed,
+        required this.texto,
+        this.borderSide = const BorderSide(width: 1.0, color: DefaultColors.blueBrand),
+        this.elevation
+      })
       : super(key: key);
 
   @override
@@ -43,9 +50,10 @@ class ButtonSecondary extends StatelessWidget {
     return ElevatedButton(
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
-          minimumSize: const Size.fromHeight(DefaultSizes.defaultButton),
-          backgroundColor: Colors.white,
-          side: const BorderSide(width: 1.0, color: DefaultColors.blueBrand),
+        minimumSize: const Size.fromHeight(DefaultSizes.defaultButton),
+        backgroundColor: Colors.white,
+        side: borderSide,
+        elevation: elevation,
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10.0)
         ),
@@ -269,6 +277,112 @@ class ButtonCarousel extends StatelessWidget {
             Text(texto),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class ButtonRigthIcon extends StatelessWidget {
+  final VoidCallback onPressed;
+  final String texto;
+  final double? textSize;
+  final Color? textColor;
+
+  final IconData icon;
+  final Color? iconColor;
+
+  final BorderSide? borderSide;
+  final double? elevation;
+
+
+  const ButtonRigthIcon(
+      {
+        Key? key,
+        required this.onPressed,
+        required this.texto,
+        required this.icon,
+        this.borderSide = const BorderSide(width: 1.0, color: DefaultColors.blueBrand),
+        this.elevation,
+        this.textSize = 20,
+        this.textColor = DefaultColors.greyMedium,
+        this.iconColor = DefaultColors.greyMedium,
+      })
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton(
+      onPressed: onPressed,
+      style: ElevatedButton.styleFrom(
+        backgroundColor: Colors.white,
+        side: borderSide,
+        elevation: elevation,
+      ),
+      child:  Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+              texto,
+              style: TextStyle(
+                fontSize: textSize,
+                color: textColor,
+            ),
+          ),
+          const SizedBox(
+            width: 10,
+          ),
+          Icon(
+              icon,
+              color: iconColor
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class ButtonOnlyText extends StatelessWidget {
+  final VoidCallback onPressed;
+  final String texto;
+  final double? textSize;
+  final Color? textColor;
+
+  final BorderSide? borderSide;
+  final double? elevation;
+
+
+  const ButtonOnlyText(
+      {
+        Key? key,
+        required this.onPressed,
+        required this.texto,
+        this.borderSide = const BorderSide(width: 1.0, color: DefaultColors.blueBrand),
+        this.elevation,
+        this.textSize = 20,
+        this.textColor = DefaultColors.greyMedium,
+      })
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton(
+      onPressed: onPressed,
+      style: ElevatedButton.styleFrom(
+        backgroundColor: Colors.white,
+        side: borderSide,
+        elevation: elevation,
+      ),
+      child:  Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            texto,
+            style: TextStyle(
+              fontSize: textSize,
+              color: textColor,
+            ),
+          ),
+        ],
       ),
     );
   }

@@ -45,7 +45,7 @@ class _ContainerProfilePicturesState extends State<ContainerProfilePictures> {
               color: DefaultColors.greyMedium,
               iconSize: 25,
               onPressed: () {
-                Navigator.pushNamed(context, RoutesApp.userConfig);
+                Navigator.pushNamed(context, RoutesApp.editPictures);
               },
             ),
           ],
@@ -77,6 +77,7 @@ class _ContainerProfilePicturesState extends State<ContainerProfilePictures> {
                             ),
                           ),
                       ),
+                      const SizedBox(width: 10),
                       Flexible(
                           child: CardPicturesProfile(
                             onPressed: () {},
@@ -86,6 +87,8 @@ class _ContainerProfilePicturesState extends State<ContainerProfilePictures> {
                             ),
                           ),
                       ),
+                      const SizedBox(width: 10),
+
                       Flexible(
                         child: CardPicturesProfile(
                           onPressed: () {},
@@ -112,6 +115,8 @@ class _ContainerProfilePicturesState extends State<ContainerProfilePictures> {
                           ),
                         ),
                       ),
+                      const SizedBox(width: 10),
+
                       Flexible(
                         child: CardPicturesProfile(
                           onPressed: () {},
@@ -121,6 +126,8 @@ class _ContainerProfilePicturesState extends State<ContainerProfilePictures> {
                           ),
                         ),
                       ),
+                      const SizedBox(width: 10),
+
                       Flexible(
                         child: CardPicturesProfile(
                           onPressed: () {},
