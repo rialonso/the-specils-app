@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:the_specials_app/shared/components/card_pictures_profile/card_pictures_profile.dart';
 import 'package:the_specials_app/shared/components/container_profile_pictures/container_profile_pictures_translate.dart';
+import 'package:the_specials_app/shared/interfaces/local_interfaces/edit_pictures_asset.dart';
 import 'package:the_specials_app/shared/state_management/user_data_profile/user_data_profile.dart';
 import 'package:the_specials_app/shared/styles/colors.dart';
 import 'package:the_specials_app/shared/values/routes.dart';
@@ -71,9 +72,11 @@ class _ContainerProfilePicturesState extends State<ContainerProfilePictures> {
                             onPressed: () {
 
                             },
-                            picture: validatePicture(
-                              profileUserDataController?.savedUserDataProfile?.data?.profilePicture,
-                              0
+                            picture: ImageAsset(
+                              imagePath: validatePicture(
+                                  profileUserDataController?.savedUserDataProfile?.data?.profilePicture,
+                                  0
+                              ),
                             ),
                           ),
                       ),
@@ -81,9 +84,11 @@ class _ContainerProfilePicturesState extends State<ContainerProfilePictures> {
                       Flexible(
                           child: CardPicturesProfile(
                             onPressed: () {},
-                            picture: validatePicture(
-                                profileUserDataController?.savedUserDataProfile?.data?.profilePicture,
-                                1
+                            picture: ImageAsset(
+                              imagePath: validatePicture(
+                                  profileUserDataController?.savedUserDataProfile?.data?.profilePicture,
+                                  1
+                              ),
                             ),
                           ),
                       ),
@@ -92,9 +97,11 @@ class _ContainerProfilePicturesState extends State<ContainerProfilePictures> {
                       Flexible(
                         child: CardPicturesProfile(
                           onPressed: () {},
-                          picture: validatePicture(
-                              profileUserDataController?.savedUserDataProfile?.data?.profilePicture,
-                              2
+                          picture: ImageAsset(
+                            imagePath: validatePicture(
+                                profileUserDataController?.savedUserDataProfile?.data?.profilePicture,
+                                2
+                            ),
                           ),
                         ),
                       ),
@@ -109,9 +116,11 @@ class _ContainerProfilePicturesState extends State<ContainerProfilePictures> {
                       Flexible(
                         child: CardPicturesProfile(
                           onPressed: () {},
-                          picture: validatePicture(
-                              profileUserDataController?.savedUserDataProfile?.data?.profilePicture,
-                              3
+                          picture: ImageAsset(
+                            imagePath: validatePicture(
+                                profileUserDataController?.savedUserDataProfile?.data?.profilePicture,
+                                3
+                            ),
                           ),
                         ),
                       ),
@@ -120,9 +129,11 @@ class _ContainerProfilePicturesState extends State<ContainerProfilePictures> {
                       Flexible(
                         child: CardPicturesProfile(
                           onPressed: () {},
-                          picture: validatePicture(
-                              profileUserDataController?.savedUserDataProfile?.data?.profilePicture,
-                              4
+                          picture: ImageAsset(
+                            imagePath: validatePicture(
+                                profileUserDataController?.savedUserDataProfile?.data?.profilePicture,
+                                4
+                            ),
                           ),
                         ),
                       ),
@@ -131,9 +142,11 @@ class _ContainerProfilePicturesState extends State<ContainerProfilePictures> {
                       Flexible(
                         child: CardPicturesProfile(
                           onPressed: () {},
-                          picture: validatePicture(
-                              profileUserDataController?.savedUserDataProfile?.data?.profilePicture,
-                              5
+                          picture: ImageAsset(
+                            imagePath: validatePicture(
+                                profileUserDataController?.savedUserDataProfile?.data?.profilePicture,
+                                5
+                            ),
                           ),
                         ),
                       ),

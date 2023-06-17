@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:the_specials_app/env/env.dart';
+import 'package:the_specials_app/shared/interfaces/local_interfaces/edit_pictures_asset.dart';
 import 'package:the_specials_app/shared/styles/colors.dart';
 
 
@@ -9,7 +10,7 @@ class CardPicturesProfile extends StatefulWidget {
   CardPicturesProfile({Key? key,  required this.onPressed, required this.picture}) : super(key: key);
   final VoidCallback onPressed;
 
-  String picture;
+  ImageAsset picture;
 
   @override
   State<CardPicturesProfile> createState() => _CardPicturesProfileState();
@@ -18,11 +19,7 @@ class CardPicturesProfile extends StatefulWidget {
 class _CardPicturesProfileState extends State<CardPicturesProfile> {
   final myWidgetKey = GlobalKey();
   late double height;
-  late XFile uploadImage; //variable for choosed file
 
-  verifyExistsImage(image) {
-
-  }
   @override
   void initState() {
     height = 100;
@@ -37,7 +34,12 @@ class _CardPicturesProfileState extends State<CardPicturesProfile> {
     // print(myWidgetKey.currentContext?.size?.width?.toDouble() as double);
 
   }
+  validateImageAndSetNetworkOrAsset(ImageAsset image) {
+    if(image.imageType == 'asset') {
 
+    }
+    // return NetworkImage('${Env.baseURLImage}${widget.picture.replaceAll(r"\", r"")}');
+  }
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
@@ -67,7 +69,8 @@ class _CardPicturesProfileState extends State<CardPicturesProfile> {
           color: DefaultColors.greyMedium,
           borderRadius: BorderRadius.circular(10),
           image: DecorationImage(
-            image: NetworkImage('${Env.baseURLImage}${widget.picture.replaceAll(r"\", r"")}') ,
+            // image: AssetImage(assetName),
+            image: NetworkImage('${Env.baseURLImage}${widget?.picture?.imagePath?.replaceAll(r"\", r"")}') ,
             fit: BoxFit.cover,
             alignment: const Alignment(-0.3, 0),
           ),

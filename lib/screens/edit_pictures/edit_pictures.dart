@@ -1,7 +1,9 @@
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:the_specials_app/screens/edit_pictures/edit_pictures_translatt.dart';
 import 'package:the_specials_app/shared/components/card_pictures_profile/card_pictures_profile.dart';
+import 'package:the_specials_app/shared/interfaces/local_interfaces/edit_pictures_asset.dart';
 import 'package:the_specials_app/shared/styles/buttons.dart';
 import 'package:the_specials_app/shared/styles/colors.dart';
 import 'package:get/get.dart';
@@ -20,7 +22,7 @@ class EditPictures extends StatefulWidget {
 
 class _EditPicturesState extends State<EditPictures> {
   final profileUserDataController = Get.put<UserDataProfileController>(UserDataProfileController());
-  File? image;
+  List<ImageAsset>? imagesToShow;
   late CameraController _controller;
   late Future<void> _initializeControllerFuture;
   late CameraDescription? camera;
@@ -77,23 +79,32 @@ class _EditPicturesState extends State<EditPictures> {
   }
 
   validatePicture(pictures, index) {
+    // print('validade');
+    // print(imagesToShow?[index].imageType);
 
+    if(imagesToShow?[index].imageType == 'asset') {
+      // print(imagesToShow?[index]);
+      return imagesToShow?[index];
+    }
     if(pictures.asMap().containsKey(index)) {
       return pictures?[index].path?.replaceAll(r"\", r"") as String;
     }
     return '';
   }
-  Future pickImage() async {
+  Future pickImage(indexToSave) async {
     try {
       final image = await ImagePicker().pickImage(source: ImageSource.gallery);
       if(image == null) return;
       final imageTemp = File(image.path);
-      setState(() => this.image = imageTemp);
+      print('selectIMGAE');
+      setState(() => {imagesToShow?[1] = ImageAsset(imagePath: image.path, imageType: 'asset')});
+      print(imagesToShow?[1].imagePath);
+
     } on PlatformException catch(e) {
       print('Failed to pick image: $e');
     }
   }
-  openTakeOrPickImage(context) {
+  openTakeOrPickImage(context, indexToSave) {
     return showModalBottomSheet(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10.0),
@@ -101,9 +112,10 @@ class _EditPicturesState extends State<EditPictures> {
         context: context,
         builder: (BuildContext context) {
           return Container(
+            height: 200,
             decoration: BoxDecoration(
               borderRadius:  BorderRadius.circular(10),
-              color: Colors.white
+              color: Colors.white,
             ),
             child: Center(
               child: Column(
@@ -112,7 +124,7 @@ class _EditPicturesState extends State<EditPictures> {
                 children: [
                   ButtonRigthIcon(
                     onPressed: (){
-                      pickImage();
+                      pickImage(indexToSave);
                     },
                     borderSide: const BorderSide(width: 0, color: Colors.transparent),
                     elevation: 0,
@@ -129,7 +141,7 @@ class _EditPicturesState extends State<EditPictures> {
                   ),
                   ButtonRigthIcon(
                     onPressed: (){
-                      pickImage();
+                      // pickImage();
                     },
                     borderSide: const BorderSide(width: 0, color: Colors.transparent),
                     elevation: 0,
@@ -222,12 +234,13 @@ class _EditPicturesState extends State<EditPictures> {
                           Flexible(
                             child: CardPicturesProfile(
                               onPressed: () {
-                                openTakeOrPickImage(context);
-
+                                openTakeOrPickImage(context, 0);
                               },
-                              picture: validatePicture(
+                              picture: ImageAsset(
+                                imagePath: validatePicture(
                                   profileUserDataController?.savedUserDataProfile?.data?.profilePicture,
                                   0
+                                ),
                               ),
                             ),
                           ),
@@ -239,9 +252,11 @@ class _EditPicturesState extends State<EditPictures> {
                               onPressed: () {
                                 takePicture();
                               },
-                              picture: validatePicture(
-                                  profileUserDataController?.savedUserDataProfile?.data?.profilePicture,
-                                  1
+                              picture: ImageAsset(
+                                imagePath: validatePicture(
+                                    profileUserDataController?.savedUserDataProfile?.data?.profilePicture,
+                                    1
+                                ),
                               ),
                             ),
                           ),
@@ -256,9 +271,11 @@ class _EditPicturesState extends State<EditPictures> {
                           Flexible(
                             child: CardPicturesProfile(
                               onPressed: () {},
-                              picture: validatePicture(
-                                  profileUserDataController?.savedUserDataProfile?.data?.profilePicture,
-                                  2
+                              picture: ImageAsset(
+                                imagePath: validatePicture(
+                                    profileUserDataController?.savedUserDataProfile?.data?.profilePicture,
+                                    2
+                                ),
                               ),
                             ),
                           ),
@@ -268,9 +285,11 @@ class _EditPicturesState extends State<EditPictures> {
                           Flexible(
                             child: CardPicturesProfile(
                               onPressed: () {},
-                              picture: validatePicture(
-                                  profileUserDataController?.savedUserDataProfile?.data?.profilePicture,
-                                  3
+                              picture: ImageAsset(
+                                imagePath: validatePicture(
+                                    profileUserDataController?.savedUserDataProfile?.data?.profilePicture,
+                                    3
+                                ),
                               ),
                             ),
                           ),
@@ -285,9 +304,11 @@ class _EditPicturesState extends State<EditPictures> {
                           Flexible(
                             child: CardPicturesProfile(
                               onPressed: () {},
-                              picture: validatePicture(
-                                  profileUserDataController?.savedUserDataProfile?.data?.profilePicture,
-                                  4
+                              picture: ImageAsset(
+                                imagePath: validatePicture(
+                                    profileUserDataController?.savedUserDataProfile?.data?.profilePicture,
+                                    4
+                                ),
                               ),
                             ),
                           ),
@@ -295,9 +316,11 @@ class _EditPicturesState extends State<EditPictures> {
                           Flexible(
                             child: CardPicturesProfile(
                               onPressed: () {},
-                              picture: validatePicture(
-                                  profileUserDataController?.savedUserDataProfile?.data?.profilePicture,
-                                  5
+                              picture: ImageAsset(
+                                imagePath: validatePicture(
+                                    profileUserDataController?.savedUserDataProfile?.data?.profilePicture,
+                                    5
+                                ),
                               ),
                             ),
                           ),
