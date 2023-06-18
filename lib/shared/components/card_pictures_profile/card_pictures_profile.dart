@@ -7,11 +7,11 @@ import 'package:the_specials_app/shared/styles/colors.dart';
 
 // ignore: must_be_immutable
 class CardPicturesProfile extends StatefulWidget {
-  CardPicturesProfile({Key? key,  required this.onPressed, required this.picture}) : super(key: key);
+  CardPicturesProfile({Key? key,  required this.onPressed, required this.picture, this.showIconAddPicture = false}) : super(key: key);
   final VoidCallback onPressed;
 
   ImageAsset picture;
-
+  bool showIconAddPicture;
   @override
   State<CardPicturesProfile> createState() => _CardPicturesProfileState();
 }
@@ -35,14 +35,27 @@ class _CardPicturesProfileState extends State<CardPicturesProfile> {
 
   }
   validateImageAndSetNetworkOrAsset(ImageAsset image) {
-    print(image.imageType);
-    // print(image.imagePath);
-
     if(image.imageType == 'asset') {
       return AssetImage(image?.imagePath as String);
     }
     if(image.imageType == 'network') {
       return NetworkImage('${Env.baseURLImage}${image?.imagePath?.replaceAll(r"\", r"")}');
+    }
+  }
+  Widget iconAddPictureVisible() {
+    if(widget.showIconAddPicture) {
+      return  IconButton(
+          icon: const Icon(Icons.add_circle_rounded ),
+          padding: EdgeInsets.zero,
+          constraints: const BoxConstraints(),
+          color: DefaultColors.purpleBrand,
+          iconSize: 25,
+          onPressed: () {
+          // Navigator.pushNamed(context, RoutesApp.userConfig);
+          },
+        );
+    } else {
+      return const Text('');
     }
   }
   @override
@@ -82,16 +95,7 @@ class _CardPicturesProfileState extends State<CardPicturesProfile> {
         ),
         child:  Padding(
           padding: const EdgeInsets.all(8.0),
-          child: IconButton(
-            icon: const Icon(Icons.add_circle_rounded ),
-            padding: EdgeInsets.zero,
-            constraints: const BoxConstraints(),
-            color: DefaultColors.purpleBrand,
-            iconSize: 25,
-            onPressed: () {
-              // Navigator.pushNamed(context, RoutesApp.userConfig);
-            },
-          ),
+          child: iconAddPictureVisible(),
         ),
       ),
     );

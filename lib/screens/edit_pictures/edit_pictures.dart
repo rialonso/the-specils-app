@@ -265,6 +265,7 @@ class _EditPicturesState extends State<EditPictures> {
                                 openTakeOrPickImage(context, 0);
                               },
                               picture: returnPictureToCard(0),
+                              showIconAddPicture: true,
                             ),
                           ),
                           const SizedBox(
@@ -273,9 +274,10 @@ class _EditPicturesState extends State<EditPictures> {
                           Flexible(
                             child: CardPicturesProfile(
                               onPressed: () {
-                                openTakeOrPickImage(context, 0);
+                                openTakeOrPickImage(context, 1);
                               },
                               picture: returnPictureToCard(1),
+                              showIconAddPicture: true,
                             ),
                           ),
                         ],
@@ -288,8 +290,11 @@ class _EditPicturesState extends State<EditPictures> {
                         children: [
                           Flexible(
                             child: CardPicturesProfile(
-                              onPressed: () {},
+                              onPressed: () {
+                                openTakeOrPickImage(context, 2);
+                              },
                               picture: returnPictureToCard(2),
+                              showIconAddPicture: true,
                             ),
                           ),
                           const SizedBox(
@@ -297,8 +302,11 @@ class _EditPicturesState extends State<EditPictures> {
                           ),
                           Flexible(
                             child: CardPicturesProfile(
-                              onPressed: () {},
+                              onPressed: () {
+                                openTakeOrPickImage(context, 3);
+                              },
                               picture: returnPictureToCard(3),
+                              showIconAddPicture: true,
                             ),
                           ),
                         ],
@@ -311,15 +319,21 @@ class _EditPicturesState extends State<EditPictures> {
                         children: [
                           Flexible(
                             child: CardPicturesProfile(
-                              onPressed: () {},
+                              onPressed: () {
+                                openTakeOrPickImage(context, 4);
+                              },
                               picture: returnPictureToCard(4),
+                              showIconAddPicture: true,
                             ),
                           ),
                           const SizedBox(width: 10),
                           Flexible(
                             child: CardPicturesProfile(
-                              onPressed: () {},
+                              onPressed: () {
+                                openTakeOrPickImage(context, 5);
+                              },
                               picture: returnPictureToCard(5),
+                              showIconAddPicture: true,
                             ),
                           ),
                         ],
