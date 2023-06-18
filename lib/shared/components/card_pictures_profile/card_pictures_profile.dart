@@ -35,10 +35,15 @@ class _CardPicturesProfileState extends State<CardPicturesProfile> {
 
   }
   validateImageAndSetNetworkOrAsset(ImageAsset image) {
-    if(image.imageType == 'asset') {
+    print(image.imageType);
+    // print(image.imagePath);
 
+    if(image.imageType == 'asset') {
+      return AssetImage(image?.imagePath as String);
     }
-    // return NetworkImage('${Env.baseURLImage}${widget.picture.replaceAll(r"\", r"")}');
+    if(image.imageType == 'network') {
+      return NetworkImage('${Env.baseURLImage}${image?.imagePath?.replaceAll(r"\", r"")}');
+    }
   }
   @override
   Widget build(BuildContext context) {
@@ -70,7 +75,7 @@ class _CardPicturesProfileState extends State<CardPicturesProfile> {
           borderRadius: BorderRadius.circular(10),
           image: DecorationImage(
             // image: AssetImage(assetName),
-            image: NetworkImage('${Env.baseURLImage}${widget?.picture?.imagePath?.replaceAll(r"\", r"")}') ,
+            image: validateImageAndSetNetworkOrAsset(widget?.picture as ImageAsset),
             fit: BoxFit.cover,
             alignment: const Alignment(-0.3, 0),
           ),

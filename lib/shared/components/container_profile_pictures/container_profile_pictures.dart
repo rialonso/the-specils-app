@@ -77,6 +77,7 @@ class _ContainerProfilePicturesState extends State<ContainerProfilePictures> {
                                   profileUserDataController?.savedUserDataProfile?.data?.profilePicture,
                                   0
                               ),
+                                imageType: 'network'
                             ),
                           ),
                       ),
@@ -89,6 +90,7 @@ class _ContainerProfilePicturesState extends State<ContainerProfilePictures> {
                                   profileUserDataController?.savedUserDataProfile?.data?.profilePicture,
                                   1
                               ),
+                                imageType: 'network'
                             ),
                           ),
                       ),
@@ -102,6 +104,7 @@ class _ContainerProfilePicturesState extends State<ContainerProfilePictures> {
                                 profileUserDataController?.savedUserDataProfile?.data?.profilePicture,
                                 2
                             ),
+                              imageType: 'network'
                           ),
                         ),
                       ),
@@ -121,6 +124,7 @@ class _ContainerProfilePicturesState extends State<ContainerProfilePictures> {
                                 profileUserDataController?.savedUserDataProfile?.data?.profilePicture,
                                 3
                             ),
+                              imageType: 'network'
                           ),
                         ),
                       ),
@@ -134,6 +138,7 @@ class _ContainerProfilePicturesState extends State<ContainerProfilePictures> {
                                 profileUserDataController?.savedUserDataProfile?.data?.profilePicture,
                                 4
                             ),
+                              imageType: 'network'
                           ),
                         ),
                       ),
@@ -147,6 +152,7 @@ class _ContainerProfilePicturesState extends State<ContainerProfilePictures> {
                                 profileUserDataController?.savedUserDataProfile?.data?.profilePicture,
                                 5
                             ),
+                              imageType: 'network'
                           ),
                         ),
                       ),

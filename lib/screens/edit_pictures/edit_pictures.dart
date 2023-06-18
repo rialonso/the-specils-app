@@ -1,4 +1,6 @@
 
+import 'dart:collection';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:the_specials_app/screens/edit_pictures/edit_pictures_translatt.dart';
@@ -22,7 +24,14 @@ class EditPictures extends StatefulWidget {
 
 class _EditPicturesState extends State<EditPictures> {
   final profileUserDataController = Get.put<UserDataProfileController>(UserDataProfileController());
-  List<ImageAsset>? imagesToShow;
+  List<ImageAsset> imagesToShow = [
+    ImageAsset(imagePath: '', imageType: ''),
+    ImageAsset(imagePath: '', imageType: ''),
+    ImageAsset(imagePath: '', imageType: ''),
+    ImageAsset(imagePath: '', imageType: ''),
+    ImageAsset(imagePath: '', imageType: ''),
+    ImageAsset(imagePath: '', imageType: ''),
+  ];
   late CameraController _controller;
   late Future<void> _initializeControllerFuture;
   late CameraDescription? camera;
@@ -32,6 +41,14 @@ class _EditPicturesState extends State<EditPictures> {
   void initState()  {
     super.initState();
     initCamera();
+    imagesToShow = [
+      ImageAsset(imagePath: '', imageType: ''),
+      ImageAsset(imagePath: '', imageType: ''),
+      ImageAsset(imagePath: '', imageType: ''),
+      ImageAsset(imagePath: '', imageType: ''),
+      ImageAsset(imagePath: '', imageType: ''),
+      ImageAsset(imagePath: '', imageType: ''),
+    ];
 
 
   }
@@ -78,31 +95,42 @@ class _EditPicturesState extends State<EditPictures> {
     }
   }
 
-  validatePicture(pictures, index) {
-    // print('validade');
-    // print(imagesToShow?[index].imageType);
-
-    if(imagesToShow?[index].imageType == 'asset') {
-      // print(imagesToShow?[index]);
-      return imagesToShow?[index];
-    }
+  validatePictureNetWork(pictures, index) {
     if(pictures.asMap().containsKey(index)) {
       return pictures?[index].path?.replaceAll(r"\", r"") as String;
     }
     return '';
+  }
+  returnPictureToCard(index) {
+    if(imagesToShow?[index].imageType == 'asset' && imagesToShow?[index].imagePath != '') {
+      return ImageAsset(
+          imagePath: imagesToShow?[index].imagePath,
+          imageType: 'asset'
+      );
+    }
+    return ImageAsset(
+        imagePath: validatePictureNetWork(
+          profileUserDataController?.savedUserDataProfile?.data?.profilePicture,
+            index
+        ),
+        imageType: 'network'
+    );
+
   }
   Future pickImage(indexToSave) async {
     try {
       final image = await ImagePicker().pickImage(source: ImageSource.gallery);
       if(image == null) return;
       final imageTemp = File(image.path);
-      print('selectIMGAE');
-      setState(() => {imagesToShow?[1] = ImageAsset(imagePath: image.path, imageType: 'asset')});
-      print(imagesToShow?[1].imagePath);
-
+      setImageToShow(image, indexToSave);
     } on PlatformException catch(e) {
       print('Failed to pick image: $e');
     }
+  }
+  setImageToShow(image, indexToSave) {
+    setState(() {
+      imagesToShow?[indexToSave] = ImageAsset(imagePath: image.path, imageType: 'asset');
+    });
   }
   openTakeOrPickImage(context, indexToSave) {
     return showModalBottomSheet(
@@ -236,12 +264,7 @@ class _EditPicturesState extends State<EditPictures> {
                               onPressed: () {
                                 openTakeOrPickImage(context, 0);
                               },
-                              picture: ImageAsset(
-                                imagePath: validatePicture(
-                                  profileUserDataController?.savedUserDataProfile?.data?.profilePicture,
-                                  0
-                                ),
-                              ),
+                              picture: returnPictureToCard(0),
                             ),
                           ),
                           const SizedBox(
@@ -250,14 +273,9 @@ class _EditPicturesState extends State<EditPictures> {
                           Flexible(
                             child: CardPicturesProfile(
                               onPressed: () {
-                                takePicture();
+                                openTakeOrPickImage(context, 0);
                               },
-                              picture: ImageAsset(
-                                imagePath: validatePicture(
-                                    profileUserDataController?.savedUserDataProfile?.data?.profilePicture,
-                                    1
-                                ),
-                              ),
+                              picture: returnPictureToCard(1),
                             ),
                           ),
                         ],
@@ -271,12 +289,7 @@ class _EditPicturesState extends State<EditPictures> {
                           Flexible(
                             child: CardPicturesProfile(
                               onPressed: () {},
-                              picture: ImageAsset(
-                                imagePath: validatePicture(
-                                    profileUserDataController?.savedUserDataProfile?.data?.profilePicture,
-                                    2
-                                ),
-                              ),
+                              picture: returnPictureToCard(2),
                             ),
                           ),
                           const SizedBox(
@@ -285,12 +298,7 @@ class _EditPicturesState extends State<EditPictures> {
                           Flexible(
                             child: CardPicturesProfile(
                               onPressed: () {},
-                              picture: ImageAsset(
-                                imagePath: validatePicture(
-                                    profileUserDataController?.savedUserDataProfile?.data?.profilePicture,
-                                    3
-                                ),
-                              ),
+                              picture: returnPictureToCard(3),
                             ),
                           ),
                         ],
@@ -304,24 +312,14 @@ class _EditPicturesState extends State<EditPictures> {
                           Flexible(
                             child: CardPicturesProfile(
                               onPressed: () {},
-                              picture: ImageAsset(
-                                imagePath: validatePicture(
-                                    profileUserDataController?.savedUserDataProfile?.data?.profilePicture,
-                                    4
-                                ),
-                              ),
+                              picture: returnPictureToCard(4),
                             ),
                           ),
                           const SizedBox(width: 10),
                           Flexible(
                             child: CardPicturesProfile(
                               onPressed: () {},
-                              picture: ImageAsset(
-                                imagePath: validatePicture(
-                                    profileUserDataController?.savedUserDataProfile?.data?.profilePicture,
-                                    5
-                                ),
-                              ),
+                              picture: returnPictureToCard(5),
                             ),
                           ),
                         ],
