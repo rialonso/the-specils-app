@@ -1,19 +1,26 @@
 
-import 'dart:collection';
 
+
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:the_specials_app/screens/edit_pictures/edit_pictures_translatt.dart';
 import 'package:the_specials_app/shared/components/card_pictures_profile/card_pictures_profile.dart';
 import 'package:the_specials_app/shared/interfaces/local_interfaces/edit_pictures_asset.dart';
+import 'package:the_specials_app/shared/interfaces/local_interfaces/edit_pictures_send_api.dart';
+import 'package:the_specials_app/shared/services/apis/consume_apis.dart';
+import 'package:the_specials_app/shared/services/functions/functions.dart';
+import 'package:the_specials_app/shared/services/functions/functions_images.dart';
+import 'package:the_specials_app/shared/state_management/logged_user_data/logged_user_data.dart';
 import 'package:the_specials_app/shared/styles/buttons.dart';
 import 'package:the_specials_app/shared/styles/colors.dart';
-import 'package:get/get.dart';
+import 'package:get/get.dart' hide FormData, MultipartFile;
 import 'package:the_specials_app/shared/state_management/user_data_profile/user_data_profile.dart';
-import 'dart:convert';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:camera/camera.dart';
+import 'package:the_specials_app/shared/values/routes.dart';
+// import 'dart:html';
 
 class EditPictures extends StatefulWidget {
   const EditPictures({Key? key}) : super(key: key);
@@ -24,6 +31,9 @@ class EditPictures extends StatefulWidget {
 
 class _EditPicturesState extends State<EditPictures> {
   final profileUserDataController = Get.put<UserDataProfileController>(UserDataProfileController());
+  final _service = ConsumeApisService();
+  final loggedUserData = Get.put<LoggedUserDataController>(LoggedUserDataController());
+
   List<ImageAsset> imagesToShow = [
     ImageAsset(imagePath: '', imageType: ''),
     ImageAsset(imagePath: '', imageType: ''),
@@ -32,28 +42,20 @@ class _EditPicturesState extends State<EditPictures> {
     ImageAsset(imagePath: '', imageType: ''),
     ImageAsset(imagePath: '', imageType: ''),
   ];
+  List<ImageToSendApi> imageToSendApi = [
+  ];
   late CameraController _controller;
   late Future<void> _initializeControllerFuture;
   late CameraDescription? camera;
-
+  FormData? formDataSaved;
 
   @override
   void initState()  {
     super.initState();
     initCamera();
-    imagesToShow = [
-      ImageAsset(imagePath: '', imageType: ''),
-      ImageAsset(imagePath: '', imageType: ''),
-      ImageAsset(imagePath: '', imageType: ''),
-      ImageAsset(imagePath: '', imageType: ''),
-      ImageAsset(imagePath: '', imageType: ''),
-      ImageAsset(imagePath: '', imageType: ''),
-    ];
-
-
   }
   initCamera() async {
-    print('beforeAvalibleCameras');
+    // print('beforeAvalibleCameras');
    await availableCameras().then((cameras) {
      final camera1 = cameras
           .where((camera) => camera.lensDirection == CameraLensDirection.back)
@@ -69,7 +71,6 @@ class _EditPicturesState extends State<EditPictures> {
     });
 
    setState(() {
-     print('afterAvalibleCameras');
     _controller = CameraController(
       // Get a specific camera from the list of available cameras.
       camera as CameraDescription,
@@ -77,7 +78,6 @@ class _EditPicturesState extends State<EditPictures> {
       ResolutionPreset.medium,
     );
      _initializeControllerFuture = _controller.initialize();
-     print('init');
    });
     // Next, initialize the controller. This returns a Future.
 
@@ -121,16 +121,56 @@ class _EditPicturesState extends State<EditPictures> {
     try {
       final image = await ImagePicker().pickImage(source: ImageSource.gallery);
       if(image == null) return;
-      final imageTemp = File(image.path);
-      setImageToShow(image, indexToSave);
+      final file = File(image.path);
+      localSetImageToShow(image, indexToSave);
+      localSetImageToSendApi(file, indexToSave);
     } on PlatformException catch(e) {
       print('Failed to pick image: $e');
     }
   }
-  setImageToShow(image, indexToSave) {
+  // List<ImageAsset> setImageToShow(image, indexToSave) {
+  //   imagesToShow?[indexToSave] = ImageAsset(imagePath: image.path, imageType: 'asset');
+  //   return imagesToShow;
+  // }
+  localSetImageToShow(image, indexToSave) {
     setState(() {
       imagesToShow?[indexToSave] = ImageAsset(imagePath: image.path, imageType: 'asset');
+      Navigator.of(context).pop();
     });
+  }
+  localSetImageToSendApi(file, indexToSave) {
+    setState(() {
+      imageToSendApi.add(ImageToSendApi(file: file, indexToSave: indexToSave));
+    });
+  }
+  sendImagesToApi() async {
+    final formData = FormData();
+    var userId = profileUserDataController.savedUserDataProfile?.data?.id;
+
+    for (ImageToSendApi imageToSend in imageToSendApi) {
+      print(imageToSend.toJson());
+      // ignore: unrelated_type_equality_checks
+      if(imageToSend.file != '') {
+        String? fileName = imageToSend.file?.path.split('/').last;
+        var formDataMap = FormData.fromMap({
+          "image[]":  await MultipartFile.fromFile(imageToSend.file?.path as String, filename:fileName),
+          "order[]": imageToSend.indexToSave,
+        });
+        await FunctionsImages().sendImagesToSave(formDataMap);
+      }
+    }
+    UserData userData = await loggedUserData.getUserData();
+    UserDataProfile user = await _service.getProfile(userData.data?.id);
+    setState(() {
+      print('');
+    });
+    loggedUserData.saveUserData(userData);
+    await profileUserDataController.saveProfileUserData(user);
+
+    // loggedUserData.saveUserData(user.data);
+    Functions().openSnackBar(context, DefaultColors.greenSoft,
+        snackBarSuccessImagesUpdate.i18n, snackBarBtnOk.i18n);
+    Navigator.pushNamed(context, RoutesApp.profile);
   }
   openTakeOrPickImage(context, indexToSave) {
     return showModalBottomSheet(
@@ -255,89 +295,105 @@ class _EditPicturesState extends State<EditPictures> {
                 Padding(
                   padding: const EdgeInsets.all(10),
                   child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      Column(
                         children: [
-                          Flexible(
-                            child: CardPicturesProfile(
-                              onPressed: () {
-                                openTakeOrPickImage(context, 0);
-                              },
-                              picture: returnPictureToCard(0),
-                              showIconAddPicture: true,
-                            ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Flexible(
+                                child: CardPicturesProfile(
+                                  onPressed: () {
+                                    openTakeOrPickImage(context, 0);
+                                  },
+                                  picture: returnPictureToCard(0),
+                                  showIconAddPicture: true,
+                                ),
+                              ),
+                              const SizedBox(
+                                width: 10,
+                              ),
+                              Flexible(
+                                child: CardPicturesProfile(
+                                  onPressed: () {
+                                    openTakeOrPickImage(context, 1);
+                                  },
+                                  picture: returnPictureToCard(1),
+                                  showIconAddPicture: true,
+                                ),
+                              ),
+                            ],
                           ),
                           const SizedBox(
-                            width: 10,
+                            height: 10,
                           ),
-                          Flexible(
-                            child: CardPicturesProfile(
-                              onPressed: () {
-                                openTakeOrPickImage(context, 1);
-                              },
-                              picture: returnPictureToCard(1),
-                              showIconAddPicture: true,
-                            ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Flexible(
+                                child: CardPicturesProfile(
+                                  onPressed: () {
+                                    openTakeOrPickImage(context, 2);
+                                  },
+                                  picture: returnPictureToCard(2),
+                                  showIconAddPicture: true,
+                                ),
+                              ),
+                              const SizedBox(
+                                width: 10,
+                              ),
+                              Flexible(
+                                child: CardPicturesProfile(
+                                  onPressed: () {
+                                    openTakeOrPickImage(context, 3);
+                                  },
+                                  picture: returnPictureToCard(3),
+                                  showIconAddPicture: true,
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Flexible(
+                                child: CardPicturesProfile(
+                                  onPressed: () {
+                                    openTakeOrPickImage(context, 4);
+                                  },
+                                  picture: returnPictureToCard(4),
+                                  showIconAddPicture: true,
+                                ),
+                              ),
+                              const SizedBox(width: 10),
+                              Flexible(
+                                child: CardPicturesProfile(
+                                  onPressed: () {
+                                    openTakeOrPickImage(context, 5);
+                                  },
+                                  picture: returnPictureToCard(5),
+                                  showIconAddPicture: true,
+                                ),
+                              ),
+                            ],
                           ),
                         ],
                       ),
                       const SizedBox(
-                        height: 10,
+                        height: 30,
                       ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Flexible(
-                            child: CardPicturesProfile(
-                              onPressed: () {
-                                openTakeOrPickImage(context, 2);
-                              },
-                              picture: returnPictureToCard(2),
-                              showIconAddPicture: true,
-                            ),
-                          ),
-                          const SizedBox(
-                            width: 10,
-                          ),
-                          Flexible(
-                            child: CardPicturesProfile(
-                              onPressed: () {
-                                openTakeOrPickImage(context, 3);
-                              },
-                              picture: returnPictureToCard(3),
-                              showIconAddPicture: true,
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Flexible(
-                            child: CardPicturesProfile(
-                              onPressed: () {
-                                openTakeOrPickImage(context, 4);
-                              },
-                              picture: returnPictureToCard(4),
-                              showIconAddPicture: true,
-                            ),
-                          ),
-                          const SizedBox(width: 10),
-                          Flexible(
-                            child: CardPicturesProfile(
-                              onPressed: () {
-                                openTakeOrPickImage(context, 5);
-                              },
-                              picture: returnPictureToCard(5),
-                              showIconAddPicture: true,
-                            ),
-                          ),
-                        ],
-                      )
+                      ButtonPrimary(onPressed: (){
+                        if(imageToSendApi.isNotEmpty) {
+                          sendImagesToApi();
+                        } else {
+                          Functions().openSnackBar(context, DefaultColors.redDefault,
+                              snackBarImagesEmpty.i18n, snackBarBtnOk.i18n);
+                        }
+                      }, texto: buttonSave.i18n)
                     ],
                   ),
                 )

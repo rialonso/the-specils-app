@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:the_specials_app/screens/edit_about_me/list_value_use_dropdown.dart';
+import 'package:the_specials_app/shared/interfaces/local_interfaces/edit_pictures_asset.dart';
 import 'package:the_specials_app/shared/interfaces/responses/response_hospitals.dart';
 import 'package:the_specials_app/shared/services/apis/consume_apis.dart';
 import 'package:the_specials_app/shared/services/factory/location_lat_lng_factory.dart';
@@ -161,5 +162,4 @@ class Functions {
     }
     return list;
   }
-
 }

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:camera/camera.dart';
 import 'package:dio/dio.dart';
 import 'package:get/get.dart' as GET;
 import 'package:the_specials_app/env/env.dart';
@@ -28,7 +29,7 @@ class ConsumeApisService {
   LikedMeController likedMeController = GET.Get.put(LikedMeController());
 
 
-  Dio dio = new Dio();
+  Dio dio = Dio();
   // final a = LoggedUserDataController();
   postLoginApi(params) async {
     Response response = await dio.post(
@@ -262,4 +263,22 @@ class ConsumeApisService {
       return likedMe;
     }
   }
+
+  postImageOrderAddAndDelete(FormData formData) async {
+    var token = await LoggedUserDataController().getToken();
+
+    // response = await dio.post("/info", data: formData);
+    // return response.data['id'];
+    Response response = await dio.post(
+        '${Env.baseURL}${Env.postImagesByOrderAddAndDelete}',
+        options: Options(headers: {
+          HttpHeaders.contentTypeHeader: Env.baseMultipartFormData,
+          HttpHeaders.acceptHeader: Env.baseApplicationJson,
+          'Authorization': 'Bearer $token',
+        }),
+        data: formData
+    );
+    print(response.statusCode);
+  }
+
 }

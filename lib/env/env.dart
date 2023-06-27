@@ -1,5 +1,7 @@
 class Env {
   static const String baseApplicationJson = 'application/json';
+  static const String baseMultipartFormData = 'multipart/form-data';
+
   static const String baseURL = 'https://apiv2.devotee.com.br/';
   static const String baseURLImage = 'https://devote-v2.s3.sa-east-1.amazonaws.com/';
   static const String login = 'api/login';
@@ -12,9 +14,13 @@ class Env {
   static const String getHospitals = 'api/hospitals';
   static const String getDrugs = 'api/drugs';
   static const String getLikedMe = 'api/liked-me';
+
   static const String webSocketURL = 'apiv2.devotee.com.br';
   static const int webSocketPort = 6001;
   static const String webSocketCluster = 'devows';
   static const String webSocketEventChat = 'new-message';
   static const String webSocketChannelChat = 'match.';
+
+  static const String postImagesByOrderAddAndDelete = 'api/user/pictures/update-by-order';
+
 }

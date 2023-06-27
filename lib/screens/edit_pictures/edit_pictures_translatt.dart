@@ -7,6 +7,11 @@ const buttonPickImage = "buttonPickImage";
 const buttonTakeImage = "buttonTakeImage";
 const buttonCancel = "buttonCancel";
 
+const snackBarSuccessImagesUpdate = "snackBarSuccessImagesUpdate";
+const snackBarErrorProfileUpdate = "snackBarErrorProfileUpdate";
+const snackBarBtnOk = "snackBarBtnOk";
+
+const snackBarImagesEmpty = "snackBarImagesEmpty";
 
 extension Localization on String {
   static const _t = Translations.from("en_us", {
@@ -29,6 +34,22 @@ extension Localization on String {
     buttonCancel: {
       "en_us": "Cancel",
       "pt_br": 'Cancelar',
+    },
+    snackBarSuccessImagesUpdate: {
+      "en_us": "Successfully saved pictures",
+      "pt_br": 'Imagens salvas com sucesso',
+    },
+    snackBarBtnOk: {
+      "en_us": "Ok",
+      "pt_br": 'Entendi',
+    },
+    snackBarErrorProfileUpdate: {
+      "en_us": "Sorry, error saving pictures",
+      "pt_br": 'Desculpe, erro ao salvar imagens',
+    },
+    snackBarImagesEmpty: {
+      "en_us": "Not image selected",
+      "pt_br": 'Nenhuma imagem selecionada',
     },
   });
 
