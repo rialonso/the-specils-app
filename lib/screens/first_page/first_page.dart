@@ -36,8 +36,8 @@ class _FirstPageState extends State<FirstPage> {
             children: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Logo(),
+                children: const [
+                  Logo(),
                 ],
               ),
               RichText(
@@ -59,7 +59,7 @@ class _FirstPageState extends State<FirstPage> {
                   ],
                 ),
               ),
-              ButtonsLoginCreate(),
+              const ButtonsLoginCreate(),
             ],
           ),
         ),

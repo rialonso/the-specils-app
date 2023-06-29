@@ -13,6 +13,7 @@ import 'package:the_specials_app/screens/liked_me/liked_me.dart';
 import 'package:the_specials_app/screens/list_persons_chats/list_persons_chats.dart';
 import 'package:the_specials_app/screens/login/login.dart';
 import 'package:the_specials_app/screens/others_profile/others_profile.dart';
+import 'package:the_specials_app/screens/pre-register/pre-register.dart';
 import 'package:the_specials_app/screens/profile/profile.dart';
 import 'package:the_specials_app/screens/suggestion_matchs/suggestion_matchs.dart';
 import 'package:the_specials_app/screens/user_configurations/user_config.dart';
@@ -74,6 +75,7 @@ class _MyAppState extends State<MyApp> {
         RoutesApp.listPersonsChats: (context) => const ListPersonsChats(),
         RoutesApp.filterPreferences: (context) => const FilterPreferences(),
         RoutesApp.editPictures: (context) => const EditPictures(),
+        RoutesApp.preRegister: (context) => const PreRegister(),
 
       },
 
