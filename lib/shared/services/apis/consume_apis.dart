@@ -280,5 +280,30 @@ class ConsumeApisService {
     );
     print(response.statusCode);
   }
+  postRegister(params) async {
+    Response response = await dio.post(
+        '${Env.baseURL}${Env.postRegister}',
+        options: Options(headers: {
+          HttpHeaders.contentTypeHeader: Env.baseApplicationJson,
+          HttpHeaders.acceptHeader: Env.baseApplicationJson
+        }),
+        data: params
+    );
+    if(response.statusCode == 200) {
+      var reponseMap = Map<String, dynamic>.from(response.data as Map);
+      var strEncoded = jsonEncode(reponseMap);
+      if(reponseMap['status']) {
+        UserDataProfile user = UserDataProfile.fromJson(response.data);
+        userDataProfileController.saveProfileUserData(user);
+        // UserData user = UserData.fromJson(response.data);
+        // // print(response.data);
+        // loggedUserDataController.saveUserData(user);
+        return user;
+      } else {
+        InvalidCredentials responseInvalidCredentials = Functions().mapInvalidCredentials(strEncoded!);
+        return responseInvalidCredentials;
+      }
+    }
+  }
 
 }

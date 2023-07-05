@@ -18,9 +18,11 @@ import 'package:the_specials_app/shared/values/routes.dart';
 import 'package:get/get.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:intl/intl.dart';
 
 class EditAboutMe extends StatefulWidget {
-  const EditAboutMe({Key? key}) : super(key: key);
+  const EditAboutMe({Key? key, this.showReturnRoute = true}) : super(key: key);
+  final bool showReturnRoute;
 
   @override
   State<EditAboutMe> createState() => _EditAboutMeState();
@@ -38,6 +40,14 @@ class _EditAboutMeState extends State<EditAboutMe> {
 
   final showLists = false.obs;
   final form = FormGroup({
+    'name': FormControl<String>(
+      validators: [Validators.required],
+    ),
+    // 'birthdate_date': FormControl<DateTime>(value: DateTime.now()),
+    'birthdate':  FormControl<String>(),
+    'birthdate_text':  FormControl<String>(),
+    'birthdate_date':  FormControl<DateTime>(value: DateTime.now()),
+
     'occupation': FormControl<String>(
       validators: [Validators.required],
     ),
@@ -105,6 +115,19 @@ class _EditAboutMeState extends State<EditAboutMe> {
   getDataSetValueForm() async {
     await profileUserDataController.getProfileUserData();
     form.value = profileUserDataController.savedUserDataProfile?.data?.toJson();
+    form.control('birthdate_date').value = DateTime.parse(profileUserDataController.savedUserDataProfile?.data?.birthdate as String);
+    form.control('birthdate').value = DateFormat('yyyy-MM-dd').format(form.control('birthdate_date').value as DateTime);
+
+    if (Localizations.localeOf(context).toString() == Languages.ptBR) {
+      form.control('birthdate_text').value = DateFormat('dd/MM/yyyy').format(form.control('birthdate_date').value as DateTime);
+    } else {
+      form.control('birthdate_text').value = DateFormat('MM/dd/yyyy').format(form.control('birthdate_date').value as DateTime);
+
+    }
+
+  }
+  formateBirthDate() {
+
   }
 
   Future<bool> getHosptalsWitCurrentLocation() async {
@@ -200,8 +223,12 @@ class _EditAboutMeState extends State<EditAboutMe> {
       newArrayValueHosptals.add(element);
     }
     // print({...form.value, 'disability': {'cids': newArrayValue}});
+    form.removeControl('birthdate_text');
+    form.removeControl('birthdate_date');
+
     var responseUpdateProfile = await _service.postUpdateProfile(userId, {
       ...form.value,
+
       'disability': {
         'cid': newArrayValueCids,
         'medical_procedures': newArrayValueMedicalProcedures,
@@ -215,7 +242,7 @@ class _EditAboutMeState extends State<EditAboutMe> {
       await profileUserDataController.getProfileUserData();
       Functions().openSnackBar(context, DefaultColors.greenSoft,
           snackBarSuccessProfileUpdate.i18n, snackBarBtnOk.i18n);
-      Navigator.popUntil(context, ModalRoute.withName(RoutesApp.profile));
+      Navigator.pushNamed(context, RoutesApp.profile);
     } else {
       Functions().openSnackBar(context, DefaultColors.redDefault,
           snackBarErrorProfileUpdate.i18n, snackBarBtnOk.i18n);
@@ -447,16 +474,18 @@ class _EditAboutMeState extends State<EditAboutMe> {
               children: [
                 Row(
                   children: [
-                    IconButton(
-                      icon: const Icon(Icons.arrow_back),
-                      padding: EdgeInsets.zero,
-                      constraints: const BoxConstraints(),
-                      color: DefaultColors.blueBrand,
-                      iconSize: 35,
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                    ),
+                    widget.showReturnRoute
+                        ? IconButton(
+                            icon: const Icon(Icons.arrow_back),
+                            padding: EdgeInsets.zero,
+                            constraints: const BoxConstraints(),
+                            color: DefaultColors.blueBrand,
+                            iconSize: 35,
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                          )
+                        : const Text(''),
                     const SizedBox(
                       width: 10,
                     ),
@@ -495,6 +524,75 @@ class _EditAboutMeState extends State<EditAboutMe> {
                                 padding: const EdgeInsets.all(10.0),
                                 child: Column(
                                   children: [
+                                    profileUserDataController.savedUserDataProfile?.data?.name ==
+                                            null
+                                        ? ReactiveTextField(
+                                            decoration: InputDecoration(
+                                              hintText: labelHitName.i18n,
+                                            ),
+                                            formControlName: 'name',
+                                            validationMessages: {
+                                                ValidationMessage.required: (_) =>
+                                                    '${labelHitName.i18n} ${requiredMsg.i18n}'
+                                              })
+                                        : const Text(''),
+                                    profileUserDataController.savedUserDataProfile?.data?.birthdate != null
+                                        ? ReactiveDatePicker(
+                                            formControlName: 'birthdate_date',
+                                            firstDate: DateTime(DateTime.now().year - 100, DateTime.now().month, DateTime.now().day),
+                                            lastDate: DateTime(DateTime.now().year - 18, DateTime.now().month, DateTime.now().day),
+                                            builder: (BuildContext context, ReactiveDatePickerDelegate<dynamic>picker, Widget? child) {
+                                              Future.delayed(Duration.zero, () async {
+                                                if (picker.value != null) {
+                                                  setState(() {
+                                                    // print();
+                                                    form.control('birthdate').value = DateFormat('yyyy-MM-dd').format(picker.value as DateTime);
+
+                                                    if (Localizations.localeOf(context).toString() == Languages.ptBR) {
+                                                      form.control('birthdate_text').value = DateFormat('dd/MM/yyyy').format(picker.value as DateTime);
+                                                    } else {
+                                                      form.control('birthdate_text').value = DateFormat('MM/dd/yyyy').format(picker.value as DateTime);
+
+                                                    }
+                                                  });
+                                                }
+                                              });
+                                              return SizedBox(
+                                                child: Row(
+                                                  children: [
+                                                    Expanded(
+                                                      child: ReactiveTextField(
+                                                          decoration: InputDecoration(
+                                                            suffixIcon: IconButton(
+                                                              onPressed: picker.showPicker,
+
+                                                              icon: const Icon(Icons.date_range),
+                                                            ),
+                                                            hintText: labelHitBirthDate.i18n,
+                                                          ),
+                                                          formControlName: 'birthdate_text',
+                                                          validationMessages: {
+                                                            ValidationMessage
+                                                                    .required:
+                                                                (_) =>
+                                                                    '${labelHitBirthDate.i18n} ${requiredMsg.i18n}'
+                                                          },
+                                                        onTap: (str) => picker.showPicker,
+                                                        readOnly: true,
+                                                          ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              );
+                                            },
+                                            // decoration: const InputDecoration(
+                                            //   labelText: 'dstt',
+                                            //   border: OutlineInputBorder(),
+                                            //   helperText: '',
+                                            //   suffixIcon: Icon(Icons.watch_later_outlined),
+                                            // ),
+                                          )
+                                        : const Text(''),
                                     ReactiveTextField(
                                         decoration: InputDecoration(
                                           hintText: labelHitOccupation.i18n,

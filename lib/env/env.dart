@@ -14,13 +14,13 @@ class Env {
   static const String getHospitals = 'api/hospitals';
   static const String getDrugs = 'api/drugs';
   static const String getLikedMe = 'api/liked-me';
+  static const String postRegister = 'api/users';
 
   static const String webSocketURL = 'apiv2.devotee.com.br';
   static const int webSocketPort = 6001;
   static const String webSocketCluster = 'devows';
   static const String webSocketEventChat = 'new-message';
   static const String webSocketChannelChat = 'match.';
-
   static const String postImagesByOrderAddAndDelete = 'api/user/pictures/update-by-order';
 
 }

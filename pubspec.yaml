@@ -55,6 +55,7 @@ dependencies:
       url: https://github.com/thijskuilman/pusher_client.git
   image_picker: ^0.8.8
   camera: ^0.10.5+2
+  reactive_date_time_picker: ^0.5.0
 dev_dependencies:
   flutter_test:
     sdk: flutter

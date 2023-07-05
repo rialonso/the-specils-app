@@ -1,9 +1,14 @@
 
 
 
+// ignore_for_file: use_build_context_synchronously
+
+import 'dart:math';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:the_specials_app/screens/edit_about_me/edit_about_me.dart';
 import 'package:the_specials_app/screens/edit_pictures/edit_pictures_translatt.dart';
 import 'package:the_specials_app/shared/components/card_pictures_profile/card_pictures_profile.dart';
 import 'package:the_specials_app/shared/interfaces/local_interfaces/edit_pictures_asset.dart';
@@ -23,8 +28,9 @@ import 'package:the_specials_app/shared/values/routes.dart';
 // import 'dart:html';
 
 class EditPictures extends StatefulWidget {
-  const EditPictures({Key? key}) : super(key: key);
-
+  const EditPictures({Key? key, this.showReturnRoute = true, this.buttonText = ''}) : super(key: key);
+  final bool showReturnRoute;
+  final String buttonText;
   @override
   State<EditPictures> createState() => _EditPicturesState();
 }
@@ -53,6 +59,12 @@ class _EditPicturesState extends State<EditPictures> {
   void initState()  {
     super.initState();
     initCamera();
+  }
+  String validateStringNotEmpty(String text) {
+    if(widget.buttonText.isNotEmpty) {
+      return widget.buttonText;
+    }
+    return text;
   }
   initCamera() async {
     // print('beforeAvalibleCameras');
@@ -96,7 +108,8 @@ class _EditPicturesState extends State<EditPictures> {
   }
 
   validatePictureNetWork(pictures, index) {
-    if(pictures.asMap().containsKey(index)) {
+    print(pictures);
+    if(pictures != null && pictures?.asMap().containsKey(index)) {
       return pictures?[index].path?.replaceAll(r"\", r"") as String;
     }
     return '';
@@ -168,9 +181,19 @@ class _EditPicturesState extends State<EditPictures> {
     await profileUserDataController.saveProfileUserData(user);
 
     // loggedUserData.saveUserData(user.data);
-    Functions().openSnackBar(context, DefaultColors.greenSoft,
-        snackBarSuccessImagesUpdate.i18n, snackBarBtnOk.i18n);
-    Navigator.pushNamed(context, RoutesApp.profile);
+    if(widget.showReturnRoute) {
+      Functions().openSnackBar(context, DefaultColors.greenSoft,
+          snackBarSuccessImagesUpdate.i18n, snackBarBtnOk.i18n);
+      Navigator.pushNamed(context, RoutesApp.profile);
+    } else {
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const EditAboutMe(showReturnRoute: false),
+          ));
+      // Navigator.pushNamed(context, RoutesApp.editAboutMe);
+    }
+
   }
   openTakeOrPickImage(context, indexToSave) {
     return showModalBottomSheet(
@@ -266,6 +289,7 @@ class _EditPicturesState extends State<EditPictures> {
               children: [
                 Row(
                   children: [
+                    widget.showReturnRoute ?
                     IconButton(
                       icon: const Icon(Icons.arrow_back),
                       padding: EdgeInsets.zero,
@@ -275,7 +299,7 @@ class _EditPicturesState extends State<EditPictures> {
                       onPressed: () {
                         Navigator.pop(context);
                       },
-                    ),
+                    ): const Text(''),
                     const SizedBox(
                       width: 10,
                     ),
@@ -393,7 +417,7 @@ class _EditPicturesState extends State<EditPictures> {
                           Functions().openSnackBar(context, DefaultColors.redDefault,
                               snackBarImagesEmpty.i18n, snackBarBtnOk.i18n);
                         }
-                      }, texto: buttonSave.i18n)
+                      }, texto: validateStringNotEmpty(buttonSave.i18n))
                     ],
                   ),
                 )

@@ -40,7 +40,12 @@ class _ProfileState extends State<Profile> {
     waitProfileUserData();
   }
 
-
+  String validateStringNotNull(String? stringToValidate) {
+    if(stringToValidate != null) {
+      return stringToValidate;
+    }
+    return '';
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -123,7 +128,7 @@ class _ProfileState extends State<Profile> {
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 Text(
-                                  '${profileUserDataController.savedUserDataProfile?.data?.name as String}, ${Functions().transformAge(profileUserDataController.savedUserDataProfile?.data?.birthdate)}',
+                                  '${validateStringNotNull(profileUserDataController?.savedUserDataProfile?.data?.name)}, ${Functions().transformAge(profileUserDataController.savedUserDataProfile?.data?.birthdate)}',
                                   style: const TextStyle(
                                     fontSize: 18,
                                     fontWeight: FontWeight.w700,

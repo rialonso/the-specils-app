@@ -6,8 +6,8 @@ const password = "password";
 const errorPassword = "errorPassword";
 const btnContinue = "btnContinue";
 const btnReturn = "btnReturn";
-const snackBarErrorSavedLogin = "snackBarErrorSavedLogin";
-const buttonSnackBarLogin = "buttonSnackBarLogin";
+const snackBarEmailUsed = "snackBarEmailUsed";
+const buttonSnackBarEmailInUse= "buttonSnackBarEmailInUse";
 const titleLoginDevotee = "titleLoginDevotee";
 const messageLoginDevotee = "messageLoginDevotee";
 
@@ -41,11 +41,11 @@ extension Localization on String {
       "en_us": "Return",
       "pt_br": "Voltar"
     },
-    snackBarErrorSavedLogin: {
-      "en_us": "Invalid credentials",
-      "pt_br": 'Credenciais inválidas',
+    snackBarEmailUsed: {
+      "en_us": "Email is in use",
+      "pt_br": "Email em uso",
     },
-    buttonSnackBarLogin: {
+    buttonSnackBarEmailInUse: {
       "en_us": "Ok",
       "pt_br": 'Entendi',
     },

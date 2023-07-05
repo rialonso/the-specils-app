@@ -2,6 +2,8 @@ import "package:i18n_extension/i18n_extension.dart";
 const editAboutMeTitle = "editAboutMeTitle";
 const labelHitOccupation = "labelHitOccupation";
 const titlePersonalInfo = "titlePersonalInfo";
+const labelHitName = "labelHitName";
+const labelHitBirthDate = "labelHitBirthDate";
 
 const requiredMsg = "requiredMsg";
 const labelHitGender = "labelHitGender";
@@ -86,6 +88,14 @@ extension Localization on String {
       "en_us": "Save",
       "pt_br": 'Salvar',
     },
+    labelHitName: {
+      "en_us": "Name",
+      "pt_br": 'Nome',
+    },
+    labelHitBirthDate: {
+      "en_us": "Birthdate",
+      "pt_br": 'Data de nascimento',
+    }
   });
 
   String get i18n => localize(this, _t);

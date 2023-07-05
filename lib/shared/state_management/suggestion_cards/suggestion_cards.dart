@@ -32,8 +32,13 @@ class SuggestionCardsController extends GetxController {
   createSuggestionCards (dynamic suggestionData) {
     List<Widget> suggestionCardsWidget = [];
     var allCards = suggestionData.data;
+    print(suggestionData.data);
+    if(allCards == null) {
+      suggestionCardsWidget.add(Text('nao tem nada'));
+      return suggestionCardsWidget;
+    }
     List<SuggestionData> cardsToShow;
-    print(allCards.removeRange(1, allCards.length));
+    print(allCards.removeRange(1, allCards?.length));
     allCards?.length >= 3
         ? cardsToShow = allCards.removeRange(1, allCards.length).cast<SuggestionData>()
         : cardsToShow = allCards;
