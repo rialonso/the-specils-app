@@ -33,7 +33,7 @@ class SuggestionCardsController extends GetxController {
     List<Widget> suggestionCardsWidget = [];
     var allCards = suggestionData.data;
     print(suggestionData.data);
-    if(allCards == null) {
+    if(allCards == null || allCards.length < 1) {
       suggestionCardsWidget.add(Text('nao tem nada'));
       return suggestionCardsWidget;
     }

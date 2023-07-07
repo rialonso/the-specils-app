@@ -39,57 +39,59 @@ class _UserConfigState extends State<UserConfig> {
               elevation: 0,
               // ...
             )),
-        body: Padding(
-          padding: const EdgeInsets.all(25.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children:  [
-             Container(
-               width: MediaQuery.of(context).size.width,
-               margin: const EdgeInsets.only(bottom: 20),
-               child: Text(
-                  settingsTitle.i18n,
-                  textDirection: TextDirection.ltr,
-                  style: const TextStyle(
-                    fontSize: 30,
-                    color: DefaultColors.greyMedium,
-                    fontWeight: FontWeight.w800,
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(25.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children:  [
+               Container(
+                 width: MediaQuery.of(context).size.width,
+                 margin: const EdgeInsets.only(bottom: 20),
+                 child: Text(
+                    settingsTitle.i18n,
+                    textDirection: TextDirection.ltr,
+                    style: const TextStyle(
+                      fontSize: 30,
+                      color: DefaultColors.greyMedium,
+                      fontWeight: FontWeight.w800,
+                    ),
                   ),
+               ),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    ButtonSettings(onPressed: () async{
+                      UserData userData = await loggedUserData.getUserData();
+                      await _service.getProfile(userData.data?.id);
+                      Navigator.pushNamed(context, RoutesApp.profile);
+                    }, text: btnSettingsUpdateProfile.i18n, icon: 'account_circle',),
+                    const SizedBox(
+                      height: 20, //<-- SEE HERE
+                    ),
+                    ButtonSettings(onPressed: (){
+                      Navigator.pushNamed(context, RoutesApp.filterPreferences);
+                    }, text: btnPreferences.i18n, icon: 'interests',),
+                    const SizedBox(
+                      height: 20, //<-- SEE HERE
+                    ),
+                    ButtonSettings(onPressed: (){
+                      Navigator.pushNamed(context, RoutesApp.changePassword);
+                    }, text: btnChangePassword.i18n, icon: 'password',),
+                    const SizedBox(
+                      height: 20, //<-- SEE HERE
+                    ),
+                    ButtonSettings(onPressed: (){
+                    StateManagementAllController().clearAll();
+                    Navigator.pushNamed(context, RoutesApp.login);
+                    }, text: btnLogout.i18n, icon: 'logout',),
+
+                  ],
                 ),
-             ),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  ButtonSettings(onPressed: () async{
-                    UserData userData = await loggedUserData.getUserData();
-                    await _service.getProfile(userData.data?.id);
-                    Navigator.pushNamed(context, RoutesApp.profile);
-                  }, text: btnSettingsUpdateProfile.i18n, icon: 'account_circle',),
-                  const SizedBox(
-                    height: 20, //<-- SEE HERE
-                  ),
-                  ButtonSettings(onPressed: (){
-                    Navigator.pushNamed(context, RoutesApp.filterPreferences);
-                  }, text: btnPreferences.i18n, icon: 'interests',),
-                  const SizedBox(
-                    height: 20, //<-- SEE HERE
-                  ),
-                  ButtonSettings(onPressed: (){
-                    Navigator.pushNamed(context, RoutesApp.changePassword);
-                  }, text: btnChangePassword.i18n, icon: 'password',),
-                  const SizedBox(
-                    height: 20, //<-- SEE HERE
-                  ),
-                  ButtonSettings(onPressed: (){
-                  StateManagementAllController().clearAll();
-                  Navigator.pushNamed(context, RoutesApp.login);
-                  }, text: btnLogout.i18n, icon: 'logout',),
+              ],
+            ),
 
-                ],
-              ),
-            ],
           ),
-
         ),
         bottomNavigationBar: const MenuLogged(routeUserConfig: true,),
       ),
