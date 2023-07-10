@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:the_specials_app/env/env.dart';
 import 'package:the_specials_app/screens/liked_me/liked_me_translate.dart';
 import 'package:the_specials_app/shared/components/menu_logged/menu_logged.dart';
+import 'package:the_specials_app/shared/components/not_load_itens/not_load_itens.dart';
 import 'package:the_specials_app/shared/interfaces/responses/response_liked_me.dart';
 import 'package:the_specials_app/shared/services/apis/consume_apis.dart';
 import 'package:the_specials_app/shared/state_management/liked_me/liked_me.dart';
@@ -16,20 +17,6 @@ class LikedMe extends StatefulWidget {
 
   @override
   State<LikedMe> createState() => _LikedMeState();
-}
-createLikedMeCards (dynamic likedMeData) {
-  List<Widget> suggestionCardsWidget = [];
-  var allCards = likedMeData.data;
-  // List<SuggestionData> cardsToShow;
-  // print(allCards.removeRange(1, allCards.length));
-  // allCards?.length >= 3
-  //     ? cardsToShow = allCards.removeRange(1, allCards.length).cast<SuggestionData>()
-  //     : cardsToShow = allCards;
-  // cardsToShow.forEach((suggestionCardData) {
-  //   return suggestionCardsWidget.add(SuggestionCards(suggestionCardsData: suggestionCardData));
-  // });
-  // saveSuggestionCardsToShow(cardsToShow);
-  // return  suggestionCardsWidget;
 }
 class _LikedMeState extends State<LikedMe> {
   final _service = ConsumeApisService();
@@ -80,6 +67,14 @@ class _LikedMeState extends State<LikedMe> {
   createLikedMeData (dynamic likedData) {
     List<Widget> suggestionCardsWidget = [];
     var allCards = likedData.data;
+    print(allCards.length);
+    if(allCards == null || allCards.length == 0) {
+      suggestionCardsWidget.add(
+          NotLoadItens(messageToShow: notLoadCardsLikedMe.i18n)
+      );
+      return  suggestionCardsWidget;
+
+    }
     allCards.forEach((likedMeCard) {
       return suggestionCardsWidget.add(
         ClipRRect(
@@ -206,7 +201,6 @@ class _LikedMeState extends State<LikedMe> {
                     ),
                   ),
                 ),
-
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: GetBuilder<LikedMeController>(
@@ -216,7 +210,7 @@ class _LikedMeState extends State<LikedMe> {
                             runSpacing: 10,
                             children: createLikedMeData(likedMeController.savedLikedMe),
                           )
-                          : Text('false')
+                          : Text('akskasksksaaskask')
                   ),
                 ),
               ],

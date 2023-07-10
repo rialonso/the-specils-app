@@ -7,7 +7,7 @@ const hours = "hours";
 const day = "day";
 const days = "days";
 const ago = "ago";
-
+const notLoadCardsLikedMe = "notLoadCardsLikedMe";
 
 
 extension Localization on String {
@@ -44,7 +44,10 @@ extension Localization on String {
       "en_us": "ago",
       "pt_br": "atrás",
     },
-
+    notLoadCardsLikedMe: {
+      "en_us": "Too bad you don't have any likes yet",
+      "pt_br": "Que pena, voce ainda nao possui nenhuma curtida",
+    }
 
   });
 
