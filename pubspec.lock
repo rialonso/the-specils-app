@@ -629,6 +629,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.8.0"
+  laravel_flutter_pusher:
+    dependency: "direct main"
+    description:
+      name: laravel_flutter_pusher
+      sha256: a83edb50e3c8b11f1e8661daef8d53fa48fe5cc7dbbff2bcc959115dbef78df6
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.4"
   lints:
     dependency: transitive
     description:
@@ -789,15 +797,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.2.2"
-  pusher_client:
-    dependency: "direct main"
-    description:
-      path: "."
-      ref: HEAD
-      resolved-ref: d95d362a74d3e0602e8959b3c8b992ec57adba24
-      url: "https://github.com/thijskuilman/pusher_client.git"
-    source: git
-    version: "2.0.0"
   quiver:
     dependency: transitive
     description:

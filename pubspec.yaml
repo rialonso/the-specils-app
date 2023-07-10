@@ -50,12 +50,10 @@ dependencies:
   geocoding: ^2.1.0
   flutter_image_slideshow: ^0.1.5
   carousel_slider: ^4.2.1
-  pusher_client:
-    git:
-      url: https://github.com/thijskuilman/pusher_client.git
   image_picker: ^0.8.8
   camera: ^0.10.5+2
   reactive_date_time_picker: ^0.5.0
+  laravel_flutter_pusher: ^0.0.4
 dev_dependencies:
   flutter_test:
     sdk: flutter
