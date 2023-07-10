@@ -59,6 +59,16 @@ class _SuggestionCardsState extends State<SuggestionCards> {
     await otherProfileUserDataController.getProfileUserData();
     Navigator.pushNamed(context, RoutesApp.othersProfiles);
   }
+  validateImageAndReturn() {
+    var profilePicture = widget?.suggestionCardsData?.profilePicture;
+    if(profilePicture!.isNotEmpty) {
+      return NetworkImage('${Env.baseURLImage}${profilePicture?[0]?.path?.replaceAll(r"\", r"")}');
+    } else {
+      return const AssetImage(
+        'assets/images/profile-picture.png',
+      );
+    }
+  }
   @override
   Widget build(BuildContext context) => ClipRRect(
     borderRadius: BorderRadius.circular(20),
@@ -68,7 +78,7 @@ class _SuggestionCardsState extends State<SuggestionCards> {
       decoration: BoxDecoration(
 
         image: DecorationImage(
-          image: NetworkImage('${Env.baseURLImage}${widget?.suggestionCardsData?.profilePicture?[0]?.path?.replaceAll(r"\", r"")}') ,
+          image:  validateImageAndReturn(),
           fit: BoxFit.cover,
           alignment: const Alignment(-0.3, 0),
         ),

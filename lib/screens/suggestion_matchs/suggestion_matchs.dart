@@ -77,12 +77,8 @@ class _SuggestionMatchsState extends State<SuggestionMatchs> {
           child: GetBuilder<SuggestionCardsController>(
             builder: (_) => (suggestionCardsController.listUpdated.value ) ?
             teste() :
-            Column(
-              children: [
-                Stack(
-                  children: suggestionCardsController.createSuggestionCards(suggestionCardsController.savedSuggestionCardsData),
-                ),
-              ],
+            Stack(
+              children: suggestionCardsController.createSuggestionCards(suggestionCardsController.savedSuggestionCardsData),
             ),
           ),
 

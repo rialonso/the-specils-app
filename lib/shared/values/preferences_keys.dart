@@ -8,5 +8,6 @@ class PreferencesKeys {
   static const userProfileData = 'USER_PROFILE_DATA';
   static const likedMe = 'LIKED_ME';
   static const otherProfileData = 'OTHER_PROFILE_DATA';
+  static const userMatches = 'USER_MATCHES';
 
 }

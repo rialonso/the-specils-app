@@ -106,7 +106,7 @@ class Data {
   String? createdAt;
   String? updatedAt;
   bool? automaticLocation;
-  Null? disabilityDescription;
+  dynamic disabilityDescription;
   String? occupation;
   String? about;
   String? addressDescription;
@@ -115,8 +115,8 @@ class Data {
   bool? prejudice;
   bool? showAge;
   bool? showDistance;
-  Null? thingsIUse;
-  Null? illicitDrugs;
+  dynamic thingsIUse;
+  dynamic illicitDrugs;
   String? relationshipType;
   String? targetAccountType;
   bool? notificationMessage;

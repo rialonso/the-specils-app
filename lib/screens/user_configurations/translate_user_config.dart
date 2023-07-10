@@ -5,6 +5,7 @@ const btnSettingsUpdateProfile = "btnSettingsUpdateProfile";
 const btnPreferences = "btnPreferences";
 const btnChangePassword = "btnChangePassword";
 const btnLogout = "btnLogout";
+const loginWeb = "loginWeb";
 
 extension Localization on String {
   static const _t = Translations.from("en_us", {
@@ -28,6 +29,10 @@ extension Localization on String {
       "en_us": "Logout",
       "pt_br": "Sair",
     },
+    loginWeb: {
+      "en_us": "Login Web",
+      "pt_br": "Login Web",
+    }
 
   });
 

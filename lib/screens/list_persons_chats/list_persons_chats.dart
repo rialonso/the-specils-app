@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:pusher_client/pusher_client.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:get/get.dart';
+import 'package:laravel_flutter_pusher/laravel_flutter_pusher.dart';
+// import 'package:pusher_client/pusher_client.dart';
 import 'package:the_specials_app/env/env.dart';
 import 'package:the_specials_app/shared/components/menu_logged/menu_logged.dart';
-import 'package:the_specials_app/shared/services/web_sockets/ws_connection_chat.dart';
+import 'package:the_specials_app/shared/interfaces/responses/response_user_matches.dart';
+import 'package:the_specials_app/shared/services/apis/consume_apis.dart';
+import 'package:the_specials_app/shared/state_management/user_matches/stm_user_matches.dart';
 import 'package:the_specials_app/shared/styles/buttons.dart';
 
 class ListPersonsChats extends StatefulWidget {
@@ -15,32 +18,53 @@ class ListPersonsChats extends StatefulWidget {
 
 class _ListPersonsChatsState extends State<ListPersonsChats> {
   bool fd = false;
+  final _service = ConsumeApisService();
+  final stmUserMatchesController = Get.put<STMUserMatchesController>(STMUserMatchesController());
+  InterfaceUserMatches? userMatches;
   getChat() {
-    var pusher = PusherClient(
-      '1hfEn3KQ0G',
-      PusherOptions(
+    var pusherOptions = PusherOptions(
         // if local on android use 10.0.2.2\
-        cluster: Env.webSocketCluster,
-        host: Env.webSocketURL,
+        cluster: Env.webSocket.cluster,
+        host: Env.webSocket.url as String,
         encrypted: true,
-        wssPort: Env.webSocketPort,
-        wsPort:  Env.webSocketPort,
-
-      ),
-      enableLogging: false,
-    );
-    var channel = pusher.subscribe('${Env.webSocketChannelChat}1234');
-    pusher.onConnectionStateChange((state) {
-      print("previousState: ${state?.previousState}, currentState: ${state?.currentState}");
+        port:  Env.webSocket.port as int,
+      );
+    LaravelFlutterPusher pusher = LaravelFlutterPusher(Env?.webSocket?.key as String, pusherOptions, enableLogging: true);
+    pusher.connect();
+    pusher
+        .subscribe('${Env.webSocket.channels?.chat}1234')
+        .bind(Env.webSocket?.events?.chat as String, (event) {
+          print(event.toString());
     });
-    print(fd);
-    pusher.onConnectionError((error) {
-      print("error: ${error?.message}");
-    });
-    channel.bind(Env.webSocketEventChat, (event) {
-      fd = true;
-      print(event);
-    });
+  }
+  waitMatchesLoad() {
+    var status = stmUserMatchesController?.savedUserMatches?.status;
+    print('list_person 41');
+    print(status);
+    if(status == false || status == null) {
+      _service.getMatches();
+      getSavedUserMatches();
+    } else {
+      getSavedUserMatches();
+    }
+  }
+  getSavedUserMatches() async {
+    await stmUserMatchesController.getUserMatches();
+    userMatches = stmUserMatchesController.savedUserMatches;
+    print('list+person 54');
+    print(userMatches);
+  }
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance
+        .addPostFrameCallback((_) => waitMatchesLoad());
+  }
+  @override
+  void didUpdateWidget(ListPersonsChats oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    waitMatchesLoad();
+    // waitGetUserData();
   }
   @override
   Widget build(BuildContext context) {

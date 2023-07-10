@@ -9,6 +9,7 @@ import 'package:the_specials_app/shared/interfaces/responses/response_drugs.dart
 import 'package:the_specials_app/shared/interfaces/responses/response_hospitals.dart';
 import 'package:the_specials_app/shared/interfaces/responses/response_liked_me.dart';
 import 'package:the_specials_app/shared/interfaces/responses/response_medical_procedures.dart';
+import 'package:the_specials_app/shared/interfaces/responses/response_user_matches.dart';
 import 'package:the_specials_app/shared/services/functions/functions.dart';
 import 'package:the_specials_app/shared/state_management/cids/cids.dart';
 import 'package:the_specials_app/shared/state_management/invalid_credentials.dart';
@@ -17,6 +18,7 @@ import 'package:the_specials_app/shared/state_management/liked_me/liked_me.dart'
 import 'package:the_specials_app/shared/state_management/other_profile_data/other_profile_data.dart';
 import 'package:the_specials_app/shared/state_management/suggestion_cards/suggestion_cards.dart';
 import 'package:the_specials_app/shared/state_management/user_data_profile/user_data_profile.dart';
+import 'package:the_specials_app/shared/state_management/user_matches/stm_user_matches.dart';
 
 import '../../state_management/logged_user_data/logged_user_data.dart';
 
@@ -25,6 +27,7 @@ class ConsumeApisService {
   LoggedUserDataController loggedUserDataController = GET.Get.put(LoggedUserDataController());
   UserDataProfileController userDataProfileController = GET.Get.put(UserDataProfileController());
   OtherProfileDataController otherProfileDataController = GET.Get.put(OtherProfileDataController());
+  STMUserMatchesController userMatchesController = GET.Get.put(STMUserMatchesController());
 
   LikedMeController likedMeController = GET.Get.put(LikedMeController());
 
@@ -304,6 +307,31 @@ class ConsumeApisService {
         return responseInvalidCredentials;
       }
     }
+  }
+  getMatches() async {
+    var token = await LoggedUserDataController().getToken();
+    try {
+      print('${Env.baseURL}${Env.getMatches}');
+      Response response = await dio.get(
+        '${Env.baseURL}${Env.getMatches}',
+        options: Options(headers: {
+          HttpHeaders.acceptHeader: Env.baseApplicationJson,
+          'Authorization': 'Bearer $token',
+        }),
+      );
+      if(response.statusCode == 200) {
+        print(response.data);
+        InterfaceUserMatches userMatches = InterfaceUserMatches.fromJson(response.data);
+        userMatchesController.saveUserMacthes(userMatches);
+        return userMatches;
+      }
+    } catch (e){
+      print(e);
+    } finally {
+
+    }
+
+
   }
 
 }

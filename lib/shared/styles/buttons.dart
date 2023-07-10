@@ -184,6 +184,7 @@ class ButtonSettings extends StatelessWidget {
               'assets/images/$icon.svg',
               width: 50,
               height: 50,
+              color: DefaultColors.blueBrand,
             ),
             const SizedBox(
               height: 10,
