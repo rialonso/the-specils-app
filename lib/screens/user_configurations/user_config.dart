@@ -82,6 +82,12 @@ class _UserConfigState extends State<UserConfig> {
                       height: 20, //<-- SEE HERE
                     ),
                     ButtonSettings(onPressed: (){
+                      Navigator.pushNamed(context, RoutesApp.changePassword);
+                    }, text: loginWeb.i18n, icon: 'qrcode-icon',),
+                    const SizedBox(
+                      height: 20, //<-- SEE HERE
+                    ),
+                    ButtonSettings(onPressed: (){
                     StateManagementAllController().clearAll();
                     Navigator.pushNamed(context, RoutesApp.login);
                     }, text: btnLogout.i18n, icon: 'logout',),
