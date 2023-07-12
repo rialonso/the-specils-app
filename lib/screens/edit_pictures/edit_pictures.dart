@@ -87,7 +87,7 @@ class _EditPicturesState extends State<EditPictures> {
       // Get a specific camera from the list of available cameras.
       camera as CameraDescription,
       // Define the resolution to use.
-      ResolutionPreset.medium,
+      ResolutionPreset.high,
     );
      _initializeControllerFuture = _controller.initialize();
    });
@@ -232,6 +232,7 @@ class _EditPicturesState extends State<EditPictures> {
                   ),
                   ButtonRigthIcon(
                     onPressed: (){
+                      takePicture();
                       // pickImage();
                     },
                     borderSide: const BorderSide(width: 0, color: Colors.transparent),

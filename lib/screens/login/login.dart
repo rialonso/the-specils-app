@@ -61,6 +61,7 @@ class _LoginState extends State<Login> {
     if(responseLogin.toJson()['status']) {
       if(responseLogin.toJson()?['data']?['account_type'] == 'special') {
         await _suggestionBloc.getSuggestionCards();
+        await _service.getMatches();
         // ignore: use_build_context_synchronously
         Navigator.push(
             context,

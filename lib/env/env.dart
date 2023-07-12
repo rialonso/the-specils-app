@@ -19,6 +19,7 @@ class Env {
   static const String getLikedMe = 'api/liked-me';
   static const String postRegister = 'api/users';
   static const String getMatches = 'api/matches';
+  static const String getMessagesMatchId = 'api/match/messages?match_id=1';
   static InterfaceWebSocket webSocket = InterfaceWebSocket(
     key: '1hfEn3KQ0G',
     url: "apiv2.devotee.com.br",

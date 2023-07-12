@@ -1,6 +1,6 @@
 class LoginFactory {
-  String email;
-  String password;
+  String? email;
+  String? password;
 
   LoginFactory({
     required this.email,

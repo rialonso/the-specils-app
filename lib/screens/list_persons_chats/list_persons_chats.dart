@@ -39,8 +39,8 @@ class _ListPersonsChatsState extends State<ListPersonsChats> {
   }
   waitMatchesLoad() {
     var status = stmUserMatchesController?.savedUserMatches?.status;
-    print('list_person 41');
-    print(status);
+    print('list_ppersons 42');
+    print(stmUserMatchesController?.savedUserMatches?.status);
     if(status == false || status == null) {
       _service.getMatches();
       getSavedUserMatches();
@@ -51,8 +51,9 @@ class _ListPersonsChatsState extends State<ListPersonsChats> {
   getSavedUserMatches() async {
     await stmUserMatchesController.getUserMatches();
     userMatches = stmUserMatchesController.savedUserMatches;
-    print('list+person 54');
-    print(userMatches);
+    stmUserMatchesController.listUpdated(true);
+    print('list_person 52');
+    print(userMatches?.toJson());
   }
   @override
   void initState() {
@@ -89,9 +90,17 @@ class _ListPersonsChatsState extends State<ListPersonsChats> {
               elevation: 0,
               // ...
             )),
-        body: ButtonPrimary(onPressed: () async{
-          getChat();
-        }, texto: 'cht'),
+        body: SingleChildScrollView(
+          child: GetBuilder<STMUserMatchesController>(
+            builder: (_) => (!stmUserMatchesController.listUpdated.value)?
+            Text('loading') :  Column(
+              children: stmUserMatchesController.createCardsMatches(userMatches),
+            ),
+
+          )
+
+
+        ),
         bottomNavigationBar:  const MenuLogged(personsChats: true),
 
     ),

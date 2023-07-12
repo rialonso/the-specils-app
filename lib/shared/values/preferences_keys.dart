@@ -9,5 +9,6 @@ class PreferencesKeys {
   static const likedMe = 'LIKED_ME';
   static const otherProfileData = 'OTHER_PROFILE_DATA';
   static const userMatches = 'USER_MATCHES';
+  static const messages = 'MESSAGES';
 
 }

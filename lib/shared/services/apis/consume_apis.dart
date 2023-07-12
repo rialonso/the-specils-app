@@ -3,12 +3,14 @@ import 'dart:io';
 
 import 'package:camera/camera.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart' as GET;
 import 'package:the_specials_app/env/env.dart';
 import 'package:the_specials_app/shared/interfaces/responses/response_drugs.dart';
 import 'package:the_specials_app/shared/interfaces/responses/response_hospitals.dart';
 import 'package:the_specials_app/shared/interfaces/responses/response_liked_me.dart';
 import 'package:the_specials_app/shared/interfaces/responses/response_medical_procedures.dart';
+import 'package:the_specials_app/shared/interfaces/responses/response_messages.dart';
 import 'package:the_specials_app/shared/interfaces/responses/response_user_matches.dart';
 import 'package:the_specials_app/shared/services/functions/functions.dart';
 import 'package:the_specials_app/shared/state_management/cids/cids.dart';
@@ -16,6 +18,7 @@ import 'package:the_specials_app/shared/state_management/invalid_credentials.dar
 import 'package:the_specials_app/shared/state_management/like_dislike/likedislike_data.dart';
 import 'package:the_specials_app/shared/state_management/liked_me/liked_me.dart';
 import 'package:the_specials_app/shared/state_management/other_profile_data/other_profile_data.dart';
+import 'package:the_specials_app/shared/state_management/stm_messages/stm_messages.dart';
 import 'package:the_specials_app/shared/state_management/suggestion_cards/suggestion_cards.dart';
 import 'package:the_specials_app/shared/state_management/user_data_profile/user_data_profile.dart';
 import 'package:the_specials_app/shared/state_management/user_matches/stm_user_matches.dart';
@@ -28,8 +31,8 @@ class ConsumeApisService {
   UserDataProfileController userDataProfileController = GET.Get.put(UserDataProfileController());
   OtherProfileDataController otherProfileDataController = GET.Get.put(OtherProfileDataController());
   STMUserMatchesController userMatchesController = GET.Get.put(STMUserMatchesController());
-
   LikedMeController likedMeController = GET.Get.put(LikedMeController());
+  STMMessagesController stmMessagesController = GET.Get.put(STMMessagesController());
 
 
   Dio dio = Dio();
@@ -44,7 +47,7 @@ class ConsumeApisService {
         data: params
     );
     if(response.statusCode == 200) {
-      var reponseMap = Map<String, dynamic>.from(response.data as Map);
+      var reponseMap = Map<dynamic, dynamic>.from(response.data as Map);
       var strEncoded = jsonEncode(reponseMap);
       if(reponseMap['status']) {
         UserData user = UserData.fromJson(response.data);
@@ -333,5 +336,24 @@ class ConsumeApisService {
 
 
   }
-
+  getMessagesMatchId({queryParameters}) async {
+    var token = await LoggedUserDataController().getToken();
+    Response response = await dio.get(
+        '${Env.baseURL}${Env.getMessagesMatchId}',
+        queryParameters: queryParameters,
+        options: Options(headers: {
+          HttpHeaders.contentTypeHeader: Env.baseApplicationJson,
+          HttpHeaders.acceptHeader: Env.baseApplicationJson,
+          'Authorization': 'Bearer $token',
+        })
+    );
+    if(response.statusCode == 200) {
+      if (kDebugMode) {
+        print(response.data);
+      }
+      InterfaceResponseMessages messages = InterfaceResponseMessages.fromJson(response.data);
+      stmMessagesController.saveMessages(messages);
+      return messages;
+    }
+  }
 }

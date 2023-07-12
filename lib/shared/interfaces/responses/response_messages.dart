@@ -1,89 +1,149 @@
-import 'dart:convert';
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:the_specials_app/shared/state_management/state_manament.dart';
-import 'package:the_specials_app/shared/values/preferences_keys.dart';
-import 'package:the_specials_app/shared/values/routes.dart';
+class InterfaceResponseMessages {
+  int? currentPage;
+  List<Data>? data;
+  String? firstPageUrl;
+  int? from;
+  int? lastPage;
+  String? lastPageUrl;
+  List<Links>? links;
+  String? nextPageUrl;
+  String? path;
+  int? perPage;
+  dynamic prevPageUrl;
+  int? to;
+  int? total;
 
-class LoggedUserDataController extends GetxController {
-  static LoggedUserDataController get to => Get.find();
-  final stateManagementAll = Get.put<StateManagementAllController>(StateManagementAllController());
-  UserData? savedUserData;
-  dynamic status = false;
-  dynamic data;
-  dynamic access_token = '';
+  InterfaceResponseMessages(
+      {this.currentPage,
+        this.data,
+        this.firstPageUrl,
+        this.from,
+        this.lastPage,
+        this.lastPageUrl,
+        this.links,
+        this.nextPageUrl,
+        this.path,
+        this.perPage,
+        this.prevPageUrl,
+        this.to,
+        this.total});
 
-  void saveData(status, data, access_token) {
-    this.status = status;
-    this.data = data;
-    this.access_token = access_token;
-    update();
-  }
-  void saveUserData(UserData userData) async{
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString(PreferencesKeys.userDataLogged, json.encode(userData.toJson()));
-  }
-  getUserData() async{
-    savedUserData = await _getSavedUserData(); // if (userData?.status == null) {
-    //   return '';
-    // }
-    // if(savedUserData?.status == true) {
-    //   stateManagementAll.clearAll();
-    //   Navigator.pushNamed(Get.key.currentContext as BuildContext, RoutesApp.login);
-    // }
-    // print(savedUserData.toJson());
-    return savedUserData;
-  }
-  getToken() async{
-    String? token = await _getToken();
-    return token;
-  }
-  Future<UserData> _getSavedUserData() async{
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? jsonUserData = prefs.getString(PreferencesKeys.userDataLogged);
-    Map<String,dynamic> mapUser = jsonDecode(jsonUserData!);
-    UserData user = UserData.fromJson(mapUser);
-    return user;
-  }
-  Future<String?> _getToken() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? jsonUserData = prefs.getString(PreferencesKeys.userDataLogged);
-    Map<String,dynamic> mapUser = jsonDecode(jsonUserData!);
-    UserData user = UserData.fromJson(mapUser);
-    return user.access_token;
-
-  }
-}
-
-class UserData {
-  bool? status;
-  Data? data;
-  String? access_token;
-
-  UserData({this.status, this.data, this.access_token});
-
-  UserData.fromJson(Map<String, dynamic> json) {
-    status = json['status'];
-    data = json['data'] != null ? Data.fromJson(json['data']) : null;
-    access_token = json['access_token'];
+  InterfaceResponseMessages.fromJson(Map<String, dynamic> json) {
+    currentPage = json['current_page'];
+    if (json['data'] != null) {
+      data = <Data>[];
+      json['data'].forEach((v) {
+        data!.add(Data.fromJson(v));
+      });
+    }
+    firstPageUrl = json['first_page_url'];
+    from = json['from'];
+    lastPage = json['last_page'];
+    lastPageUrl = json['last_page_url'];
+    if (json['links'] != null) {
+      links = <Links>[];
+      json['links'].forEach((v) {
+        links!.add(Links.fromJson(v));
+      });
+    }
+    nextPageUrl = json['next_page_url'];
+    path = json['path'];
+    perPage = json['per_page'];
+    prevPageUrl = json['prev_page_url'];
+    to = json['to'];
+    total = json['total'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['status'] = status;
+    data['current_page'] = currentPage;
     if (this.data != null) {
-      data['data'] = this.data!.toJson();
+      data['data'] = this.data!.map((v) => v.toJson()).toList();
     }
-    data['access_token'] = access_token;
+    data['first_page_url'] = firstPageUrl;
+    data['from'] = from;
+    data['last_page'] = lastPage;
+    data['last_page_url'] = lastPageUrl;
+    if (links != null) {
+      data['links'] = links!.map((v) => v.toJson()).toList();
+    }
+    data['next_page_url'] = nextPageUrl;
+    data['path'] = path;
+    data['per_page'] = perPage;
+    data['prev_page_url'] = prevPageUrl;
+    data['to'] = to;
+    data['total'] = total;
     return data;
   }
 }
 
 class Data {
   int? id;
-  String? stripeId;
-  String? subscriptionsId;
+  int? matchId;
+  int? userId;
+  int? recipientId;
+  dynamic content;
+  String? type;
+  dynamic path;
+  bool? read;
+  String? createdAt;
+  String? updatedAt;
+  dynamic audioDuration;
+  User? user;
+
+  Data(
+      {this.id,
+        this.matchId,
+        this.userId,
+        this.recipientId,
+        this.content,
+        this.type,
+        this.path,
+        this.read,
+        this.createdAt,
+        this.updatedAt,
+        this.audioDuration,
+        this.user});
+
+  Data.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    matchId = json['match_id'];
+    userId = json['user_id'];
+    recipientId = json['recipient_id'];
+    content = json['content'];
+    type = json['type'];
+    path = json['path'];
+    read = json['read'];
+    createdAt = json['created_at'];
+    updatedAt = json['updated_at'];
+    audioDuration = json['audio_duration'];
+    user = json['user'] != null ? User.fromJson(json['user']) : null;
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['match_id'] = matchId;
+    data['user_id'] = userId;
+    data['recipient_id'] = recipientId;
+    data['content'] = content;
+    data['type'] = type;
+    data['path'] = path;
+    data['read'] = read;
+    data['created_at'] = createdAt;
+    data['updated_at'] = updatedAt;
+    data['audio_duration'] = audioDuration;
+    if (user != null) {
+      data['user'] = user!.toJson();
+    }
+    return data;
+  }
+}
+
+class User {
+  int? id;
+  dynamic stripeId;
+  dynamic subscriptionsId;
   String? planType;
   String? name;
   int? active;
@@ -95,9 +155,9 @@ class Data {
   String? sexualOrientation;
   String? targetGender;
   String? type;
-  Null? emailVerifiedAt;
-  Null? oldId;
-  String? notificationToken;
+  dynamic emailVerifiedAt;
+  dynamic oldId;
+  dynamic notificationToken;
   double? lat;
   double? lng;
   int? ageMin;
@@ -106,7 +166,7 @@ class Data {
   String? createdAt;
   String? updatedAt;
   bool? automaticLocation;
-  String? disabilityDescription;
+  dynamic disabilityDescription;
   String? occupation;
   String? about;
   String? addressDescription;
@@ -115,24 +175,26 @@ class Data {
   bool? prejudice;
   bool? showAge;
   bool? showDistance;
-  String? thingsIUse;
+  dynamic thingsIUse;
   dynamic illicitDrugs;
   String? relationshipType;
   String? targetAccountType;
   bool? notificationMessage;
   bool? notificationMatch;
   bool? notificationLike;
-  String? os;
-  String? model;
-  String? osVersion;
+  dynamic os;
+  dynamic model;
+  dynamic osVersion;
   dynamic reasonCancelPlan;
   dynamic reasonCancelAccount;
   int? legacyUser;
   dynamic subscriptionOrderId;
   dynamic deletedAt;
+  String? country;
+  int? showTheSpecial;
   List<ProfilePicture>? profilePicture;
 
-  Data(
+  User(
       {this.id,
         this.stripeId,
         this.subscriptionsId,
@@ -182,9 +244,11 @@ class Data {
         this.legacyUser,
         this.subscriptionOrderId,
         this.deletedAt,
+        this.country,
+        this.showTheSpecial,
         this.profilePicture});
 
-  Data.fromJson(Map<String, dynamic> json) {
+  User.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     stripeId = json['stripe_id'];
     subscriptionsId = json['subscriptions_id'];
@@ -234,6 +298,8 @@ class Data {
     legacyUser = json['legacy_user'];
     subscriptionOrderId = json['subscription_order_id'];
     deletedAt = json['deleted_at'];
+    country = json['country'];
+    showTheSpecial = json['show_the_special'];
     if (json['profile_picture'] != null) {
       profilePicture = <ProfilePicture>[];
       json['profile_picture'].forEach((v) {
@@ -293,6 +359,8 @@ class Data {
     data['legacy_user'] = legacyUser;
     data['subscription_order_id'] = subscriptionOrderId;
     data['deleted_at'] = deletedAt;
+    data['country'] = country;
+    data['show_the_special'] = showTheSpecial;
     if (profilePicture != null) {
       data['profile_picture'] =
           profilePicture!.map((v) => v.toJson()).toList();
@@ -342,5 +410,24 @@ class ProfilePicture {
   }
 }
 
+class Links {
+  String? url;
+  String? label;
+  bool? active;
 
+  Links({this.url, this.label, this.active});
 
+  Links.fromJson(Map<String, dynamic> json) {
+    url = json['url'];
+    label = json['label'];
+    active = json['active'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['url'] = url;
+    data['label'] = label;
+    data['active'] = active;
+    return data;
+  }
+}

@@ -1,16 +1,16 @@
 
 class InterfaceUserMatches {
   bool? status;
-  List<Data>? data;
+  List<ListUserMatchesData>? data;
 
   InterfaceUserMatches({this.status, this.data});
 
   InterfaceUserMatches.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     if (json['data'] != null) {
-      data = <Data>[];
+      data = <ListUserMatchesData>[];
       json['data'].forEach((v) {
-        data!.add(Data.fromJson(v));
+        data!.add(ListUserMatchesData.fromJson(v));
       });
     }
   }
@@ -25,14 +25,14 @@ class InterfaceUserMatches {
   }
 }
 
-class Data {
+class ListUserMatchesData {
   int? matchId;
   TargetUser? targetUser;
   LatestMessage? latestMessage;
 
-  Data({this.matchId, this.targetUser, this.latestMessage});
+  ListUserMatchesData({this.matchId, this.targetUser, this.latestMessage});
 
-  Data.fromJson(Map<String, dynamic> json) {
+  ListUserMatchesData.fromJson(Map<String, dynamic> json) {
     matchId = json['match_id'];
     targetUser = json['target_user'] != null
         ? TargetUser.fromJson(json['target_user'])
@@ -44,12 +44,12 @@ class Data {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['match_id'] = this.matchId;
-    if (this.targetUser != null) {
-      data['target_user'] = this.targetUser!.toJson();
+    data['match_id'] = matchId;
+    if (targetUser != null) {
+      data['target_user'] = targetUser!.toJson();
     }
-    if (this.latestMessage != null) {
-      data['latest_message'] = this.latestMessage!.toJson();
+    if (latestMessage != null) {
+      data['latest_message'] = latestMessage!.toJson();
     }
     return data;
   }
@@ -225,60 +225,60 @@ class TargetUser {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['id'] = this.id;
-    data['stripe_id'] = this.stripeId;
-    data['subscriptions_id'] = this.subscriptionsId;
-    data['plan_type'] = this.planType;
-    data['name'] = this.name;
-    data['active'] = this.active;
-    data['email'] = this.email;
-    data['birthdate'] = this.birthdate;
-    data['account_type'] = this.accountType;
-    data['gender'] = this.gender;
-    data['show_as_gender'] = this.showAsGender;
-    data['sexual_orientation'] = this.sexualOrientation;
-    data['target_gender'] = this.targetGender;
-    data['type'] = this.type;
-    data['email_verified_at'] = this.emailVerifiedAt;
-    data['old_id'] = this.oldId;
-    data['notification_token'] = this.notificationToken;
-    data['lat'] = this.lat;
-    data['lng'] = this.lng;
-    data['age_min'] = this.ageMin;
-    data['age_max'] = this.ageMax;
-    data['max_distance'] = this.maxDistance;
-    data['created_at'] = this.createdAt;
-    data['updated_at'] = this.updatedAt;
-    data['automatic_location'] = this.automaticLocation;
-    data['disability_description'] = this.disabilityDescription;
-    data['occupation'] = this.occupation;
-    data['about'] = this.about;
-    data['address_description'] = this.addressDescription;
-    data['tiic'] = this.tiic;
-    data['show_me'] = this.showMe;
-    data['prejudice'] = this.prejudice;
-    data['show_age'] = this.showAge;
-    data['show_distance'] = this.showDistance;
-    data['things_i_use'] = this.thingsIUse;
-    data['illicit_drugs'] = this.illicitDrugs;
-    data['relationship_type'] = this.relationshipType;
-    data['target_account_type'] = this.targetAccountType;
-    data['notification_message'] = this.notificationMessage;
-    data['notification_match'] = this.notificationMatch;
-    data['notification_like'] = this.notificationLike;
-    data['os'] = this.os;
-    data['model'] = this.model;
-    data['osVersion'] = this.osVersion;
-    data['reason_cancel_plan'] = this.reasonCancelPlan;
-    data['reason_cancel_account'] = this.reasonCancelAccount;
-    data['legacy_user'] = this.legacyUser;
-    data['subscription_order_id'] = this.subscriptionOrderId;
-    data['deleted_at'] = this.deletedAt;
-    data['country'] = this.country;
-    data['show_the_special'] = this.showTheSpecial;
-    if (this.profilePicture != null) {
+    data['id'] = id;
+    data['stripe_id'] = stripeId;
+    data['subscriptions_id'] = subscriptionsId;
+    data['plan_type'] = planType;
+    data['name'] = name;
+    data['active'] = active;
+    data['email'] = email;
+    data['birthdate'] = birthdate;
+    data['account_type'] = accountType;
+    data['gender'] = gender;
+    data['show_as_gender'] = showAsGender;
+    data['sexual_orientation'] = sexualOrientation;
+    data['target_gender'] = targetGender;
+    data['type'] = type;
+    data['email_verified_at'] = emailVerifiedAt;
+    data['old_id'] = oldId;
+    data['notification_token'] = notificationToken;
+    data['lat'] = lat;
+    data['lng'] = lng;
+    data['age_min'] = ageMin;
+    data['age_max'] = ageMax;
+    data['max_distance'] = maxDistance;
+    data['created_at'] = createdAt;
+    data['updated_at'] = updatedAt;
+    data['automatic_location'] = automaticLocation;
+    data['disability_description'] = disabilityDescription;
+    data['occupation'] = occupation;
+    data['about'] = about;
+    data['address_description'] = addressDescription;
+    data['tiic'] = tiic;
+    data['show_me'] = showMe;
+    data['prejudice'] = prejudice;
+    data['show_age'] = showAge;
+    data['show_distance'] = showDistance;
+    data['things_i_use'] = thingsIUse;
+    data['illicit_drugs'] = illicitDrugs;
+    data['relationship_type'] = relationshipType;
+    data['target_account_type'] = targetAccountType;
+    data['notification_message'] = notificationMessage;
+    data['notification_match'] = notificationMatch;
+    data['notification_like'] = notificationLike;
+    data['os'] = os;
+    data['model'] = model;
+    data['osVersion'] = osVersion;
+    data['reason_cancel_plan'] = reasonCancelPlan;
+    data['reason_cancel_account'] = reasonCancelAccount;
+    data['legacy_user'] = legacyUser;
+    data['subscription_order_id'] = subscriptionOrderId;
+    data['deleted_at'] = deletedAt;
+    data['country'] = country;
+    data['show_the_special'] = showTheSpecial;
+    if (profilePicture != null) {
       data['profile_picture'] =
-          this.profilePicture!.map((v) => v.toJson()).toList();
+          profilePicture!.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -314,13 +314,13 @@ class ProfilePicture {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['id'] = this.id;
-    data['user_id'] = this.userId;
-    data['path'] = this.path;
-    data['main'] = this.main;
-    data['created_at'] = this.createdAt;
-    data['updated_at'] = this.updatedAt;
-    data['order'] = this.order;
+    data['id'] = id;
+    data['user_id'] = userId;
+    data['path'] = path;
+    data['main'] = main;
+    data['created_at'] = createdAt;
+    data['updated_at'] = updatedAt;
+    data['order'] = order;
     return data;
   }
 }
@@ -370,19 +370,19 @@ class LatestMessage {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['id'] = this.id;
-    data['match_id'] = this.matchId;
-    data['user_id'] = this.userId;
-    data['recipient_id'] = this.recipientId;
-    data['content'] = this.content;
-    data['type'] = this.type;
-    data['path'] = this.path;
-    data['read'] = this.read;
-    data['created_at'] = this.createdAt;
-    data['updated_at'] = this.updatedAt;
-    data['audio_duration'] = this.audioDuration;
-    if (this.user != null) {
-      data['user'] = this.user!.toJson();
+    data['id'] = id;
+    data['match_id'] = matchId;
+    data['user_id'] = userId;
+    data['recipient_id'] = recipientId;
+    data['content'] = content;
+    data['type'] = type;
+    data['path'] = path;
+    data['read'] = read;
+    data['created_at'] = createdAt;
+    data['updated_at'] = updatedAt;
+    data['audio_duration'] = audioDuration;
+    if (user != null) {
+      data['user'] = user!.toJson();
     }
     return data;
   }
@@ -558,60 +558,60 @@ class User {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['id'] = this.id;
-    data['stripe_id'] = this.stripeId;
-    data['subscriptions_id'] = this.subscriptionsId;
-    data['plan_type'] = this.planType;
-    data['name'] = this.name;
-    data['active'] = this.active;
-    data['email'] = this.email;
-    data['birthdate'] = this.birthdate;
-    data['account_type'] = this.accountType;
-    data['gender'] = this.gender;
-    data['show_as_gender'] = this.showAsGender;
-    data['sexual_orientation'] = this.sexualOrientation;
-    data['target_gender'] = this.targetGender;
-    data['type'] = this.type;
-    data['email_verified_at'] = this.emailVerifiedAt;
-    data['old_id'] = this.oldId;
-    data['notification_token'] = this.notificationToken;
-    data['lat'] = this.lat;
-    data['lng'] = this.lng;
-    data['age_min'] = this.ageMin;
-    data['age_max'] = this.ageMax;
-    data['max_distance'] = this.maxDistance;
-    data['created_at'] = this.createdAt;
-    data['updated_at'] = this.updatedAt;
-    data['automatic_location'] = this.automaticLocation;
-    data['disability_description'] = this.disabilityDescription;
-    data['occupation'] = this.occupation;
-    data['about'] = this.about;
-    data['address_description'] = this.addressDescription;
-    data['tiic'] = this.tiic;
-    data['show_me'] = this.showMe;
-    data['prejudice'] = this.prejudice;
-    data['show_age'] = this.showAge;
-    data['show_distance'] = this.showDistance;
-    data['things_i_use'] = this.thingsIUse;
-    data['illicit_drugs'] = this.illicitDrugs;
-    data['relationship_type'] = this.relationshipType;
-    data['target_account_type'] = this.targetAccountType;
-    data['notification_message'] = this.notificationMessage;
-    data['notification_match'] = this.notificationMatch;
-    data['notification_like'] = this.notificationLike;
-    data['os'] = this.os;
-    data['model'] = this.model;
-    data['osVersion'] = this.osVersion;
-    data['reason_cancel_plan'] = this.reasonCancelPlan;
-    data['reason_cancel_account'] = this.reasonCancelAccount;
-    data['legacy_user'] = this.legacyUser;
-    data['subscription_order_id'] = this.subscriptionOrderId;
-    data['deleted_at'] = this.deletedAt;
-    data['country'] = this.country;
-    data['show_the_special'] = this.showTheSpecial;
-    if (this.profilePicture != null) {
+    data['id'] = id;
+    data['stripe_id'] = stripeId;
+    data['subscriptions_id'] = subscriptionsId;
+    data['plan_type'] = planType;
+    data['name'] = name;
+    data['active'] = active;
+    data['email'] = email;
+    data['birthdate'] = birthdate;
+    data['account_type'] = accountType;
+    data['gender'] = gender;
+    data['show_as_gender'] = showAsGender;
+    data['sexual_orientation'] = sexualOrientation;
+    data['target_gender'] = targetGender;
+    data['type'] = type;
+    data['email_verified_at'] = emailVerifiedAt;
+    data['old_id'] = oldId;
+    data['notification_token'] = notificationToken;
+    data['lat'] = lat;
+    data['lng'] = lng;
+    data['age_min'] = ageMin;
+    data['age_max'] = ageMax;
+    data['max_distance'] = maxDistance;
+    data['created_at'] = createdAt;
+    data['updated_at'] = updatedAt;
+    data['automatic_location'] = automaticLocation;
+    data['disability_description'] = disabilityDescription;
+    data['occupation'] = occupation;
+    data['about'] = about;
+    data['address_description'] = addressDescription;
+    data['tiic'] = tiic;
+    data['show_me'] = showMe;
+    data['prejudice'] = prejudice;
+    data['show_age'] = showAge;
+    data['show_distance'] = showDistance;
+    data['things_i_use'] = thingsIUse;
+    data['illicit_drugs'] = illicitDrugs;
+    data['relationship_type'] = relationshipType;
+    data['target_account_type'] = targetAccountType;
+    data['notification_message'] = notificationMessage;
+    data['notification_match'] = notificationMatch;
+    data['notification_like'] = notificationLike;
+    data['os'] = os;
+    data['model'] = model;
+    data['osVersion'] = osVersion;
+    data['reason_cancel_plan'] = reasonCancelPlan;
+    data['reason_cancel_account'] = reasonCancelAccount;
+    data['legacy_user'] = legacyUser;
+    data['subscription_order_id'] = subscriptionOrderId;
+    data['deleted_at'] = deletedAt;
+    data['country'] = country;
+    data['show_the_special'] = showTheSpecial;
+    if (profilePicture != null) {
       data['profile_picture'] =
-          this.profilePicture!.map((v) => v.toJson()).toList();
+          profilePicture!.map((v) => v.toJson()).toList();
     }
     return data;
   }

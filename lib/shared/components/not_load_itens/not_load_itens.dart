@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 class NotLoadItens extends StatefulWidget {
-  const NotLoadItens({super.key, this.messageToShow = "Input a message to show user"});
+  const NotLoadItens({super.key, this.messageToShow = "Input a message to show user", this.iconToShow = Icons.mood_bad_outlined});
   final String messageToShow;
+  final IconData iconToShow;
   @override
   State<NotLoadItens> createState() => _NotLoadItensState();
 }
@@ -17,7 +18,7 @@ class _NotLoadItensState extends State<NotLoadItens> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Icon(
-            Icons.mood_bad_rounded,
+            widget.iconToShow,
             size: MediaQuery.of(context).size.width / 6,),
           Center(
             child: Text(

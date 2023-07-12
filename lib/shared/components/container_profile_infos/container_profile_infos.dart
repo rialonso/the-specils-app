@@ -121,6 +121,8 @@ class _ContainerProfileInfosState extends State<ContainerProfileInfos> {
           ],
         ),
       );
+    } else {
+      return Text('');
     }
 
   }
