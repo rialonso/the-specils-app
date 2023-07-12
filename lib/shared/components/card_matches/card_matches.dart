@@ -1,12 +1,17 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:laravel_flutter_pusher/laravel_flutter_pusher.dart';
 import 'package:the_specials_app/env/env.dart';
+import 'package:the_specials_app/screens/chat/chat.dart';
 import 'package:the_specials_app/shared/interfaces/responses/response_user_matches.dart';
 import 'package:the_specials_app/shared/services/apis/consume_apis.dart';
+import 'package:the_specials_app/shared/state_management/stm_messages/stm_messages.dart';
 import 'package:the_specials_app/shared/state_management/user_matches/stm_user_matches.dart';
 import 'package:the_specials_app/shared/styles/colors.dart';
+import 'package:the_specials_app/shared/values/routes.dart';
 
 class CardMatches extends StatefulWidget {
   const CardMatches({super.key, required this.match});
@@ -17,6 +22,8 @@ class CardMatches extends StatefulWidget {
 
 class _CardMatchesState extends State<CardMatches> {
   final stmUserMatchesController = Get.put<STMUserMatchesController>(STMUserMatchesController());
+  final stmMessagesController = Get.put<STMMessagesController>(STMMessagesController());
+
   final ConsumeApisService _service = ConsumeApisService();
 
   validateImageAndReturn() {
@@ -31,14 +38,19 @@ class _CardMatchesState extends State<CardMatches> {
   }
   validateTypeLastMessage() {
     if(widget.match.latestMessage?.type == 'text') {
-      return Text(
+      if(widget.match.latestMessage?.content != null) {
+        return Text(
           widget.match.latestMessage?.content as String,
-        style: const TextStyle(
-          fontSize: 20,
-          color: DefaultColors.greyMedium
-        ),
+          style: const TextStyle(
+              fontSize: 20,
+              color: DefaultColors.greyMedium
+          ),
 
-      );
+        );
+      } else {
+        return const Text('');
+      }
+
 
     }
   }
@@ -46,6 +58,7 @@ class _CardMatchesState extends State<CardMatches> {
     await _service.getMessagesMatchId(
         queryParameters: {'match_id': matchId}
     );
+
     var pusherOptions = PusherOptions(
       // if local on android use 10.0.2.2\
       cluster: Env.webSocket.cluster,
@@ -62,6 +75,8 @@ class _CardMatchesState extends State<CardMatches> {
         print(event.toString());
       }
     });
+    stmMessagesController.getMessages();
+    Navigator.pushNamed(context, RoutesApp.chat,);
   }
 
   @override

@@ -1,7 +1,11 @@
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:the_specials_app/screens/chat/translate_chat.dart';
+import 'package:the_specials_app/shared/components/messages/messages.dart';
+import 'package:the_specials_app/shared/components/not_load_itens/not_load_itens.dart';
 import 'package:the_specials_app/shared/interfaces/responses/response_messages.dart';
 import 'package:the_specials_app/shared/interfaces/responses/response_user_matches.dart';
 import 'package:the_specials_app/shared/values/preferences_keys.dart';
@@ -9,34 +13,37 @@ import 'package:the_specials_app/shared/values/preferences_keys.dart';
 class STMMessagesController extends GetxController {
   // static SuggestionCardsController get to => Get.find();
   InterfaceResponseMessages? savedMessages;
-  final listUpdated = true.obs;
+  final listUpdated = false.obs;
 
   void saveMessages(InterfaceResponseMessages suggestionCardsData) async{
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString(PreferencesKeys.messages, json.encode(suggestionCardsData.toJson()));
+    getMessages();
   }
-  getUserMatches() async{
+  getMessages() async{
     InterfaceResponseMessages savedSuggestionCards = await _getMessages();
     print('stm_messages 23');
     print(savedSuggestionCards.toJson());
     savedMessages = savedSuggestionCards;
-    listUpdated(false);
+    listUpdated(true);
     // // print(suggestionCardsController.savedSuggestionCardsData?.toJson());// print(cards);
     update();
     return savedMessages;
   }
-  // createCardsMatches(dynamic listTargetUser) {
-  //   List<Widget> cardsMatchesWidget = [];
-  //   var allCards = listTargetUser?.data;
-  //   if(allCards == null || allCards.length < 1) {
-  //     cardsMatchesWidget.add(NotLoadItens(messageToShow: notLoadItensMatches.i18n, iconToShow: Icons.chat,));
-  //     return cardsMatchesWidget;
-  //   }
-  //   allCards.forEach((targetUser) {
-  //     return cardsMatchesWidget.add(CardMatches(match: targetUser));
-  //   });
-  //   return  cardsMatchesWidget;
-  // }
+  createBaloonChat(dynamic messages) {
+    List<Widget> cardsMatchesWidget = [];
+    var allCards = messages?.data;
+    print('STM_MESSAGES 35');
+    print(messages);
+    if(allCards == null || allCards.length < 1) {
+      cardsMatchesWidget.add(NotLoadItens(messageToShow: notLoadChatMessage.i18n, iconToShow: Icons.chat,));
+      return cardsMatchesWidget;
+    }
+    allCards.forEach((message) {
+      return cardsMatchesWidget.add(Messages(messageData: message));
+    });
+    return  cardsMatchesWidget;
+  }
 
   Future<dynamic> _getMessages() async{
     SharedPreferences prefs = await SharedPreferences.getInstance();

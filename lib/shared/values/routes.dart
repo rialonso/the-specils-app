@@ -11,5 +11,6 @@ class RoutesApp {
   static const filterPreferences = '/filter-preferences';
   static const editPictures = '/edit-pictures';
   static const preRegister = '/pre-register';
+  static const chat = '/chat';
 
 }

@@ -1,6 +1,6 @@
 class InterfaceResponseMessages {
   int? currentPage;
-  List<Data>? data;
+  List<MessageData>? data;
   String? firstPageUrl;
   int? from;
   int? lastPage;
@@ -31,9 +31,9 @@ class InterfaceResponseMessages {
   InterfaceResponseMessages.fromJson(Map<String, dynamic> json) {
     currentPage = json['current_page'];
     if (json['data'] != null) {
-      data = <Data>[];
+      data = <MessageData>[];
       json['data'].forEach((v) {
-        data!.add(Data.fromJson(v));
+        data!.add(MessageData.fromJson(v));
       });
     }
     firstPageUrl = json['first_page_url'];
@@ -77,7 +77,7 @@ class InterfaceResponseMessages {
   }
 }
 
-class Data {
+class MessageData {
   int? id;
   int? matchId;
   int? userId;
@@ -91,7 +91,7 @@ class Data {
   dynamic audioDuration;
   User? user;
 
-  Data(
+  MessageData(
       {this.id,
         this.matchId,
         this.userId,
@@ -105,7 +105,7 @@ class Data {
         this.audioDuration,
         this.user});
 
-  Data.fromJson(Map<String, dynamic> json) {
+  MessageData.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     matchId = json['match_id'];
     userId = json['user_id'];

@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:the_specials_app/screens/list_persons_chats/list_persons_chat.dart';
+import 'package:the_specials_app/screens/list_persons_chats/translate_list_persons_chat.dart';
 import 'package:the_specials_app/shared/components/card_matches/card_matches.dart';
 import 'package:the_specials_app/shared/components/not_load_itens/not_load_itens.dart';
 import 'package:the_specials_app/shared/interfaces/responses/response_user_matches.dart';
