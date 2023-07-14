@@ -89,6 +89,7 @@ class ConsumeApisService {
         return response.data;
       }
     } catch (e){
+      print('consume_api 92');
       print(e);
     } finally {
       suggestionCardsController.listUpdated(false);
@@ -140,7 +141,7 @@ class ConsumeApisService {
       }
     }
   }
-  getProfile(userId) async {
+  getProfile(userId, {otherProfile = false}) async {
     try {
       print('${Env.baseURL}${Env.getProfile}$userId');
       Response response = await dio.get(
@@ -152,7 +153,9 @@ class ConsumeApisService {
       if(response.statusCode == 200) {
         print(response.data);
         UserDataProfile user = UserDataProfile.fromJson(response.data);
-        userDataProfileController.saveProfileUserData(user);
+        if(!otherProfile) {
+          userDataProfileController.saveProfileUserData(user);
+        }
         return user;
       }
     } catch (e){
@@ -323,6 +326,8 @@ class ConsumeApisService {
         }),
       );
       if(response.statusCode == 200) {
+        print('consume_api 329');
+
         print(response.data);
         InterfaceUserMatches userMatches = InterfaceUserMatches.fromJson(response.data);
         userMatchesController.saveUserMacthes(userMatches);
@@ -356,4 +361,23 @@ class ConsumeApisService {
       return messages;
     }
   }
+  postMessage(params, {queryParameters}) async {
+    var token = await LoggedUserDataController().getToken();
+
+    Response response = await dio.post(
+        '${Env.baseURL}${Env.postMessage}',
+        options: Options(headers: {
+          HttpHeaders.contentTypeHeader: Env.baseApplicationJson,
+          HttpHeaders.acceptHeader: Env.baseApplicationJson,
+          'Authorization': 'Bearer $token',
+        }),
+        queryParameters: queryParameters,
+        data: params
+    );
+    if(response.statusCode == 200) {
+      stmMessagesController.addNewMessagesPusherSubscription(MessageData.fromJson(response.data));
+    }
+    return '';
+  }
+
 }

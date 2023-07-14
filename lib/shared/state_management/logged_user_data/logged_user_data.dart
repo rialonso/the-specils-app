@@ -130,6 +130,7 @@ class Data {
   int? legacyUser;
   dynamic subscriptionOrderId;
   dynamic deletedAt;
+  bool? showTheSpecial;
   List<ProfilePicture>? profilePicture;
 
   Data(
@@ -182,6 +183,7 @@ class Data {
         this.legacyUser,
         this.subscriptionOrderId,
         this.deletedAt,
+        this.showTheSpecial,
         this.profilePicture});
 
   Data.fromJson(Map<String, dynamic> json) {
@@ -234,6 +236,7 @@ class Data {
     legacyUser = json['legacy_user'];
     subscriptionOrderId = json['subscription_order_id'];
     deletedAt = json['deleted_at'];
+    showTheSpecial = json['show_the_special'];
     if (json['profile_picture'] != null) {
       profilePicture = <ProfilePicture>[];
       json['profile_picture'].forEach((v) {
@@ -293,6 +296,7 @@ class Data {
     data['legacy_user'] = legacyUser;
     data['subscription_order_id'] = subscriptionOrderId;
     data['deleted_at'] = deletedAt;
+    data['show_the_special'] = showTheSpecial;
     if (profilePicture != null) {
       data['profile_picture'] =
           profilePicture!.map((v) => v.toJson()).toList();

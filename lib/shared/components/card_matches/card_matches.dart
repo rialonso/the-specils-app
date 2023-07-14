@@ -6,9 +6,11 @@ import 'package:get/get.dart';
 import 'package:laravel_flutter_pusher/laravel_flutter_pusher.dart';
 import 'package:the_specials_app/env/env.dart';
 import 'package:the_specials_app/screens/chat/chat.dart';
+import 'package:the_specials_app/shared/interfaces/responses/response_messages.dart';
 import 'package:the_specials_app/shared/interfaces/responses/response_user_matches.dart';
 import 'package:the_specials_app/shared/services/apis/consume_apis.dart';
 import 'package:the_specials_app/shared/state_management/stm_messages/stm_messages.dart';
+import 'package:the_specials_app/shared/state_management/user_data_profile/user_data_profile.dart';
 import 'package:the_specials_app/shared/state_management/user_matches/stm_user_matches.dart';
 import 'package:the_specials_app/shared/styles/colors.dart';
 import 'package:the_specials_app/shared/values/routes.dart';
@@ -58,7 +60,7 @@ class _CardMatchesState extends State<CardMatches> {
     await _service.getMessagesMatchId(
         queryParameters: {'match_id': matchId}
     );
-
+    UserDataProfile otherProfile  = await _service.getProfile(widget.match.targetUser?.id);
     var pusherOptions = PusherOptions(
       // if local on android use 10.0.2.2\
       cluster: Env.webSocket.cluster,
@@ -68,15 +70,22 @@ class _CardMatchesState extends State<CardMatches> {
     );
     LaravelFlutterPusher pusher = LaravelFlutterPusher(Env.webSocket.key as String, pusherOptions, enableLogging: true);
     pusher.connect();
+
+    await stmMessagesController.getMessages();
     pusher
         .subscribe('${Env.webSocket.channels?.chat}$matchId')
         .bind(Env.webSocket.events?.chat as String, (event) {
       if (kDebugMode) {
-        print(event.toString());
+        print(event['payload']);
+        
       }
+      setState(() {
+        stmMessagesController.addNewMessagesPusherSubscription(MessageData.fromJson(event['payload']));
+        stmMessagesController.update();
+      });
+
     });
-    stmMessagesController.getMessages();
-    Navigator.pushNamed(context, RoutesApp.chat,);
+    Navigator.pushNamed(context, RoutesApp.chat,arguments: {'matchData':otherProfile});
   }
 
   @override

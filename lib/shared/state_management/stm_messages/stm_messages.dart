@@ -20,6 +20,21 @@ class STMMessagesController extends GetxController {
     prefs.setString(PreferencesKeys.messages, json.encode(suggestionCardsData.toJson()));
     getMessages();
   }
+  addNewMessagesPusherSubscription(MessageData message) async{
+    listUpdated(false);
+
+    InterfaceResponseMessages savedMessagesLocal= await _getMessages();
+    savedMessagesLocal.data?.insert(0, message);
+    print('stm_messages 26');
+    print(message.toJson());
+    print(savedMessagesLocal.data?.last.toJson());
+    savedMessages = savedMessagesLocal;
+    listUpdated(true);
+
+    update();
+    return savedMessages;
+
+  }
   getMessages() async{
     InterfaceResponseMessages savedSuggestionCards = await _getMessages();
     print('stm_messages 23');
@@ -33,13 +48,13 @@ class STMMessagesController extends GetxController {
   createBaloonChat(dynamic messages) {
     List<Widget> cardsMatchesWidget = [];
     var allCards = messages?.data;
-    print('STM_MESSAGES 35');
-    print(messages);
+    // print('STM_MESSAGES 35');
+    // print(messages);
     if(allCards == null || allCards.length < 1) {
       cardsMatchesWidget.add(NotLoadItens(messageToShow: notLoadChatMessage.i18n, iconToShow: Icons.chat,));
       return cardsMatchesWidget;
     }
-    allCards.forEach((message) {
+    allCards.reversed.toList().forEach((message) {
       return cardsMatchesWidget.add(Messages(messageData: message));
     });
     return  cardsMatchesWidget;

@@ -77,7 +77,7 @@ class _MyAppState extends State<MyApp> {
         RoutesApp.filterPreferences: (context) => const FilterPreferences(),
         RoutesApp.editPictures: (context) => const EditPictures(),
         RoutesApp.preRegister: (context) => const PreRegister(),
-        RoutesApp.chat: (context) => const Chat(),
+        RoutesApp.chat: (context) => const Chat(matchData: null,),
 
       },
 

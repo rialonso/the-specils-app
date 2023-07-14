@@ -21,22 +21,7 @@ class _ListPersonsChatsState extends State<ListPersonsChats> {
   final _service = ConsumeApisService();
   final stmUserMatchesController = Get.put<STMUserMatchesController>(STMUserMatchesController());
   InterfaceUserMatches? userMatches;
-  getChat() {
-    var pusherOptions = PusherOptions(
-        // if local on android use 10.0.2.2\
-        cluster: Env.webSocket.cluster,
-        host: Env.webSocket.url as String,
-        encrypted: true,
-        port:  Env.webSocket.port as int,
-      );
-    LaravelFlutterPusher pusher = LaravelFlutterPusher(Env?.webSocket?.key as String, pusherOptions, enableLogging: true);
-    pusher.connect();
-    pusher
-        .subscribe('${Env.webSocket.channels?.chat}1234')
-        .bind(Env.webSocket?.events?.chat as String, (event) {
-          print(event.toString());
-    });
-  }
+
   waitMatchesLoad() {
     var status = stmUserMatchesController?.savedUserMatches?.status;
     print('list_ppersons 42');

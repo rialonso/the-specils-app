@@ -1,3 +1,26 @@
+import 'dart:ffi';
+
+class InterfaceResponseSendMessage {
+  Bool? status;
+  MessageData? data;
+  InterfaceResponseSendMessage(
+  {
+    this.status,
+    this.data
+  });
+  InterfaceResponseSendMessage.fromJson(Map<String, dynamic> json) {
+    status = json['status'];
+    data = json['data'];
+  }
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['status'] = status;
+    data['data'] = data;
+
+    return data;
+  }
+
+}
 class InterfaceResponseMessages {
   int? currentPage;
   List<MessageData>? data;
@@ -191,7 +214,7 @@ class User {
   dynamic subscriptionOrderId;
   dynamic deletedAt;
   String? country;
-  int? showTheSpecial;
+  bool? showTheSpecial;
   List<ProfilePicture>? profilePicture;
 
   User(
