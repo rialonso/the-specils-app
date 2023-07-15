@@ -327,11 +327,13 @@ class ConsumeApisService {
       );
       if(response.statusCode == 200) {
         print('consume_api 329');
-
         print(response.data);
         InterfaceUserMatches userMatches = InterfaceUserMatches.fromJson(response.data);
         userMatchesController.saveUserMacthes(userMatches);
-        return userMatches;
+        print('consume_api 333');
+
+        // print(userMatches.data?[1].latestMessage?.content);
+        // return userMatches;
       }
     } catch (e){
       print(e);
@@ -376,8 +378,8 @@ class ConsumeApisService {
     );
     if(response.statusCode == 200) {
       stmMessagesController.addNewMessagesPusherSubscription(MessageData.fromJson(response.data));
+      return '';
     }
-    return '';
   }
 
 }

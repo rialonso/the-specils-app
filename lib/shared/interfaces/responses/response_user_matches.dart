@@ -106,7 +106,7 @@ class TargetUser {
   dynamic subscriptionOrderId;
   dynamic deletedAt;
   String? country;
-  int? showTheSpecial;
+  bool? showTheSpecial;
   List<ProfilePicture>? profilePicture;
 
   TargetUser(
@@ -332,11 +332,11 @@ class LatestMessage {
   int? recipientId;
   String? content;
   String? type;
-  Null? path;
+  dynamic path;
   bool? read;
   String? createdAt;
   String? updatedAt;
-  Null? audioDuration;
+  dynamic audioDuration;
   User? user;
 
   LatestMessage(
@@ -403,8 +403,8 @@ class User {
   String? sexualOrientation;
   String? targetGender;
   String? type;
-  Null? emailVerifiedAt;
-  Null? oldId;
+  dynamic emailVerifiedAt;
+  dynamic oldId;
   String? notificationToken;
   double? lat;
   double? lng;
@@ -414,7 +414,7 @@ class User {
   String? createdAt;
   String? updatedAt;
   bool? automaticLocation;
-  Null? disabilityDescription;
+  dynamic disabilityDescription;
   String? occupation;
   String? about;
   String? addressDescription;
@@ -424,7 +424,7 @@ class User {
   bool? showAge;
   bool? showDistance;
   String? thingsIUse;
-  Null? illicitDrugs;
+  dynamic illicitDrugs;
   String? relationshipType;
   String? targetAccountType;
   bool? notificationMessage;
@@ -433,13 +433,13 @@ class User {
   String? os;
   String? model;
   String? osVersion;
-  Null? reasonCancelPlan;
-  Null? reasonCancelAccount;
+  dynamic reasonCancelPlan;
+  dynamic reasonCancelAccount;
   int? legacyUser;
-  Null? subscriptionOrderId;
-  Null? deletedAt;
+  dynamic subscriptionOrderId;
+  dynamic deletedAt;
   String? country;
-  int? showTheSpecial;
+  bool? showTheSpecial;
   List<ProfilePicture>? profilePicture;
 
   User(

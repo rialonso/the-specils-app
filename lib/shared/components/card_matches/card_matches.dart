@@ -41,6 +41,7 @@ class _CardMatchesState extends State<CardMatches> {
   validateTypeLastMessage() {
     if(widget.match.latestMessage?.type == 'text') {
       if(widget.match.latestMessage?.content != null) {
+        // print('card_matches 44 type content:${widget.match.latestMessage?.content}');
         return Text(
           widget.match.latestMessage?.content as String,
           style: const TextStyle(
@@ -77,13 +78,11 @@ class _CardMatchesState extends State<CardMatches> {
         .bind(Env.webSocket.events?.chat as String, (event) {
       if (kDebugMode) {
         print(event['payload']);
-        
-      }
-      setState(() {
-        stmMessagesController.addNewMessagesPusherSubscription(MessageData.fromJson(event['payload']));
-        stmMessagesController.update();
-      });
 
+      }
+      stmMessagesController.addNewMessagesPusherSubscription(MessageData.fromJson(event['payload']));
+      _service.getMatches();
+      stmMessagesController.update();
     });
     Navigator.pushNamed(context, RoutesApp.chat,arguments: {'matchData':otherProfile});
   }

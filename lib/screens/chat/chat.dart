@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:reactive_forms/reactive_forms.dart';
@@ -26,6 +28,7 @@ class _ChatState extends State<Chat> {
   });
   UserDataProfile? match;
   final _service = ConsumeApisService();
+  final ScrollController _scrollController = ScrollController();
 
   validateImageAndReturn() {
     final arguments = (ModalRoute.of(context)?.settings.arguments ?? <String, dynamic>{}) as Map;
@@ -39,9 +42,15 @@ class _ChatState extends State<Chat> {
       );
     }
   }
-  @override
 
+  @override
   Widget build(BuildContext context) {
+    scrollingMessages() {
+      _scrollController.addListener(() {
+        print('chat 48: offset${_scrollController.offset}');
+        print('chat 49: intialoffset${_scrollController.initialScrollOffset}');
+      });
+    }
     return Container(
       decoration: const BoxDecoration(
           gradient: LinearGradient(
@@ -130,6 +139,7 @@ class _ChatState extends State<Chat> {
             ),
             Expanded(
               child: SingleChildScrollView(
+                controller: _scrollController,
                 reverse: true,
                   child: GetBuilder<STMMessagesController>(
                     builder: (_) => (!_.listUpdated.value)?
@@ -173,7 +183,10 @@ class _ChatState extends State<Chat> {
                                       content: form.control('message').value,
                                       type: 'text'
                                     ), queryParameters: {'match_id': stmMessagesController.savedMessages?.data?[0].matchId});
-                                    form!.resetState({});
+                                    print('afterPostmessafe 184 in chat');
+                                    Timer(const Duration(milliseconds: 500), () {
+                                      form.control('message').value = '';
+                                    });
                                   },
                                   icon: const Icon(
                                     Icons.send_outlined,

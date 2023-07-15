@@ -18,6 +18,7 @@ class STMUserMatchesController extends GetxController {
   void saveUserMacthes(InterfaceUserMatches suggestionCardsData) async{
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString(PreferencesKeys.userMatches, json.encode(suggestionCardsData.toJson()));
+    getUserMatches();
     // print(suggestionCardsData?.data?.length);
   }
   getUserMatches() async{

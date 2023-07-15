@@ -23,6 +23,7 @@ class LoggedUserDataController extends GetxController {
   void saveUserData(UserData userData) async{
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString(PreferencesKeys.userDataLogged, json.encode(userData.toJson()));
+    getUserData();
   }
   getUserData() async{
     savedUserData = await _getSavedUserData(); // if (userData?.status == null) {
