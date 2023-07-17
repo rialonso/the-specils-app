@@ -1,3 +1,5 @@
+// ignore_for_file: library_prefixes
+
 import 'dart:convert';
 import 'dart:io';
 
@@ -37,28 +39,38 @@ class ConsumeApisService {
 
   Dio dio = Dio();
   // final a = LoggedUserDataController();
-  postLoginApi(params) async {
+  Future<Response> dioPost(String endPoint, params, {queryParameters}) async{
     Response response = await dio.post(
-      '${Env.baseURL}${Env.login}',
-      options: Options(headers: {
-        HttpHeaders.contentTypeHeader: Env.baseApplicationJson,
-        HttpHeaders.acceptHeader: Env.baseApplicationJson
-      }),
+        '${Env.baseURL}$endPoint',
+        queryParameters: queryParameters,
+        options: Options(headers: {
+          HttpHeaders.contentTypeHeader: Env.baseApplicationJson,
+          HttpHeaders.acceptHeader: Env.baseApplicationJson
+        }),
         data: params
     );
-    if(response.statusCode == 200) {
-      var reponseMap = Map<dynamic, dynamic>.from(response.data as Map);
-      var strEncoded = jsonEncode(reponseMap);
-      if(reponseMap['status']) {
-        UserData user = UserData.fromJson(response.data);
-        // print(response.data);
-        loggedUserDataController.saveUserData(user);
-        return user;
-      } else {
-        InvalidCredentials responseInvalidCredentials = Functions().mapInvalidCredentials(strEncoded!);
-        return responseInvalidCredentials;
+    return response;
+  }
+  postLoginApi(params) async {
+    Future<Response> response = dioPost(Env.login, params);
+    return response.then((response) {
+
+      if(response.statusCode == 200) {
+        var reponseMap = Map<dynamic, dynamic>.from(response.data as Map);
+        var strEncoded = jsonEncode(reponseMap);
+        if(reponseMap['status']) {
+          UserData user = UserData.fromJson(response.data);
+          // print(response.data);
+          loggedUserDataController.saveUserData(user);
+          return user;
+        } else {
+          InvalidCredentials responseInvalidCredentials = Functions().mapInvalidCredentials(strEncoded!);
+          return responseInvalidCredentials;
+        }
       }
-    }
+
+
+    });
   }
   getSuggestionCardsApi() async {
     var token = await LoggedUserDataController().getToken();
@@ -68,7 +80,7 @@ class ConsumeApisService {
         options: Options(headers: {
           HttpHeaders.contentTypeHeader: Env.baseApplicationJson,
           HttpHeaders.acceptHeader: Env.baseApplicationJson,
-          'Authorization': 'Bearer $token',
+          HttpHeaders.authorizationHeader: 'Bearer $token',
         }),
       );
 
@@ -304,9 +316,6 @@ class ConsumeApisService {
       if(reponseMap['status']) {
         UserDataProfile user = UserDataProfile.fromJson(response.data);
         userDataProfileController.saveProfileUserData(user);
-        // UserData user = UserData.fromJson(response.data);
-        // // print(response.data);
-        // loggedUserDataController.saveUserData(user);
         return user;
       } else {
         InvalidCredentials responseInvalidCredentials = Functions().mapInvalidCredentials(strEncoded!);
@@ -326,14 +335,13 @@ class ConsumeApisService {
         }),
       );
       if(response.statusCode == 200) {
-        print('consume_api 329');
-        print(response.data);
+        if (kDebugMode) {
+          print('consume_api 329 getMatches:');
+          print(response.data);
+        }
         InterfaceUserMatches userMatches = InterfaceUserMatches.fromJson(response.data);
         userMatchesController.saveUserMacthes(userMatches);
-        print('consume_api 333');
-
-        // print(userMatches.data?[1].latestMessage?.content);
-        // return userMatches;
+        return userMatches;
       }
     } catch (e){
       print(e);

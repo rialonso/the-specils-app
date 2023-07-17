@@ -7,6 +7,7 @@ import 'package:the_specials_app/env/env.dart';
 import 'package:the_specials_app/shared/services/apis/consume_apis.dart';
 import 'package:the_specials_app/shared/services/factory/send_message.dart';
 import 'package:the_specials_app/shared/services/functions/functions.dart';
+import 'package:the_specials_app/shared/state_management/other_profile_data/other_profile_data.dart';
 import 'package:the_specials_app/shared/state_management/stm_messages/stm_messages.dart';
 import 'package:the_specials_app/shared/state_management/user_data_profile/user_data_profile.dart';
 import 'package:the_specials_app/shared/styles/colors.dart';
@@ -21,6 +22,8 @@ class Chat extends StatefulWidget {
 
 class _ChatState extends State<Chat> {
   final stmMessagesController = Get.put<STMMessagesController>(STMMessagesController());
+  final otherProfileUserDataController = Get.put<OtherProfileDataController>(OtherProfileDataController());
+
   final form = FormGroup({
     'message': FormControl<String>(
       validators: [Validators.required],
@@ -29,10 +32,12 @@ class _ChatState extends State<Chat> {
   UserDataProfile? match;
   final _service = ConsumeApisService();
   final ScrollController _scrollController = ScrollController();
-
-  validateImageAndReturn() {
+  getArguments() {
     final arguments = (ModalRoute.of(context)?.settings.arguments ?? <String, dynamic>{}) as Map;
     match = UserDataProfile.fromJson(arguments['matchData'].toJson());
+  }
+  validateImageAndReturn() {
+    getArguments();
     var profilePicture = match?.data?.profilePicture;
     if(profilePicture!.isNotEmpty) {
       return NetworkImage('${Env.baseURLImage}${profilePicture[0].path?.replaceAll(r"\", r"")}');
@@ -104,34 +109,51 @@ class _ChatState extends State<Chat> {
                     const SizedBox(
                       width: 20,
                     ),
-                    Row(
-                      children: [
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(100),
-                          child: Container(
-                            width: 60,
-                            height: 60,
-                            decoration: BoxDecoration(
-                              image: DecorationImage(
-                                image: validateImageAndReturn(),
-                                fit: BoxFit.cover,
-                                alignment: const Alignment(-0.3, 0),
+                    ElevatedButton(
+                      onPressed: () async {
+
+                        int userId = match?.data?.id as int;
+                        await _service.getOtherProfile(userId);
+                        await otherProfileUserDataController.getProfileUserData();
+                        Navigator.pushNamed(context, RoutesApp.othersProfiles);
+
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.transparent,
+                        side: const BorderSide(
+                            color: Colors.transparent
+                        ),
+                        elevation: 0,
+                      ),
+                      child: Row(
+                        children: [
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(100),
+                            child: Container(
+                              width: 60,
+                              height: 60,
+                              decoration: BoxDecoration(
+                                image: DecorationImage(
+                                  image: validateImageAndReturn(),
+                                  fit: BoxFit.cover,
+                                  alignment: const Alignment(-0.3, 0),
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                        const SizedBox(
-                          width: 15,
-                        ),
-                        Text(
-                          '${match?.data?.name as String}, ${Functions().transformAge(match?.data?.birthdate)}',
-                          style: const TextStyle(
-                              color: DefaultColors.blueBrand,
-                              fontSize: 15,
-                              fontWeight: FontWeight.bold
+                          const SizedBox(
+                            width: 15,
                           ),
-                        ),
-                      ],
+                          Text(
+                            '${match?.data?.name as String}, ${Functions().transformAge(match?.data?.birthdate)}',
+                            style: const TextStyle(
+                                color: DefaultColors.blueBrand,
+                                fontSize: 15,
+                                fontWeight: FontWeight.bold
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ),
@@ -183,7 +205,6 @@ class _ChatState extends State<Chat> {
                                       content: form.control('message').value,
                                       type: 'text'
                                     ), queryParameters: {'match_id': stmMessagesController.savedMessages?.data?[0].matchId});
-                                    print('afterPostmessafe 184 in chat');
                                     Timer(const Duration(milliseconds: 500), () {
                                       form.control('message').value = '';
                                     });

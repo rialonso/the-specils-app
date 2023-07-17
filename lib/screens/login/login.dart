@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:the_specials_app/screens/login/translate_login.dart';
@@ -21,6 +23,7 @@ class Login extends StatefulWidget {
 class _LoginState extends State<Login> {
   bool _passwordVisible = true;
   final _service = ConsumeApisService();
+  final loggedUserDataController = Get.put<LoggedUserDataController>(LoggedUserDataController());
 
   final SuggestionCardsBloc _suggestionBloc = SuggestionCardsBloc();
 
@@ -58,11 +61,10 @@ class _LoginState extends State<Login> {
   Future<void> _signin(dynamic data) async {
     dynamic responseLogin = await _service.postLoginApi(LoginFactory(
         email: emailController.text, password: passwordController.text));
-    if(responseLogin.toJson()['status']) {
-      if(responseLogin.toJson()?['data']?['account_type'] == 'special') {
+    if(loggedUserDataController.savedUserData?.status as bool) {
+      if(loggedUserDataController.savedUserData?.data?.accountType == 'special') {
         await _suggestionBloc.getSuggestionCards();
         await _service.getMatches();
-        // ignore: use_build_context_synchronously
         Navigator.push(
             context,
             MaterialPageRoute(
@@ -75,10 +77,7 @@ class _LoginState extends State<Login> {
 
     } else {
       Functions().openSnackBar(context, DefaultColors.redDefault, snackBarErrorSavedLogin.i18n, buttonSnackBarLogin.i18n);
-
     }
-
-
   }
 
   TextEditingController emailController = TextEditingController();
