@@ -1,4 +1,6 @@
 PODS:
+  - audioplayers_darwin (0.0.1):
+    - Flutter
   - camera_avfoundation (0.0.1):
     - Flutter
   - CryptoSwift (0.15.0)
@@ -17,6 +19,9 @@ PODS:
   - laravel_flutter_pusher (0.0.4):
     - Flutter
     - PusherSwift (~> 7.2)
+  - path_provider_foundation (0.0.1):
+    - Flutter
+    - FlutterMacOS
   - PusherSwift (7.2.0):
     - CryptoSwift (~> 0.9)
     - ReachabilitySwift (= 4.3.0)
@@ -31,6 +36,7 @@ PODS:
   - Starscream (3.0.6)
 
 DEPENDENCIES:
+  - audioplayers_darwin (from `.symlinks/plugins/audioplayers_darwin/ios`)
   - camera_avfoundation (from `.symlinks/plugins/camera_avfoundation/ios`)
   - Flutter (from `Flutter`)
   - flutter_localization (from `.symlinks/plugins/flutter_localization/ios`)
@@ -38,6 +44,7 @@ DEPENDENCIES:
   - geolocator_apple (from `.symlinks/plugins/geolocator_apple/ios`)
   - image_picker_ios (from `.symlinks/plugins/image_picker_ios/ios`)
   - laravel_flutter_pusher (from `.symlinks/plugins/laravel_flutter_pusher/ios`)
+  - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/ios`)
   - shared_preferences_foundation (from `.symlinks/plugins/shared_preferences_foundation/ios`)
   - sqflite (from `.symlinks/plugins/sqflite/ios`)
 
@@ -50,6 +57,8 @@ SPEC REPOS:
     - Starscream
 
 EXTERNAL SOURCES:
+  audioplayers_darwin:
+    :path: ".symlinks/plugins/audioplayers_darwin/ios"
   camera_avfoundation:
     :path: ".symlinks/plugins/camera_avfoundation/ios"
   Flutter:
@@ -64,12 +73,15 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/image_picker_ios/ios"
   laravel_flutter_pusher:
     :path: ".symlinks/plugins/laravel_flutter_pusher/ios"
+  path_provider_foundation:
+    :path: ".symlinks/plugins/path_provider_foundation/ios"
   shared_preferences_foundation:
     :path: ".symlinks/plugins/shared_preferences_foundation/ios"
   sqflite:
     :path: ".symlinks/plugins/sqflite/ios"
 
 SPEC CHECKSUMS:
+  audioplayers_darwin: 877d9a4d06331c5c374595e46e16453ac7eafa40
   camera_avfoundation: 3125e8cd1a4387f6f31c6c63abb8a55892a9eeeb
   CryptoSwift: 769f58a9e89f64e8796c2e59ce5f002dc81a2438
   Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
@@ -79,6 +91,7 @@ SPEC CHECKSUMS:
   geolocator_apple: cc556e6844d508c95df1e87e3ea6fa4e58c50401
   image_picker_ios: 4a8aadfbb6dc30ad5141a2ce3832af9214a705b5
   laravel_flutter_pusher: ff759f90a32f9b3cb22ce9ad2afeb0024975725f
+  path_provider_foundation: 29f094ae23ebbca9d3d0cec13889cd9060c0e943
   PusherSwift: a5369a01e8a9106b4897e9186265af1426726062
   ReachabilitySwift: 408477d1b6ed9779dba301953171e017c31241f3
   shared_preferences_foundation: 986fc17f3d3251412d18b0265f9c64113a8c2472

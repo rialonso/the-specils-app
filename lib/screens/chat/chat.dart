@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:async';
 
 import 'package:flutter/material.dart';
@@ -116,7 +118,6 @@ class _ChatState extends State<Chat> {
                         await _service.getOtherProfile(userId);
                         await otherProfileUserDataController.getProfileUserData();
                         Navigator.pushNamed(context, RoutesApp.othersProfiles);
-
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.transparent,

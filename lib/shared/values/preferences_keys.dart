@@ -10,5 +10,6 @@ class PreferencesKeys {
   static const otherProfileData = 'OTHER_PROFILE_DATA';
   static const userMatches = 'USER_MATCHES';
   static const messages = 'MESSAGES';
+  static const playAudio = 'PLAY_AUDIO';
 
 }

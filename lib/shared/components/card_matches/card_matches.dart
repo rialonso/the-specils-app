@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:laravel_flutter_pusher/laravel_flutter_pusher.dart';
 import 'package:the_specials_app/env/env.dart';
 import 'package:the_specials_app/screens/chat/chat.dart';
+import 'package:the_specials_app/screens/list_persons_chats/translate_list_persons_chat.dart';
 import 'package:the_specials_app/shared/interfaces/responses/response_messages.dart';
 import 'package:the_specials_app/shared/interfaces/responses/response_user_matches.dart';
 import 'package:the_specials_app/shared/services/apis/consume_apis.dart';
@@ -14,6 +15,7 @@ import 'package:the_specials_app/shared/state_management/user_data_profile/user_
 import 'package:the_specials_app/shared/state_management/user_matches/stm_user_matches.dart';
 import 'package:the_specials_app/shared/styles/colors.dart';
 import 'package:the_specials_app/shared/values/routes.dart';
+import 'package:the_specials_app/shared/values/type_messages.dart';
 
 class CardMatches extends StatefulWidget {
   const CardMatches({super.key, required this.match});
@@ -39,7 +41,8 @@ class _CardMatchesState extends State<CardMatches> {
     }
   }
   validateTypeLastMessage() {
-    if(widget.match.latestMessage?.type == 'text') {
+    print('card_matches 58 messageType: ${widget.match.latestMessage?.type}');
+    if(widget.match.latestMessage?.type == TypesMessages.typeText) {
       if(widget.match.latestMessage?.content != null) {
         // print('card_matches 44 type content:${widget.match.latestMessage?.content}');
         return Text(
@@ -53,9 +56,45 @@ class _CardMatchesState extends State<CardMatches> {
       } else {
         return const Text('');
       }
-
-
+    } else if(widget.match.latestMessage?.type == TypesMessages.typeImage) {
+        return Row(
+          children: [
+            const Icon(
+                Icons.camera_alt,
+              color: DefaultColors.greyMedium,
+            ),
+            const SizedBox(
+              width: 5,
+            ),
+            Text(
+                lastMessageImage.i18n,
+                style: const TextStyle(
+                fontSize: 20,
+                color: DefaultColors.greyMedium
+            )),
+          ],
+        );
+    } else if(widget.match.latestMessage?.type == TypesMessages.typeAudio) {
+      return Row(
+        children: [
+          const Icon(
+            Icons.mic_sharp,
+            color: DefaultColors.greyMedium,
+          ),
+          const SizedBox(
+            width: 5,
+          ),
+          Text(
+              lastMessageAudio.i18n,
+              style: const TextStyle(
+                  fontSize: 20,
+                  color: DefaultColors.greyMedium
+              )),
+        ],
+      );
     }
+    return Text('');
+
   }
   getChat(matchId) async {
     await _service.getMessagesMatchId(
