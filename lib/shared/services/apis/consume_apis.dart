@@ -326,7 +326,7 @@ class ConsumeApisService {
   getMatches() async {
     var token = await LoggedUserDataController().getToken();
     try {
-      print('${Env.baseURL}${Env.getMatches}');
+      // print('${Env.baseURL}${Env.getMatches}');
       Response response = await dio.get(
         '${Env.baseURL}${Env.getMatches}',
         options: Options(headers: {
@@ -336,8 +336,8 @@ class ConsumeApisService {
       );
       if(response.statusCode == 200) {
         if (kDebugMode) {
-          print('consume_api 329 getMatches:');
-          print(response.data);
+          // print('consume_api 329 getMatches:');
+          // print(response.data);
         }
         InterfaceUserMatches userMatches = InterfaceUserMatches.fromJson(response.data);
         userMatchesController.saveUserMacthes(userMatches);
@@ -384,7 +384,7 @@ class ConsumeApisService {
         data: params
     );
     if(response.statusCode == 200) {
-      await stmMessagesController.addNewMessagesPusherSubscription(MessageData.fromJson(response.data));
+      // await stmMessage/sController.addNewMessagesPusherSubscription(MessageData.fromJson(response.data));
       return '';
     }
   }

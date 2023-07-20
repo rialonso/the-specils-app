@@ -176,7 +176,7 @@ class _MessagesState extends State<Messages> {
     );
   }
   Widget validateTypeMessage() {
-    print('messages 176 messageType: ${widget.messageData.type}');
+    // print('messages 176 messageType: ${widget.messageData.type}');
     switch (widget.messageData.type) {
       case TypesMessages.typeText:
         if(widget.messageData.content != null) {

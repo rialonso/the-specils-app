@@ -10,6 +10,7 @@ import 'package:the_specials_app/screens/list_persons_chats/translate_list_perso
 import 'package:the_specials_app/shared/interfaces/responses/response_messages.dart';
 import 'package:the_specials_app/shared/interfaces/responses/response_user_matches.dart';
 import 'package:the_specials_app/shared/services/apis/consume_apis.dart';
+import 'package:the_specials_app/shared/state_management/logged_user_data/logged_user_data.dart';
 import 'package:the_specials_app/shared/state_management/stm_messages/stm_messages.dart';
 import 'package:the_specials_app/shared/state_management/user_data_profile/user_data_profile.dart';
 import 'package:the_specials_app/shared/state_management/user_matches/stm_user_matches.dart';
@@ -27,6 +28,7 @@ class CardMatches extends StatefulWidget {
 class _CardMatchesState extends State<CardMatches> {
   final stmUserMatchesController = Get.put<STMUserMatchesController>(STMUserMatchesController());
   final stmMessagesController = Get.put<STMMessagesController>(STMMessagesController());
+  final loggedUserDataController = Get.put<LoggedUserDataController>(LoggedUserDataController());
 
   final ConsumeApisService _service = ConsumeApisService();
 
@@ -40,18 +42,38 @@ class _CardMatchesState extends State<CardMatches> {
       );
     }
   }
+  validateWhenSendMessage() {
+    if(widget.match.latestMessage?.userId == loggedUserDataController.savedUserData?.data?.id) {
+      return Text(
+          lastMessagePrefix.i18n,
+        style: const TextStyle(
+            fontSize: 20,
+            color: DefaultColors.greyMedium
+        ),
+      );
+    }
+    return const SizedBox();
+  }
   validateTypeLastMessage() {
     // print('card_matches 58 messageType: ${widget.match.latestMessage?.type}');
     if(widget.match.latestMessage?.type == TypesMessages.typeText) {
       if(widget.match.latestMessage?.content != null) {
         // print('card_matches 44 type content:${widget.match.latestMessage?.content}');
-        return Text(
-          widget.match.latestMessage?.content as String,
-          style: const TextStyle(
-              fontSize: 20,
-              color: DefaultColors.greyMedium
-          ),
+        return Row(
+          children: [
+            validateWhenSendMessage(),
+            const SizedBox(
+              width: 5,
+            ),
+            Text(
+              widget.match.latestMessage?.content as String,
+              style: const TextStyle(
+                  fontSize: 20,
+                  color: DefaultColors.greyMedium
+              ),
 
+            ),
+          ],
         );
       } else {
         return const Text('');
@@ -59,6 +81,7 @@ class _CardMatchesState extends State<CardMatches> {
     } else if(widget.match.latestMessage?.type == TypesMessages.typeImage) {
         return Row(
           children: [
+            validateWhenSendMessage(),
             const Icon(
                 Icons.camera_alt,
               color: DefaultColors.greyMedium,
@@ -77,6 +100,7 @@ class _CardMatchesState extends State<CardMatches> {
     } else if(widget.match.latestMessage?.type == TypesMessages.typeAudio) {
       return Row(
         children: [
+          validateWhenSendMessage(),
           const Icon(
             Icons.mic_sharp,
             color: DefaultColors.greyMedium,
@@ -119,7 +143,6 @@ class _CardMatchesState extends State<CardMatches> {
         print(event['payload']);
 
       }
-      await stmMessagesController.getMessages();
 
       stmMessagesController.addNewMessagesPusherSubscription(MessageData.fromJson(event['payload']));
       _service.getMatches();

@@ -23,11 +23,15 @@ class STMMessagesController extends GetxController {
   addNewMessagesPusherSubscription(MessageData message) async{
     listUpdated(false);
 
-    InterfaceResponseMessages savedMessagesLocal= await _getMessages();
-    savedMessagesLocal.data?.insert(0, message);
-    print('stm_messages 26');
-    print(message.toJson());
-    print(savedMessagesLocal.data?.last.toJson());
+    await _getMessages();
+    InterfaceResponseMessages? savedMessagesLocal = savedMessages;
+    print('STM_MESSAGES 28: ${savedMessagesLocal?.data?[0].id}');
+    savedMessagesLocal?.data?.insert(0, message);
+    print('STM_MESSAGES 30: ${savedMessagesLocal?.data?[0].id}');
+
+    // print('stm_messages 26');
+    // print(message.toJson());
+    // print(savedMessagesLocal?.data?.last.toJson());
     savedMessages = savedMessagesLocal;
     listUpdated(true);
 

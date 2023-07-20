@@ -2,6 +2,7 @@ import "package:i18n_extension/i18n_extension.dart";
 const notLoadItensMatches = "notLoadItensMatches";
 const lastMessageImage = "lastMessageImage";
 const lastMessageAudio = "lastMessageAudio";
+const lastMessagePrefix = "lastMessagePrefix";
 extension Localization on String {
   static const _t = Translations.from("en_us", {
     notLoadItensMatches: {
@@ -15,6 +16,10 @@ extension Localization on String {
     lastMessageAudio: {
       "en_us": "Audio",
       "pt_br": "Audio"
+    },
+    lastMessagePrefix: {
+      "en_us": "You:",
+      "pt_br": "Você:"
     }
   });
 
