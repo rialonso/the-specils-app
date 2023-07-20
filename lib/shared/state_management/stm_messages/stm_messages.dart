@@ -55,7 +55,7 @@ class STMMessagesController extends GetxController {
       return cardsMatchesWidget;
     }
     allCards.reversed.toList().forEach((message) {
-      return cardsMatchesWidget.add(Messages(messageData: message));
+      return cardsMatchesWidget.add(Messages(messageData: message)!);
     });
     return  cardsMatchesWidget;
   }

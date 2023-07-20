@@ -1,8 +1,10 @@
 import 'dart:convert';
 
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:the_specials_app/env/env.dart';
 import 'package:the_specials_app/screens/list_persons_chats/translate_list_persons_chat.dart';
 import 'package:the_specials_app/shared/components/card_matches/card_matches.dart';
 import 'package:the_specials_app/shared/components/not_load_itens/not_load_itens.dart';
@@ -14,20 +16,34 @@ class STMAudioController extends GetxController {
   InterfaceAudioPlay? savedAudio;
   List<dynamic>? cardsToShow;
   final listUpdated = true.obs;
+  final player = AudioPlayer();
+  bool audioPlay = false;
 
-  void saveAudioPlay(InterfaceAudioPlay playAudioAll) async{
+  saveAudioPlay(InterfaceAudioPlay playAudioAll) async{
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString(PreferencesKeys.playAudio, json.encode(playAudioAll.toJson()));
-    getAudio();
+    await getAudio();
+    return savedAudio;
     // print(suggestionCardsData?.data?.length);
   }
+  void toggleAudio() {
+    audioPlay = !audioPlay;
+  }
+  playAudio(pathAudio) async{
+    await player.play(UrlSource('${Env.baseURLImage}${pathAudio.replaceAll(r"\", r"")}'));
+    return player;
+  }
+  stopAudio() async{
+    await player.stop();
+    return player;
+  }
+
   getAudio() async{
     InterfaceAudioPlay savedSuggestionCards = await _getAudio();
-    print('stm_audio 22');
-    print(savedSuggestionCards.toJson());
+    // print('stm_audio 22');
+    // print(savedSuggestionCards.toJson());
     savedAudio = savedSuggestionCards;
-    listUpdated(false);
-    // // print(suggestionCardsController.savedSuggestionCardsData?.toJson());// print(cards);
+    listUpdated(true);
     update();
     return savedAudio;
   }
@@ -45,12 +61,12 @@ class InterfaceAudioPlay {
   InterfaceAudioPlay({this.idAudioPlay});
 
   InterfaceAudioPlay.fromJson(Map<String, dynamic> json) {
-    idAudioPlay = json['imagePath'];
+    idAudioPlay = json['idAudioPlay'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['imagePath'] = idAudioPlay;
+    data['idAudioPlay'] = idAudioPlay;
     return data;
   }
 }

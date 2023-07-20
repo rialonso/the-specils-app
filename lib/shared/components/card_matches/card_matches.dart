@@ -41,7 +41,7 @@ class _CardMatchesState extends State<CardMatches> {
     }
   }
   validateTypeLastMessage() {
-    print('card_matches 58 messageType: ${widget.match.latestMessage?.type}');
+    // print('card_matches 58 messageType: ${widget.match.latestMessage?.type}');
     if(widget.match.latestMessage?.type == TypesMessages.typeText) {
       if(widget.match.latestMessage?.content != null) {
         // print('card_matches 44 type content:${widget.match.latestMessage?.content}');
@@ -114,11 +114,13 @@ class _CardMatchesState extends State<CardMatches> {
     await stmMessagesController.getMessages();
     pusher
         .subscribe('${Env.webSocket.channels?.chat}$matchId')
-        .bind(Env.webSocket.events?.chat as String, (event) {
+        .bind(Env.webSocket.events?.chat as String, (event) async{
       if (kDebugMode) {
         print(event['payload']);
 
       }
+      await stmMessagesController.getMessages();
+
       stmMessagesController.addNewMessagesPusherSubscription(MessageData.fromJson(event['payload']));
       _service.getMatches();
       stmMessagesController.update();

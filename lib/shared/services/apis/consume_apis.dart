@@ -373,7 +373,6 @@ class ConsumeApisService {
   }
   postMessage(params, {queryParameters}) async {
     var token = await LoggedUserDataController().getToken();
-
     Response response = await dio.post(
         '${Env.baseURL}${Env.postMessage}',
         options: Options(headers: {
@@ -385,7 +384,7 @@ class ConsumeApisService {
         data: params
     );
     if(response.statusCode == 200) {
-      stmMessagesController.addNewMessagesPusherSubscription(MessageData.fromJson(response.data));
+      await stmMessagesController.addNewMessagesPusherSubscription(MessageData.fromJson(response.data));
       return '';
     }
   }

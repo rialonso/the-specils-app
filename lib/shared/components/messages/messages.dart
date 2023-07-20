@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_single_cascade_in_expression_statements
+
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -17,9 +19,10 @@ class Messages extends StatefulWidget {
 
 class _MessagesState extends State<Messages> {
   final loggedUserDataController = Get.put<LoggedUserDataController>(LoggedUserDataController());
+  final stmAudioController = Get.put<STMAudioController>(STMAudioController());
+
   final String orientationEnd = 'end';
   final String orientationStart = 'start';
-  bool _audioPlay = false;
   final player = AudioPlayer();
 
   String validateContentNotNull(String? content) {
@@ -38,6 +41,7 @@ class _MessagesState extends State<Messages> {
       );
     }
   }
+
   boxMessageWithUserIdLogged(Widget content, double borderRadius, double paddingContentMessage, orientation) {
     return SizedBox(
       width: MediaQuery.of(context).size.width,
@@ -115,52 +119,64 @@ class _MessagesState extends State<Messages> {
         orientation
     );
   }
-  void _toggleAudio() {
-    setState(() {
-      _audioPlay = !_audioPlay;
-    });
-  }
+
   returnAudioMessage(orientation) {
     return boxMessageWithUserIdLogged(
-        Row(
-          children: [
-            Column(
-              children: [
-                Row(
-                  children: [
-                    IconButton(
-                      icon: Icon(
-                        !_audioPlay ? Icons.play_arrow: Icons.stop_circle_sharp,
-                        color: Colors.white,
-                      ),
-                      onPressed: () async{
-                        print('audio play: $_audioPlay');
-                        _toggleAudio();
-                        player.stop();
-                        if(_audioPlay) {
-                          await player.play(UrlSource('${Env.baseURLImage}${widget.messageData.path.replaceAll(r"\", r"")}'));
-                        }else {
-                          await player.stop();
-                        }
+       GetBuilder<STMAudioController>(builder:
+       (_) {
+         if(_.listUpdated.value) {
+           return Row(
+             children: [
+               Column(
+                 children: [
+                   Row(
+                     children: [
+                       IconButton(
+                         icon: Icon(
+                           stmAudioController.audioPlay && stmAudioController.savedAudio?.idAudioPlay == widget.messageData.id? Icons.stop_circle_sharp: Icons.play_arrow,
+                           color: Colors.white,
+                         ),
+                         onPressed: () async{
+                           stmAudioController.toggleAudio();
+                           await stmAudioController.stopAudio();
+                           if(!stmAudioController.audioPlay && stmAudioController.savedAudio?.idAudioPlay == widget.messageData.id) {
+                             return;
+                           }
+                           await stmAudioController.saveAudioPlay(InterfaceAudioPlay(idAudioPlay: 1));
+                           if(!stmAudioController.audioPlay && stmAudioController.savedAudio?.idAudioPlay == 1) {
+                             stmAudioController.toggleAudio();
+                           }
+                           await stmAudioController.saveAudioPlay(InterfaceAudioPlay(idAudioPlay: widget.messageData.id));
+                           // print('messages 148: ${stmAudioController.audioPlay} e ${stmAudioController.savedAudio?.idAudioPlay} com ${widget.messageData.id}');
+                           if(stmAudioController.audioPlay && stmAudioController.savedAudio?.idAudioPlay == widget.messageData.id) {
+                              await stmAudioController.playAudio(widget.messageData.path);
+                              stmAudioController.player.onPlayerComplete.listen((_) {
+                                stmAudioController.saveAudioPlay(InterfaceAudioPlay(idAudioPlay: 1));
+                              });
+                           }
 
-                      },
-                      iconSize: 35,
+                         },
+                         iconSize: 35,
 
-                    ),
-                  ],
-                ),
+                       ),
+                     ],
+                   ),
 
-              ],
-            )
-          ],
-        ),
+                 ],
+               )
+             ],
+           );
+         }
+         return Text('');
+       }
+       ),
         20,
         10,
         orientation
     );
   }
   Widget validateTypeMessage() {
-    print('messages 24 messageType: ${widget.messageData.type}');
+    print('messages 176 messageType: ${widget.messageData.type}');
     switch (widget.messageData.type) {
       case TypesMessages.typeText:
         if(widget.messageData.content != null) {
@@ -176,7 +192,7 @@ class _MessagesState extends State<Messages> {
           );
         }
       case TypesMessages.typeImage:
-        print('message 119: ${loggedUserDataController.savedUserData?.data?.id}');
+        // print('message 192: ${loggedUserDataController.savedUserData?.data?.id}');
         if(widget.messageData.path != null) {
           if(widget.messageData.userId != loggedUserDataController.savedUserData?.data?.id) {
             return returnImageMessage(orientationStart);

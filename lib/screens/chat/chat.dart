@@ -206,7 +206,7 @@ class _ChatState extends State<Chat> {
                                       content: form.control('message').value,
                                       type: 'text'
                                     ), queryParameters: {'match_id': stmMessagesController.savedMessages?.data?[0].matchId});
-                                    Timer(const Duration(milliseconds: 500), () {
+                                    Timer(const Duration(milliseconds: 1000), () {
                                       form.control('message').value = '';
                                     });
                                   },
