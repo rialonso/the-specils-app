@@ -25,9 +25,9 @@ class STMMessagesController extends GetxController {
 
     await _getMessages();
     InterfaceResponseMessages? savedMessagesLocal = savedMessages;
-    print('STM_MESSAGES 28: ${savedMessagesLocal?.data?[0].id}');
+    // print('STM_MESSAGES 28: ${savedMessagesLocal?.data?[0].id}');
     savedMessagesLocal?.data?.insert(0, message);
-    print('STM_MESSAGES 30: ${savedMessagesLocal?.data?[0].id}');
+    // print('STM_MESSAGES 30: ${savedMessagesLocal?.data?[0].id}');
 
     // print('stm_messages 26');
     // print(message.toJson());
@@ -41,8 +41,8 @@ class STMMessagesController extends GetxController {
   }
   getMessages() async{
     InterfaceResponseMessages savedSuggestionCards = await _getMessages();
-    print('stm_messages 23');
-    print(savedSuggestionCards.toJson());
+    // print('stm_messages 23');
+    // print(savedSuggestionCards.toJson());
     savedMessages = savedSuggestionCards;
     listUpdated(true);
     // // print(suggestionCardsController.savedSuggestionCardsData?.toJson());// print(cards);

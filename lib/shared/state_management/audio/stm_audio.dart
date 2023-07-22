@@ -16,9 +16,15 @@ class STMAudioController extends GetxController {
   InterfaceAudioPlay? savedAudio;
   List<dynamic>? cardsToShow;
   final listUpdated = true.obs;
-  final player = AudioPlayer();
+  final AudioPlayer player = AudioPlayer();
   bool audioPlay = false;
-
+  late AnimationController controller;
+  initControllerProgressIndicator(context) {
+    controller = AnimationController(
+      vsync: context,
+      duration: const Duration(milliseconds: 5),
+    );
+  }
   saveAudioPlay(InterfaceAudioPlay playAudioAll) async{
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString(PreferencesKeys.playAudio, json.encode(playAudioAll.toJson()));
@@ -28,6 +34,8 @@ class STMAudioController extends GetxController {
   }
   void toggleAudio() {
     audioPlay = !audioPlay;
+    listUpdated(true);
+    update();
   }
   playAudio(pathAudio) async{
     await player.play(UrlSource('${Env.baseURLImage}${pathAudio.replaceAll(r"\", r"")}'));
@@ -37,7 +45,10 @@ class STMAudioController extends GetxController {
     await player.stop();
     return player;
   }
-
+  pauseAudio() async{
+    await player.pause();
+    return player;
+  }
   getAudio() async{
     InterfaceAudioPlay savedSuggestionCards = await _getAudio();
     // print('stm_audio 22');

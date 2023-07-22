@@ -53,15 +53,15 @@ class ConsumeApisService {
   }
   postLoginApi(params) async {
     Future<Response> response = dioPost(Env.login, params);
-    return response.then((response) {
+    await response.then((response) async{
 
       if(response.statusCode == 200) {
         var reponseMap = Map<dynamic, dynamic>.from(response.data as Map);
         var strEncoded = jsonEncode(reponseMap);
         if(reponseMap['status']) {
           UserData user = UserData.fromJson(response.data);
-          // print(response.data);
-          loggedUserDataController.saveUserData(user);
+          print('consume API 63: login${response.data}');
+          await loggedUserDataController.saveUserData(user);
           return user;
         } else {
           InvalidCredentials responseInvalidCredentials = Functions().mapInvalidCredentials(strEncoded!);
@@ -71,6 +71,7 @@ class ConsumeApisService {
 
 
     });
+    return 'login return';
   }
   getSuggestionCardsApi() async {
     var token = await LoggedUserDataController().getToken();

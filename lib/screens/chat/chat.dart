@@ -9,6 +9,7 @@ import 'package:the_specials_app/env/env.dart';
 import 'package:the_specials_app/shared/services/apis/consume_apis.dart';
 import 'package:the_specials_app/shared/services/factory/send_message.dart';
 import 'package:the_specials_app/shared/services/functions/functions.dart';
+import 'package:the_specials_app/shared/services/functions/functions_images.dart';
 import 'package:the_specials_app/shared/state_management/other_profile_data/other_profile_data.dart';
 import 'package:the_specials_app/shared/state_management/stm_messages/stm_messages.dart';
 import 'package:the_specials_app/shared/state_management/user_data_profile/user_data_profile.dart';
@@ -71,6 +72,8 @@ class _ChatState extends State<Chat> {
       ),
       child: Scaffold(
         backgroundColor: Colors.transparent,
+          resizeToAvoidBottomInset: true,
+
         appBar: PreferredSize(
             preferredSize: const Size.fromHeight(0.0),
             // here the desired height
@@ -175,59 +178,68 @@ class _ChatState extends State<Chat> {
 
               ),
             ),
-          ],
-        ),
-          bottomNavigationBar: ReactiveFormBuilder(
-            form: () => form,
-            builder: (context, form, child) {
-              return SizedBox(
+            ReactiveFormBuilder(
+                form: () => form,
+                builder: (context, form, child) {
+                  return SizedBox(
 
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.all(25),
-                        child: Container(
-                          height: 50,
-                          decoration: BoxDecoration(
-                              border: Border.all(color: DefaultColors.blueBrand),
-                            borderRadius: BorderRadius.circular(25)
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.only(left: 20),
-                            child: ReactiveTextField(
-                              formControlName: 'message',
-                              decoration: InputDecoration(
-                                border: InputBorder.none,
-                                suffixIcon: IconButton(
-                                  onPressed: () async {
-                                    await _service.postMessage(FactorySendMessage(
-                                      matchId: stmMessagesController.savedMessages?.data?[0].matchId,
-                                      content: form.control('message').value,
-                                      type: 'text'
-                                    ), queryParameters: {'match_id': stmMessagesController.savedMessages?.data?[0].matchId});
-                                    Timer(const Duration(milliseconds: 1000), () {
-                                      form.control('message').value = '';
-                                    });
-                                  },
-                                  icon: const Icon(
-                                    Icons.send_outlined,
-                                    color: DefaultColors.purpleBrand,
-                                  ),
-                                ),
-
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(25, 25, 5, 25),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Container(
+                              height: 50,
+                              decoration: BoxDecoration(
+                                  border: Border.all(color: DefaultColors.blueBrand),
+                                  borderRadius: BorderRadius.circular(25)
                               ),
+                              child: Padding(
+                                padding: const EdgeInsets.only(left: 20),
+                                child: ReactiveTextField(
+                                  formControlName: 'message',
+                                  decoration: InputDecoration(
+                                    border: InputBorder.none,
+                                    suffixIcon: IconButton(
+                                      onPressed: () async {
+                                        await _service.postMessage(FactorySendMessage(
+                                            matchId: stmMessagesController.savedMessages?.data?[0].matchId,
+                                            content: form.control('message').value,
+                                            type: 'text'
+                                        ), queryParameters: {'match_id': stmMessagesController.savedMessages?.data?[0].matchId});
+                                        // Timer(const Duration(milliseconds: 500), () {
+                                          form.control('message').value = '';
+                                        // });
+                                      },
+                                      icon: const Icon(
+                                        Icons.send_outlined,
+                                        color: DefaultColors.purpleBrand,
+                                      ),
+                                    ),
 
+                                  ),
+
+                                ),
+                              ),
                             ),
                           ),
-                        ),
+                          IconButton(
+                            onPressed: () async {
+                              FunctionsImages().openPickImageToSendChat(context);
+                            },
+                            icon: const Icon(
+                              Icons.attach_file,
+                              color: DefaultColors.purpleBrand,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                  ],
-                ),
-              );
-            }
-          )
+                  );
+                }
+            ),
+          ],
+        ),
       ),
     );
   }

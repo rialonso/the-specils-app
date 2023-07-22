@@ -17,14 +17,15 @@ class Messages extends StatefulWidget {
   State<Messages> createState() => _MessagesState();
 }
 
-class _MessagesState extends State<Messages> {
+class _MessagesState extends State<Messages> with TickerProviderStateMixin{
   final loggedUserDataController = Get.put<LoggedUserDataController>(LoggedUserDataController());
   final stmAudioController = Get.put<STMAudioController>(STMAudioController());
 
   final String orientationEnd = 'end';
   final String orientationStart = 'start';
   final player = AudioPlayer();
-
+  late AnimationController controller;
+  var currentPositionAudio;
   String validateContentNotNull(String? content) {
     if(content != null) {
       return content;
@@ -119,51 +120,63 @@ class _MessagesState extends State<Messages> {
         orientation
     );
   }
-
+  @override
+  void initState() {
+    super.initState();
+    controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 5),
+    )..addListener(() {
+      if (mounted) {
+        setState(() {
+          if (stmAudioController.savedAudio?.idAudioPlay !=
+              widget.messageData.id) controller.stop();
+        });
+      }
+    });
+  }
   returnAudioMessage(orientation) {
+    controller ??= AnimationController(
+        vsync: this,
+        duration: const Duration(milliseconds: 5),
+      )..addListener(() {
+      if (this.mounted) {
+        setState(() {
+          if (stmAudioController.savedAudio?.idAudioPlay != widget.messageData.id) controller.stop();
+
+        });
+      }
+      });
+
+
+
     return boxMessageWithUserIdLogged(
        GetBuilder<STMAudioController>(builder:
        (_) {
          if(_.listUpdated.value) {
            return Row(
              children: [
-               Column(
-                 children: [
-                   Row(
-                     children: [
-                       IconButton(
-                         icon: Icon(
-                           stmAudioController.audioPlay && stmAudioController.savedAudio?.idAudioPlay == widget.messageData.id? Icons.stop_circle_sharp: Icons.play_arrow,
-                           color: Colors.white,
-                         ),
-                         onPressed: () async{
-                           stmAudioController.toggleAudio();
-                           await stmAudioController.stopAudio();
-                           if(!stmAudioController.audioPlay && stmAudioController.savedAudio?.idAudioPlay == widget.messageData.id) {
-                             return;
-                           }
-                           await stmAudioController.saveAudioPlay(InterfaceAudioPlay(idAudioPlay: 1));
-                           if(!stmAudioController.audioPlay && stmAudioController.savedAudio?.idAudioPlay == 1) {
-                             stmAudioController.toggleAudio();
-                           }
-                           await stmAudioController.saveAudioPlay(InterfaceAudioPlay(idAudioPlay: widget.messageData.id));
-                           // print('messages 148: ${stmAudioController.audioPlay} e ${stmAudioController.savedAudio?.idAudioPlay} com ${widget.messageData.id}');
-                           if(stmAudioController.audioPlay && stmAudioController.savedAudio?.idAudioPlay == widget.messageData.id) {
-                              await stmAudioController.playAudio(widget.messageData.path);
-                              stmAudioController.player.onPlayerComplete.listen((_) {
-                                stmAudioController.saveAudioPlay(InterfaceAudioPlay(idAudioPlay: 1));
-                              });
-                           }
+               IconButton(
+                 icon: Icon(
+                   stmAudioController.audioPlay && stmAudioController.savedAudio?.idAudioPlay == widget.messageData.id? Icons.stop_circle_sharp: Icons.play_arrow,
+                   color: Colors.white,
+                 ),
+                 onPressed: () async{
+                   audioControllerPlayAndPause();
 
-                         },
-                         iconSize: 35,
+                 },
+                 iconSize: 35,
 
-                       ),
-                     ],
-                   ),
-
-                 ],
-               )
+               ),
+               SizedBox(
+                 width: 150,
+                 child: LinearProgressIndicator(
+                   color: Colors.white,
+                   valueColor: orientation == orientationEnd ? const AlwaysStoppedAnimation<Color>(DefaultColors.blueBrand): const AlwaysStoppedAnimation<Color>(DefaultColors.purpleBrand),
+                   value: controller.value,
+                   semanticsLabel: 'Linear progress indicator',
+                 ),
+               ),
              ],
            );
          }
@@ -174,6 +187,31 @@ class _MessagesState extends State<Messages> {
         10,
         orientation
     );
+  }
+  audioControllerPlayAndPause() async {
+    stmAudioController.toggleAudio();
+    await stmAudioController.stopAudio();
+    controller.reset();
+    if(!stmAudioController.audioPlay && stmAudioController.savedAudio?.idAudioPlay == widget.messageData.id) {
+      await stmAudioController.player.getCurrentPosition().then((value) => currentPositionAudio = value);
+      return;
+    }
+    // print('audio play true');
+    await stmAudioController.saveAudioPlay(InterfaceAudioPlay(idAudioPlay: 1));
+    if(!stmAudioController.audioPlay && stmAudioController.savedAudio?.idAudioPlay == 1) {
+      stmAudioController.toggleAudio();
+    }
+    await stmAudioController.saveAudioPlay(InterfaceAudioPlay(idAudioPlay: widget.messageData.id));
+    // print('messages 148: ${stmAudioController.audioPlay} e ${stmAudioController.savedAudio?.idAudioPlay} com ${widget.messageData.id}');
+    if(stmAudioController.audioPlay && stmAudioController.savedAudio?.idAudioPlay == widget.messageData.id) {
+      controller.repeat(period: Duration(milliseconds: widget.messageData.audioDuration));
+      await stmAudioController.playAudio(widget.messageData.path);
+      stmAudioController.player.onPlayerComplete.listen((_) {
+        if (mounted) controller.reset();
+        currentPositionAudio = const Duration(seconds: 0);
+        stmAudioController.saveAudioPlay(InterfaceAudioPlay(idAudioPlay: 1));
+      });
+    }
   }
   Widget validateTypeMessage() {
     // print('messages 176 messageType: ${widget.messageData.type}');
@@ -241,6 +279,7 @@ class _MessagesState extends State<Messages> {
   @override
   void dispose() {
     player.dispose();
+    if(controller == null) controller.dispose();
     super.dispose();
   }
   @override
