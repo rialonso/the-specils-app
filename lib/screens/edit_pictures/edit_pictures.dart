@@ -8,6 +8,7 @@ import 'dart:math';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:the_specials_app/screens/camera_preview/camera_preview.dart';
 import 'package:the_specials_app/screens/edit_about_me/edit_about_me.dart';
 import 'package:the_specials_app/screens/edit_pictures/edit_pictures_translatt.dart';
 import 'package:the_specials_app/shared/components/card_pictures_profile/card_pictures_profile.dart';
@@ -50,15 +51,12 @@ class _EditPicturesState extends State<EditPictures> {
   ];
   List<ImageToSendApi> imageToSendApi = [
   ];
-  late CameraController _controller;
-  late Future<void> _initializeControllerFuture;
-  late CameraDescription? camera;
+
   FormData? formDataSaved;
 
   @override
   void initState()  {
     super.initState();
-    initCamera();
   }
   String validateStringNotEmpty(String text) {
     if(widget.buttonText.isNotEmpty) {
@@ -66,46 +64,7 @@ class _EditPicturesState extends State<EditPictures> {
     }
     return text;
   }
-  initCamera() async {
-    // print('beforeAvalibleCameras');
-   await availableCameras().then((cameras) {
-     final camera1 = cameras
-          .where((camera) => camera.lensDirection == CameraLensDirection.back)
-          .toList()
-          .first;
 
-      setState(() {
-        print(camera1);
-        camera = camera1;
-      });
-    }).catchError((err) {
-      print(err);
-    });
-
-   setState(() {
-    _controller = CameraController(
-      // Get a specific camera from the list of available cameras.
-      camera as CameraDescription,
-      // Define the resolution to use.
-      ResolutionPreset.high,
-    );
-     _initializeControllerFuture = _controller.initialize();
-   });
-    // Next, initialize the controller. This returns a Future.
-
-  }
-  Future<XFile?> takePicture() async {
-    if (_controller.value.isTakingPicture) {
-      return null;
-    }
-    try {
-      XFile file = await _controller.takePicture();
-      return file;
-    } on CameraException catch (e) {
-      print(e);
-      return null;
-    }
-  }
 
   validatePictureNetWork(pictures, index) {
     print(pictures);
@@ -156,6 +115,7 @@ class _EditPicturesState extends State<EditPictures> {
       imageToSendApi.add(ImageToSendApi(file: file, indexToSave: indexToSave));
     });
   }
+
   sendImagesToApi() async {
     final formData = FormData();
     var userId = profileUserDataController.savedUserDataProfile?.data?.id;
@@ -231,8 +191,12 @@ class _EditPicturesState extends State<EditPictures> {
                     color: DefaultColors.greyMedium,
                   ),
                   ButtonRigthIcon(
-                    onPressed: (){
-                      takePicture();
+                    onPressed: ()async {
+                      Navigator.pushNamed(context, RoutesApp.takePicture);
+
+                      // CameraPreview(_controller);
+                      // return CameraPreview(_controller);
+                      // takePicture();
                       // pickImage();
                     },
                     borderSide: const BorderSide(width: 0, color: Colors.transparent),

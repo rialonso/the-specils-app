@@ -62,7 +62,7 @@ class _LoginState extends State<Login> {
     dynamic responseLogin = await _service.postLoginApi(LoginFactory(
         email: emailController.text, password: passwordController.text));
     print(responseLogin);
-    if(loggedUserDataController.savedUserData?.status as bool) {
+    if(responseLogin.status as bool) {
       if(loggedUserDataController.savedUserData?.data?.accountType == 'special') {
         await _suggestionBloc.getSuggestionCards();
         await _service.getMatches();

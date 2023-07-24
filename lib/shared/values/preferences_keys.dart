@@ -11,5 +11,9 @@ class PreferencesKeys {
   static const userMatches = 'USER_MATCHES';
   static const messages = 'MESSAGES';
   static const playAudio = 'PLAY_AUDIO';
+  static const takePicturePreview = 'TAKE_PICTURE_PREVIEW';
+
+
+  static const loginErrorResponse = 'LOGIN_ERROR_RESPONSE';
 
 }

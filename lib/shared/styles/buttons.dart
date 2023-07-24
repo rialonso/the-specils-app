@@ -347,6 +347,7 @@ class ButtonOnlyText extends StatelessWidget {
   final String texto;
   final double? textSize;
   final Color? textColor;
+  final Color? backGroundColor;
 
   final BorderSide? borderSide;
   final double? elevation;
@@ -361,6 +362,8 @@ class ButtonOnlyText extends StatelessWidget {
         this.elevation,
         this.textSize = 20,
         this.textColor = DefaultColors.greyMedium,
+        this.backGroundColor = Colors.white,
+
       })
       : super(key: key);
 
@@ -369,7 +372,7 @@ class ButtonOnlyText extends StatelessWidget {
     return ElevatedButton(
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
-        backgroundColor: Colors.white,
+        backgroundColor: backGroundColor,
         side: borderSide,
         elevation: elevation,
       ),

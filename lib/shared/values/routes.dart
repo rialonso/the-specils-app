@@ -12,5 +12,6 @@ class RoutesApp {
   static const editPictures = '/edit-pictures';
   static const preRegister = '/pre-register';
   static const chat = '/chat';
+  static const takePicture = '/take-picture';
 
 }

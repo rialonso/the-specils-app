@@ -53,7 +53,7 @@ class ConsumeApisService {
   }
   postLoginApi(params) async {
     Future<Response> response = dioPost(Env.login, params);
-    await response.then((response) async{
+    return await response.then((response) async{
 
       if(response.statusCode == 200) {
         var reponseMap = Map<dynamic, dynamic>.from(response.data as Map);

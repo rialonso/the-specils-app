@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:the_specials_app/shared/state_management/invalid_credentials.dart';
 import 'package:the_specials_app/shared/state_management/state_manament.dart';
 import 'package:the_specials_app/shared/values/preferences_keys.dart';
 import 'package:the_specials_app/shared/values/routes.dart';
@@ -9,7 +10,9 @@ import 'package:the_specials_app/shared/values/routes.dart';
 class LoggedUserDataController extends GetxController {
   static LoggedUserDataController get to => Get.find();
   final stateManagementAll = Get.put<StateManagementAllController>(StateManagementAllController());
-  UserData? savedUserData;
+  late UserData savedUserData;
+  late InvalidCredentials savedErrorResponse;
+
   dynamic status = false;
   dynamic data;
   dynamic access_token = '';
@@ -27,14 +30,7 @@ class LoggedUserDataController extends GetxController {
     return;
   }
   getUserData() async{
-    savedUserData = await _getSavedUserData(); // if (userData?.status == null) {
-    //   return '';
-    // }
-    // if(savedUserData?.status == true) {
-    //   stateManagementAll.clearAll();
-    //   Navigator.pushNamed(Get.key.currentContext as BuildContext, RoutesApp.login);
-    // }
-    // print(savedUserData.toJson());
+    savedUserData = await _getSavedUserData();
     return savedUserData;
   }
   getToken() async{
@@ -48,6 +44,7 @@ class LoggedUserDataController extends GetxController {
     UserData user = UserData.fromJson(mapUser);
     return user;
   }
+
   Future<String?> _getToken() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     String? jsonUserData = prefs.getString(PreferencesKeys.userDataLogged);

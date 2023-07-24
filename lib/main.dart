@@ -1,7 +1,9 @@
 
+import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:i18n_extension/i18n_widget.dart';
+import 'package:the_specials_app/screens/camera_preview/camera_preview.dart';
 import 'package:the_specials_app/screens/change_password/change_password.dart';
 import 'package:the_specials_app/screens/chat/chat.dart';
 import 'package:the_specials_app/screens/edit_about_me/edit_about_me.dart';
@@ -78,6 +80,7 @@ class _MyAppState extends State<MyApp> {
         RoutesApp.editPictures: (context) => const EditPictures(),
         RoutesApp.preRegister: (context) => const PreRegister(),
         RoutesApp.chat: (context) => const Chat(matchData: null,),
+        RoutesApp.takePicture: (context) => const CameraPreviewScreen(),
 
       },
 
