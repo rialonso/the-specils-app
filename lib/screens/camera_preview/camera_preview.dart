@@ -2,8 +2,10 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:the_specials_app/screens/camera_preview/translate_camera_preview.dart';
+import 'package:the_specials_app/shared/interfaces/local_interfaces/take_picture_controller.dart';
+import 'package:the_specials_app/shared/state_management/stm_take_picture/stm_take_picture.dart';
 import 'package:the_specials_app/shared/styles/buttons.dart';
-import 'package:the_specials_app/shared/styles/colors.dart';
+import 'package:get/get.dart';
 
 class CameraPreviewScreen extends StatefulWidget {
   const CameraPreviewScreen({super.key});
@@ -13,13 +15,15 @@ class CameraPreviewScreen extends StatefulWidget {
 }
 
 class _CameraPreviewState extends State<CameraPreviewScreen> with WidgetsBindingObserver{
+  final stmTakePictureController = Get.put<STMTakePictureController>(STMTakePictureController());
+  final resolutionPresets = ResolutionPreset.values;
+
   late CameraController _controller;
   late Future<void> _initializeControllerFuture;
   late CameraDescription? camera;
   bool _isRearCameraSelected = true;
   bool _isCameraInitialized = false;
   List<CameraDescription> cameras = [];
-  final resolutionPresets = ResolutionPreset.values;
   ResolutionPreset currentResolutionPreset = ResolutionPreset.high;
   double _minAvailableZoom = 1.0;
   double _maxAvailableZoom = 1.0;
@@ -123,6 +127,7 @@ class _CameraPreviewState extends State<CameraPreviewScreen> with WidgetsBinding
     }
     try {
       XFile file = await _controller.takePicture();
+
       return file;
     } on CameraException catch (e) {
       print(e);
@@ -338,7 +343,8 @@ class _CameraPreviewState extends State<CameraPreviewScreen> with WidgetsBinding
                                 Center(
                                   child: InkWell(
                                     onTap: () async {
-
+                                      XFile? file = await takePicture();
+                                      await stmTakePictureController.saveTakePictureData(InterfaceTakePictureController(file: file));
                                     },
                                     child: Stack(
                                       alignment: Alignment.center,
