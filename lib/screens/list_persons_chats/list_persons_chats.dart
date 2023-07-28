@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:laravel_flutter_pusher/laravel_flutter_pusher.dart';
-// import 'package:pusher_client/pusher_client.dart';
-import 'package:the_specials_app/env/env.dart';
 import 'package:the_specials_app/shared/components/menu_logged/menu_logged.dart';
 import 'package:the_specials_app/shared/interfaces/responses/response_user_matches.dart';
 import 'package:the_specials_app/shared/services/apis/consume_apis.dart';
 import 'package:the_specials_app/shared/state_management/user_matches/stm_user_matches.dart';
-import 'package:the_specials_app/shared/styles/buttons.dart';
+import 'package:the_specials_app/shared/styles/colors.dart';
 
 class ListPersonsChats extends StatefulWidget {
   const ListPersonsChats({Key? key}) : super(key: key);
@@ -78,7 +75,9 @@ class _ListPersonsChatsState extends State<ListPersonsChats> {
         body: SingleChildScrollView(
           child: GetBuilder<STMUserMatchesController>(
             builder: (_) => (!stmUserMatchesController.listUpdated.value)?
-            Text('loading') :  Column(
+               Container(
+              color: Colors.transparent,
+              child:  Center(child: CircularProgressIndicator(color: DefaultColors.purpleBrand, backgroundColor: Colors.transparent,))) :  Column(
               children: stmUserMatchesController.createCardsMatches(userMatches),
             ),
 

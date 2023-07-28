@@ -634,7 +634,9 @@ class _EditAboutMeState extends State<EditAboutMe> {
                                           if (showLists.value) {
                                             return returnListWidgetLists();
                                           } else {
-                                            return const Text('Loading');
+                                            return Container(
+                                                color: Colors.transparent,
+                                                child:  Center(child: CircularProgressIndicator(color: DefaultColors.purpleBrand, backgroundColor: Colors.transparent,)));
                                           }
                                         }),
                                       ],

@@ -4,6 +4,7 @@ import 'package:camera/camera.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:the_specials_app/screens/picture_taked_preview/translate_picture_taked_preview.dart';
 import 'package:the_specials_app/shared/interfaces/local_interfaces/take_picture_controller.dart';
 import 'package:the_specials_app/shared/state_management/stm_take_picture/stm_take_picture.dart';
 import 'package:the_specials_app/shared/styles/buttons.dart';
@@ -82,7 +83,7 @@ class _PictureTakedPreviewState extends State<PictureTakedPreview> {
       children: [
         ButtonOnlyText(onPressed: (){
           Navigator.pop(context);
-        }, texto: 'Repetir', textColor: Colors.white, backGroundColor: Colors.transparent,borderSide: const BorderSide(color: Colors.transparent),),
+        }, texto: buttonTakeNewPicture.i18n, textColor: Colors.white, backGroundColor: Colors.transparent,borderSide: const BorderSide(color: Colors.transparent),),
 
         // if (_croppedFile == null)
           FloatingActionButton(
@@ -94,7 +95,6 @@ class _PictureTakedPreviewState extends State<PictureTakedPreview> {
             child: const Icon(Icons.crop),
           ),
     ButtonOnlyText(onPressed: () async{
-      print('Path button confirme taked${ _croppedFile?.path}');
       if(_croppedFile != null) {
         await stmTakePictureController.saveTakePictureData(InterfaceTakePictureController(filePath: _croppedFile?.path));
         await stmTakePictureControllerToShow.saveTakePictureData(InterfaceTakePictureController(filePath: _croppedFile?.path));
@@ -104,7 +104,7 @@ class _PictureTakedPreviewState extends State<PictureTakedPreview> {
       }
 
       Navigator.popAndPushNamed(context, RoutesApp.editPictures);
-    }, texto: 'Confirmar', textColor: Colors.white, backGroundColor: Colors.transparent,borderSide: const BorderSide(color: Colors.transparent),),
+    }, texto: buttonConfirm.i18n, textColor: Colors.white, backGroundColor: Colors.transparent,borderSide: const BorderSide(color: Colors.transparent),),
       ],
     );
   }
@@ -146,12 +146,6 @@ class _PictureTakedPreviewState extends State<PictureTakedPreview> {
       }
     }
   }
-  void _clear() {
-    setState(() {
-      _pickedFile = null;
-      _croppedFile = null;
-    });
-  }
   @override
   void initState() {
     // TODO: implement initState
@@ -171,7 +165,9 @@ class _PictureTakedPreviewState extends State<PictureTakedPreview> {
           )),
       body: GetBuilder<STMTakePictureController>(
           builder: (_) => (_.listUpdated.value)?
-              Text('loading') : Container(
+          Container(
+              color: Colors.black,
+              child:  const Center(child: CircularProgressIndicator(color: Colors.white, backgroundColor: Colors.black,))) : Container(
             decoration: const BoxDecoration(
               color: Colors.black
             ),
@@ -179,8 +175,7 @@ class _PictureTakedPreviewState extends State<PictureTakedPreview> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
               mainAxisSize: MainAxisSize.max,
             children: [
-                SizedBox(height: 0,),
-                // Image.asset(_.savedTakePictureData.filePath as String),
+                const SizedBox(height: 0,),
 
               _imageCard(_.savedTakePictureData?.filePath),
               _menu()

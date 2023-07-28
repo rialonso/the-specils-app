@@ -382,7 +382,10 @@ class _CameraPreviewState extends State<CameraPreviewScreen> with WidgetsBinding
               ],
             ),
           )
-          : Container(),
+          : Container(
+        color: Colors.black,
+        child:  const Center(child: CircularProgressIndicator(color: Colors.white, backgroundColor: Colors.black,)),
+      ),
     );
   }
 }
