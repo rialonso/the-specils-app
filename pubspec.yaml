@@ -55,6 +55,7 @@ dependencies:
   reactive_date_time_picker: ^0.5.0
   laravel_flutter_pusher: ^0.0.4
   audioplayers: ^4.1.0
+  image_cropper: ^4.0.1
 dev_dependencies:
   flutter_test:
     sdk: flutter

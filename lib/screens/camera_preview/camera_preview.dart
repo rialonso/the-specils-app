@@ -1,11 +1,15 @@
+import 'dart:io';
+
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:the_specials_app/screens/camera_preview/translate_camera_preview.dart';
 import 'package:the_specials_app/shared/interfaces/local_interfaces/take_picture_controller.dart';
+import 'package:the_specials_app/shared/services/factory/picture_taked_data.dart';
 import 'package:the_specials_app/shared/state_management/stm_take_picture/stm_take_picture.dart';
 import 'package:the_specials_app/shared/styles/buttons.dart';
 import 'package:get/get.dart';
+import 'package:the_specials_app/shared/values/routes.dart';
 
 class CameraPreviewScreen extends StatefulWidget {
   const CameraPreviewScreen({super.key});
@@ -16,8 +20,9 @@ class CameraPreviewScreen extends StatefulWidget {
 
 class _CameraPreviewState extends State<CameraPreviewScreen> with WidgetsBindingObserver{
   final stmTakePictureController = Get.put<STMTakePictureController>(STMTakePictureController());
-  final resolutionPresets = ResolutionPreset.values;
+  final stmTakePictureControllerToShow = Get.put<STMTakePictureControllerToShow>(STMTakePictureControllerToShow());
 
+  final resolutionPresets = ResolutionPreset.values;
   late CameraController _controller;
   late Future<void> _initializeControllerFuture;
   late CameraDescription? camera;
@@ -344,7 +349,14 @@ class _CameraPreviewState extends State<CameraPreviewScreen> with WidgetsBinding
                                   child: InkWell(
                                     onTap: () async {
                                       XFile? file = await takePicture();
-                                      await stmTakePictureController.saveTakePictureData(InterfaceTakePictureController(file: file));
+                                      List<InterfaceTakePictureController> localFile = [];
+                                      localFile.add(InterfaceTakePictureController(filePath: file?.path));
+                                      print(file?.path);
+                                      // print(InterfaceTakePictureController(file: file));
+                                      await stmTakePictureController.saveTakePictureData(InterfaceTakePictureController(filePath: file?.path));
+                                      await stmTakePictureControllerToShow.saveTakePictureData(InterfaceTakePictureController(filePath: file?.path));
+
+                                      Navigator.pushNamed(context, RoutesApp.pictureTakedPreview);
                                     },
                                     child: Stack(
                                       alignment: Alignment.center,

@@ -317,19 +317,6 @@ class _EditAboutMeState extends State<EditAboutMe> {
 
   returnListWidgetLists() {
     List<Widget> listWidgets = [
-      // Column(
-      //   children: [
-      //     ButtonSimulateInputSelect(onPressed: (){
-      //       _showMultiSelect(context);
-      //     }, texto: 'Cids'),
-      //     MultiSelectChipDisplay(
-      //       scroll: true,
-      //       items: itensSelectedsForChipDisplay(),
-      //       icon: const Icon(Icons.close),
-      //     ),
-      //   ],
-      // ),
-
       MultiSelectBottomSheetField(
         title: Text(labelHintCids.i18n),
         buttonText: Text('${labelHintSelect.i18n} ${labelHintCids.i18n}'),

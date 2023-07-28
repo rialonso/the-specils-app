@@ -3,17 +3,18 @@ import 'dart:io';
 import 'package:camera/camera.dart';
 
 class InterfaceTakePictureController {
-  XFile? file;
 
-  InterfaceTakePictureController({this.file});
+  String? filePath;
+
+  InterfaceTakePictureController({this.filePath});
 
   InterfaceTakePictureController.fromJson(Map<String, dynamic> json) {
-    file = json['file'];
+    filePath = json['filePath'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['file'] = file;
+    data['filePath'] = filePath;
     return data;
   }
 }

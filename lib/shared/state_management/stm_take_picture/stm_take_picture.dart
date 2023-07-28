@@ -9,12 +9,13 @@ import 'package:the_specials_app/shared/values/preferences_keys.dart';
 
 class STMTakePictureController extends GetxController {
   // static SuggestionCardsController get to => Get.find();
-  late InterfaceTakePictureController savedTakePictureData;
+  InterfaceTakePictureController? savedTakePictureData;
   final listUpdated = true.obs;
 
-  saveTakePictureData(InterfaceTakePictureController takePictureDataToSave) async{
+  saveTakePictureData( takePictureDataToSave) async{
+    print(takePictureDataToSave.toJson());
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString(PreferencesKeys.takePicturePreview, json.encode(takePictureDataToSave.toJson()));
+    prefs.setString(PreferencesKeys.takePicturePreview, json.encode(takePictureDataToSave));
     await getSavedTakePictureData();
     return;
     // print(suggestionCardsData?.data?.length);
@@ -37,6 +38,46 @@ class STMTakePictureController extends GetxController {
     String? jsonSuggestionCards = prefs.getString(PreferencesKeys.takePicturePreview);
     Map<String,dynamic> mapData =  jsonDecode(jsonSuggestionCards!);
     InterfaceTakePictureController suggestionCards = InterfaceTakePictureController.fromJson(mapData);
+    print(suggestionCards.toJson());
+    return suggestionCards;
+  }
+}
+
+class STMTakePictureControllerToShow extends GetxController {
+  // static SuggestionCardsController get to => Get.find();
+  InterfaceTakePictureController? savedTakePictureData;
+  final listUpdated = true.obs;
+  int? indexClickedToSave;
+
+  saveTakePictureData( takePictureDataToSave) async{
+    print(takePictureDataToSave.toJson());
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString(PreferencesKeys.takePicturePreview, json.encode(takePictureDataToSave));
+    await getSavedTakePictureData();
+    return;
+    // print(suggestionCardsData?.data?.length);
+  }
+  getSavedTakePictureData() async{
+    InterfaceTakePictureController localSavedFile = await _getSavedTakePictureData();
+    if (kDebugMode) {
+      print('stm 22');
+      print(localSavedFile.toJson());
+
+    }
+    savedTakePictureData = localSavedFile;
+    listUpdated(false);
+    update();
+    return savedTakePictureData;
+  }
+  changeIndexToSave(int index) {
+    indexClickedToSave = index;
+  }
+  Future<dynamic> _getSavedTakePictureData() async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? jsonSuggestionCards = prefs.getString(PreferencesKeys.takePicturePreview);
+    Map<String,dynamic> mapData =  jsonDecode(jsonSuggestionCards!);
+    InterfaceTakePictureController suggestionCards = InterfaceTakePictureController.fromJson(mapData);
+    print(suggestionCards.toJson());
     return suggestionCards;
   }
 }

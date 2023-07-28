@@ -14,6 +14,8 @@ class UserDataProfileController extends GetxController {
   saveProfileUserData(UserDataProfile userData) async{
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString(PreferencesKeys.userProfileData, json.encode(userData));
+    getProfileUserData();
+    return;
   }
   getProfileUserData() async{
     UserDataProfile savedUserData = await _getSavedProfileUserData();

@@ -18,6 +18,7 @@ import 'package:the_specials_app/shared/services/apis/consume_apis.dart';
 import 'package:the_specials_app/shared/services/functions/functions.dart';
 import 'package:the_specials_app/shared/services/functions/functions_images.dart';
 import 'package:the_specials_app/shared/state_management/logged_user_data/logged_user_data.dart';
+import 'package:the_specials_app/shared/state_management/stm_take_picture/stm_take_picture.dart';
 import 'package:the_specials_app/shared/styles/buttons.dart';
 import 'package:the_specials_app/shared/styles/colors.dart';
 import 'package:get/get.dart' hide FormData, MultipartFile;
@@ -40,6 +41,8 @@ class _EditPicturesState extends State<EditPictures> {
   final profileUserDataController = Get.put<UserDataProfileController>(UserDataProfileController());
   final _service = ConsumeApisService();
   final loggedUserData = Get.put<LoggedUserDataController>(LoggedUserDataController());
+  final stmTakePictureController = Get.put<STMTakePictureController>(STMTakePictureController());
+  final stmTakePictureControllerToShow = Get.put<STMTakePictureControllerToShow>(STMTakePictureControllerToShow());
 
   List<ImageAsset> imagesToShow = [
     ImageAsset(imagePath: '', imageType: ''),
@@ -67,7 +70,7 @@ class _EditPicturesState extends State<EditPictures> {
 
 
   validatePictureNetWork(pictures, index) {
-    print(pictures);
+    // print(pictures);
     if(pictures != null && pictures?.asMap().containsKey(index)) {
       return pictures?[index].path?.replaceAll(r"\", r"") as String;
     }
@@ -96,6 +99,8 @@ class _EditPicturesState extends State<EditPictures> {
       final file = File(image.path);
       localSetImageToShow(image, indexToSave);
       localSetImageToSendApi(file, indexToSave);
+      Navigator.of(context).pop();
+
     } on PlatformException catch(e) {
       print('Failed to pick image: $e');
     }
@@ -107,7 +112,6 @@ class _EditPicturesState extends State<EditPictures> {
   localSetImageToShow(image, indexToSave) {
     setState(() {
       imagesToShow?[indexToSave] = ImageAsset(imagePath: image.path, imageType: 'asset');
-      Navigator.of(context).pop();
     });
   }
   localSetImageToSendApi(file, indexToSave) {
@@ -117,11 +121,9 @@ class _EditPicturesState extends State<EditPictures> {
   }
 
   sendImagesToApi() async {
-    final formData = FormData();
-    var userId = profileUserDataController.savedUserDataProfile?.data?.id;
 
     for (ImageToSendApi imageToSend in imageToSendApi) {
-      print(imageToSend.toJson());
+      // print(imageToSend.toJson());
       // ignore: unrelated_type_equality_checks
       if(imageToSend.file != '') {
         String? fileName = imageToSend.file?.path.split('/').last;
@@ -142,6 +144,7 @@ class _EditPicturesState extends State<EditPictures> {
 
     // loggedUserData.saveUserData(user.data);
     if(widget.showReturnRoute) {
+
       Functions().openSnackBar(context, DefaultColors.greenSoft,
           snackBarSuccessImagesUpdate.i18n, snackBarBtnOk.i18n);
       Navigator.pushNamed(context, RoutesApp.profile);
@@ -228,6 +231,23 @@ class _EditPicturesState extends State<EditPictures> {
         }
     );
   }
+  saveImagesToShowAndSend() {
+    if(stmTakePictureController?.savedTakePictureData != null) {
+      if (stmTakePictureControllerToShow?.savedTakePictureData
+          ?.filePath != null &&
+          stmTakePictureControllerToShow?.indexClickedToSave != null) {
+        File pictureTaked = File(
+            stmTakePictureControllerToShow?.savedTakePictureData
+                ?.filePath as String);
+        localSetImageToShow(
+            pictureTaked, stmTakePictureControllerToShow.indexClickedToSave);
+        localSetImageToSendApi(
+            pictureTaked, stmTakePictureControllerToShow.indexClickedToSave);
+        !stmTakePictureController.listUpdated(true);
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -262,7 +282,7 @@ class _EditPicturesState extends State<EditPictures> {
                       color: DefaultColors.blueBrand,
                       iconSize: 35,
                       onPressed: () {
-                        Navigator.pop(context);
+                        Navigator.popAndPushNamed(context, RoutesApp.profile);
                       },
                     ): const Text(''),
                     const SizedBox(
@@ -286,92 +306,109 @@ class _EditPicturesState extends State<EditPictures> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Column(
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Flexible(
-                                child: CardPicturesProfile(
-                                  onPressed: () {
-                                    openTakeOrPickImage(context, 0);
-                                  },
-                                  picture: returnPictureToCard(0),
-                                  showIconAddPicture: true,
+                      GetBuilder<STMTakePictureControllerToShow>(builder: (_){
+                        if(!stmTakePictureController.listUpdated.value) {
+                          Future.delayed(Duration.zero, () {
+                            //your code goes here
+                            saveImagesToShowAndSend();
+                          });
+                        }
+                          return Column(
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Flexible(
+                                  child: CardPicturesProfile(
+                                    onPressed: () {
+                                      stmTakePictureControllerToShow.changeIndexToSave(0);
+                                      openTakeOrPickImage(context, 0);
+                                    },
+                                    picture: returnPictureToCard(0),
+                                    showIconAddPicture: true,
+                                  ),
                                 ),
-                              ),
-                              const SizedBox(
-                                width: 10,
-                              ),
-                              Flexible(
-                                child: CardPicturesProfile(
-                                  onPressed: () {
-                                    openTakeOrPickImage(context, 1);
-                                  },
-                                  picture: returnPictureToCard(1),
-                                  showIconAddPicture: true,
+                                const SizedBox(
+                                  width: 10,
                                 ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Flexible(
-                                child: CardPicturesProfile(
-                                  onPressed: () {
-                                    openTakeOrPickImage(context, 2);
-                                  },
-                                  picture: returnPictureToCard(2),
-                                  showIconAddPicture: true,
+                                Flexible(
+                                  child: CardPicturesProfile(
+                                    onPressed: () {
+                                      stmTakePictureControllerToShow.changeIndexToSave(1);
+                                      openTakeOrPickImage(context, 1);
+                                    },
+                                    picture: returnPictureToCard(1),
+                                    showIconAddPicture: true,
+                                  ),
                                 ),
-                              ),
-                              const SizedBox(
-                                width: 10,
-                              ),
-                              Flexible(
-                                child: CardPicturesProfile(
-                                  onPressed: () {
-                                    openTakeOrPickImage(context, 3);
-                                  },
-                                  picture: returnPictureToCard(3),
-                                  showIconAddPicture: true,
+                              ],
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Flexible(
+                                  child: CardPicturesProfile(
+                                    onPressed: () {
+                                      stmTakePictureControllerToShow.changeIndexToSave(2);
+                                      openTakeOrPickImage(context, 2);
+                                    },
+                                    picture: returnPictureToCard(2),
+                                    showIconAddPicture: true,
+                                  ),
                                 ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Flexible(
-                                child: CardPicturesProfile(
-                                  onPressed: () {
-                                    openTakeOrPickImage(context, 4);
-                                  },
-                                  picture: returnPictureToCard(4),
-                                  showIconAddPicture: true,
+                                const SizedBox(
+                                  width: 10,
                                 ),
-                              ),
-                              const SizedBox(width: 10),
-                              Flexible(
-                                child: CardPicturesProfile(
-                                  onPressed: () {
-                                    openTakeOrPickImage(context, 5);
-                                  },
-                                  picture: returnPictureToCard(5),
-                                  showIconAddPicture: true,
+                                Flexible(
+                                  child: CardPicturesProfile(
+                                    onPressed: () {
+                                      stmTakePictureControllerToShow.changeIndexToSave(3);
+                                      openTakeOrPickImage(context, 3);
+                                    },
+                                    picture: returnPictureToCard(3),
+                                    showIconAddPicture: true,
+                                  ),
                                 ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
+                              ],
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Flexible(
+                                  child: CardPicturesProfile(
+                                    onPressed: () {
+                                      stmTakePictureControllerToShow.changeIndexToSave(4);
+                                      openTakeOrPickImage(context, 4);
+                                    },
+                                    picture: returnPictureToCard(4),
+                                    showIconAddPicture: true,
+                                  ),
+                                ),
+                                const SizedBox(width: 10),
+                                Flexible(
+                                  child: CardPicturesProfile(
+                                    onPressed: () {
+                                      stmTakePictureControllerToShow.changeIndexToSave(5);
+                                      openTakeOrPickImage(context, 5);
+                                    },
+                                    picture: returnPictureToCard(5),
+                                    showIconAddPicture: true,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        );
+                        // }
+                        // return Text('load');
+                      }),
+
                       const SizedBox(
                         height: 30,
                       ),
