@@ -16,6 +16,7 @@ import 'package:the_specials_app/screens/liked_me/liked_me.dart';
 import 'package:the_specials_app/screens/list_persons_chats/list_persons_chats.dart';
 import 'package:the_specials_app/screens/login/login.dart';
 import 'package:the_specials_app/screens/others_profile/others_profile.dart';
+import 'package:the_specials_app/screens/picture_preview_message/picture_preview_message.dart';
 import 'package:the_specials_app/screens/picture_taked_preview/picture_taked_preview.dart';
 import 'package:the_specials_app/screens/pre-register/pre-register.dart';
 import 'package:the_specials_app/screens/profile/profile.dart';
@@ -83,6 +84,7 @@ class _MyAppState extends State<MyApp> {
         RoutesApp.chat: (context) => const Chat(matchData: null,),
         RoutesApp.takePicture: (context) => const CameraPreviewScreen(),
         RoutesApp.pictureTakedPreview: (context) => const PictureTakedPreview(),
+        RoutesApp.pictureMessageSend: (context) => const PictureSendMessagePreview(),
 
       },
 

@@ -4,16 +4,20 @@ import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:the_specials_app/screens/edit_pictures/edit_pictures_translatt.dart';
 import 'package:the_specials_app/shared/interfaces/local_interfaces/edit_pictures_asset.dart';
+import 'package:the_specials_app/shared/interfaces/local_interfaces/take_picture_controller.dart';
 import 'package:the_specials_app/shared/services/apis/consume_apis.dart';
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:the_specials_app/shared/state_management/stm_messages/stm_messages.dart';
 import 'package:the_specials_app/shared/styles/buttons.dart';
 import 'package:the_specials_app/shared/styles/colors.dart';
+import 'package:get/get.dart' hide FormData, MultipartFile;
+import 'package:the_specials_app/shared/values/routes.dart';
 
 class FunctionsImages {
   final _service = ConsumeApisService();
   late CameraController _controller;
-
+  int? matchId;
   List<ImageAsset> imagesToShow = [
     ImageAsset(imagePath: '', imageType: ''),
     ImageAsset(imagePath: '', imageType: ''),
@@ -34,15 +38,27 @@ class FunctionsImages {
     });
     return formData;
   }
+  setImageToSendMessage(File file, int matchID) async{
+    String fileName = file.path.split('/').last;
+    FormData formData = FormData.fromMap({
+      "file":  await MultipartFile.fromFile(file.path, filename:fileName),
+      "type": 'image',
+      "match_id": matchID
+    });
+    return formData;
+  }
   sendImagesToSave(FormData formData) {
     return _service.postImageOrderAddAndDelete(formData);
   }
-  Future pickImage() async {
+  Future pickImage(context) async {
     try {
       final image = await ImagePicker().pickImage(source: ImageSource.gallery);
       if(image == null) return;
-      final file = File(image.path);
-
+      print('funtions 57 image path: ${image.path}');
+      final stmImageSendMessageController = Get.put<STMImageSendMessageController>(STMImageSendMessageController());
+      await stmImageSendMessageController.saveImageToSendMessage(InterfaceTakePictureController(filePath: image.path));
+      Navigator.pushNamed(context, RoutesApp.pictureMessageSend);
+      return  File(image.path);
     } on PlatformException catch(e) {
       print('Failed to pick image: $e');
     }
@@ -79,7 +95,7 @@ class FunctionsImages {
                 children: [
                   ButtonRigthIcon(
                     onPressed: (){
-                      pickImage();
+                      pickImage(context);
                     },
                     borderSide: const BorderSide(width: 0, color: Colors.transparent),
                     elevation: 0,

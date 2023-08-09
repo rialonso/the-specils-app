@@ -14,6 +14,7 @@ class RoutesApp {
   static const chat = '/chat';
   static const takePicture = '/take-picture';
   static const pictureTakedPreview = '/picture-taked';
+  static const pictureMessageSend = '/picture-message-preview';
 
 
 }

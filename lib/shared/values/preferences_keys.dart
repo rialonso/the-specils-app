@@ -12,6 +12,7 @@ class PreferencesKeys {
   static const messages = 'MESSAGES';
   static const playAudio = 'PLAY_AUDIO';
   static const takePicturePreview = 'TAKE_PICTURE_PREVIEW';
+  static const imageToSendMessage = 'IMAGE_TO_SEND_MESSAGE';
 
 
   static const loginErrorResponse = 'LOGIN_ERROR_RESPONSE';

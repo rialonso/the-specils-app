@@ -48,7 +48,7 @@ class _LoginState extends State<Login> {
           ),
           actions: <Widget>[
             TextButton(
-              child: Text('ok'),
+              child: const Text('ok'),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -61,9 +61,8 @@ class _LoginState extends State<Login> {
   Future<void> _signin(dynamic data) async {
     dynamic responseLogin = await _service.postLoginApi(LoginFactory(
         email: emailController.text, password: passwordController.text));
-    print(responseLogin);
     if(responseLogin.status as bool) {
-      if(loggedUserDataController.savedUserData?.data?.accountType == 'special') {
+      if(loggedUserDataController.savedUserData.data?.accountType == 'special') {
         await _suggestionBloc.getSuggestionCards();
         await _service.getMatches();
         Navigator.push(
@@ -135,7 +134,7 @@ class _LoginState extends State<Login> {
                               color: Theme.of(context).primaryColorDark,
                             ),
                             onPressed: () {
-                              // Update the state i.e. toogle the state of passwordVisible variable
+                              // Update the state i.e. toggle the state of passwordVisible variable
                               _toggle();
                             },
                           ),

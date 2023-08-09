@@ -1,11 +1,12 @@
-import 'dart:io';
+
+// ignore_for_file: use_build_context_synchronously
 
 import 'package:camera/camera.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:the_specials_app/screens/camera_preview/translate_camera_preview.dart';
 import 'package:the_specials_app/shared/interfaces/local_interfaces/take_picture_controller.dart';
-import 'package:the_specials_app/shared/services/factory/picture_taked_data.dart';
 import 'package:the_specials_app/shared/state_management/stm_take_picture/stm_take_picture.dart';
 import 'package:the_specials_app/shared/styles/buttons.dart';
 import 'package:get/get.dart';
@@ -24,7 +25,6 @@ class _CameraPreviewState extends State<CameraPreviewScreen> with WidgetsBinding
 
   final resolutionPresets = ResolutionPreset.values;
   late CameraController _controller;
-  late Future<void> _initializeControllerFuture;
   late CameraDescription? camera;
   bool _isRearCameraSelected = true;
   bool _isCameraInitialized = false;
@@ -38,7 +38,7 @@ class _CameraPreviewState extends State<CameraPreviewScreen> with WidgetsBinding
   @override
   void initState() {
     // TODO: implement initState
-    SystemChrome.setEnabledSystemUIOverlays([]);
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: []);
     initCamera();
     super.initState();
 
@@ -48,7 +48,7 @@ class _CameraPreviewState extends State<CameraPreviewScreen> with WidgetsBinding
   }
   @override
   void dispose() {
-    _controller?.dispose();
+    _controller.dispose();
     super.dispose();
   }
   @override
@@ -83,7 +83,7 @@ class _CameraPreviewState extends State<CameraPreviewScreen> with WidgetsBinding
   void onNewCameraSelected(CameraDescription cameraDescription) async {
     final previousCameraController = _controller;
     // Instantiating the camera controller
-    _currentFlashMode = _controller!.value.flashMode;
+    _currentFlashMode = _controller.value.flashMode;
 
     final CameraController cameraController = CameraController(
       cameraDescription,
@@ -91,7 +91,7 @@ class _CameraPreviewState extends State<CameraPreviewScreen> with WidgetsBinding
       imageFormatGroup: ImageFormatGroup.jpeg,
     );
     // Dispose the previous controller
-    await previousCameraController?.dispose();
+    await previousCameraController.dispose();
 
     // Replace with the new controller
     if (mounted) {
@@ -116,13 +116,15 @@ class _CameraPreviewState extends State<CameraPreviewScreen> with WidgetsBinding
           .getMinZoomLevel()
           .then((value) => _minAvailableZoom = value);
     } on CameraException catch (e) {
-      print('Error initializing camera: $e');
+      if (kDebugMode) {
+        print('Error initializing camera: $e');
+      }
     }
 
     // Update the Boolean
     if (mounted) {
       setState(() {
-        _isCameraInitialized = _controller!.value.isInitialized;
+        _isCameraInitialized = _controller.value.isInitialized;
       });
     }
   }
@@ -135,15 +137,15 @@ class _CameraPreviewState extends State<CameraPreviewScreen> with WidgetsBinding
 
       return file;
     } on CameraException catch (e) {
-      print(e);
+      if (kDebugMode) {
+        print(e);
+      }
       return null;
     }
   }
   @override
   Widget build(BuildContext context) {
      // initCamera();
-    final size = MediaQuery.of(context).size;
-    final deviceRatio = size.width / size.height;
     return Scaffold(
       appBar: PreferredSize(
           preferredSize: const Size.fromHeight(0.0),
@@ -160,7 +162,7 @@ class _CameraPreviewState extends State<CameraPreviewScreen> with WidgetsBinding
               children: [
                 Center(
                   child: AspectRatio(
-                    aspectRatio: 1/ _controller.value.aspectRatio,
+                    aspectRatio: 1 / _controller.value.aspectRatio,
                     child: CameraPreview(_controller),
                   ),
                 ),
@@ -182,7 +184,7 @@ class _CameraPreviewState extends State<CameraPreviewScreen> with WidgetsBinding
                                   setState(() {
                                     _currentFlashMode = FlashMode.off;
                                   });
-                                  await _controller!.setFlashMode(
+                                  await _controller.setFlashMode(
                                     FlashMode.off,
                                   );
                                 },
@@ -198,7 +200,7 @@ class _CameraPreviewState extends State<CameraPreviewScreen> with WidgetsBinding
                                   setState(() {
                                     _currentFlashMode = FlashMode.auto;
                                   });
-                                  await _controller!.setFlashMode(
+                                  await _controller.setFlashMode(
                                     FlashMode.auto,
                                   );
                                 },
@@ -218,7 +220,7 @@ class _CameraPreviewState extends State<CameraPreviewScreen> with WidgetsBinding
                                     }
                                     _currentFlashMode = FlashMode.torch;
                                   });
-                                  await _controller!.setFlashMode(
+                                  await _controller.setFlashMode(
                                     _currentFlashMode as FlashMode,
                                   );
                                 },
@@ -266,9 +268,9 @@ class _CameraPreviewState extends State<CameraPreviewScreen> with WidgetsBinding
                                   currentResolutionPreset = value!;
                                   _isCameraInitialized = false;
                                 });
-                                onNewCameraSelected(_controller!.description);
+                                onNewCameraSelected(_controller.description);
                               },
-                              hint: Text("Select item"),
+                              hint: const Text("Select item"),
                             ),
                           ],
                         ),
@@ -291,7 +293,7 @@ class _CameraPreviewState extends State<CameraPreviewScreen> with WidgetsBinding
                                     setState(() {
                                       _currentZoomLevel = value;
                                     });
-                                    await _controller!.setZoomLevel(value);
+                                    await _controller.setZoomLevel(value);
                                   },
                                 ),
                               ),
@@ -304,7 +306,7 @@ class _CameraPreviewState extends State<CameraPreviewScreen> with WidgetsBinding
                                   padding: const EdgeInsets.all(8.0),
                                   child: Text(
                                     '${_currentZoomLevel.toStringAsFixed(1)}x',
-                                    style: TextStyle(color: Colors.white),
+                                    style: const TextStyle(color: Colors.white),
                                   ),
                                 ),
                               ),
@@ -351,7 +353,6 @@ class _CameraPreviewState extends State<CameraPreviewScreen> with WidgetsBinding
                                       XFile? file = await takePicture();
                                       List<InterfaceTakePictureController> localFile = [];
                                       localFile.add(InterfaceTakePictureController(filePath: file?.path));
-                                      print(file?.path);
                                       // print(InterfaceTakePictureController(file: file));
                                       await stmTakePictureController.saveTakePictureData(InterfaceTakePictureController(filePath: file?.path));
                                       await stmTakePictureControllerToShow.saveTakePictureData(InterfaceTakePictureController(filePath: file?.path));

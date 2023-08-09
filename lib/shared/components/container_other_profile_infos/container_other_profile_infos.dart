@@ -29,12 +29,12 @@ class _ContainerOtherProfileInfosState extends State<ContainerOtherProfileInfos>
     List<Widget> suggestionCardsWidget = [];
     if(locale.toString() == 'pt_BR') {
       cids?.forEach((cid) {
-        suggestionCardsWidget.add(Text('\u2022 ${cid.cid?.description as String}'));
+        suggestionCardsWidget.add(Text('\u2022 ${cid.cid?.description ?? cid.cid?.descriptionEn}'));
       });
     }
     if (locale.toString() == 'en_US') {
       cids?.forEach((cid) {
-        suggestionCardsWidget.add(Text('\u2022 ${cid.cid?.descriptionEn as String}'));
+        suggestionCardsWidget.add(Text('\u2022 ${cid.cid?.descriptionEn ?? cid.cid?.description}'));
       });
     }
     return  suggestionCardsWidget;
@@ -43,10 +43,10 @@ class _ContainerOtherProfileInfosState extends State<ContainerOtherProfileInfos>
     List<Widget> listWidgets = [];
     list?.forEach((medical) {
       if(locale.toString() == 'pt_BR') {
-        listWidgets.add(Text('\u2022 ${medical.medicalProcedures?.name as String}'));
+        listWidgets.add(Text('\u2022 ${medical.medicalProcedures?.name ?? medical.medicalProcedures?.nameEn}'));
       }
       if (locale.toString() == 'en_US') {
-        listWidgets.add(Text('\u2022 ${medical.medicalProcedures?.nameEn as String}'));
+        listWidgets.add(Text('\u2022 ${medical.medicalProcedures?.nameEn ?? medical.medicalProcedures?.name}'));
       }
     });
     return  listWidgets;
@@ -55,10 +55,10 @@ class _ContainerOtherProfileInfosState extends State<ContainerOtherProfileInfos>
     List<Widget> listWidgets = [];
     list?.forEach((medical) {
       if(locale.toString() == 'pt_BR') {
-        listWidgets.add(Text('\u2022 ${medical.drug?.name as String}'));
+        listWidgets.add(Text('\u2022 ${medical.drug?.name ?? medical.drug?.nameEn}}'));
       }
       if (locale.toString() == 'en_US') {
-        listWidgets.add(Text('\u2022 ${medical.drug?.nameEn as String}'));
+        listWidgets.add(Text('\u2022 ${medical.drug?.nameEn ?? medical.drug?.name}'));
       }
     });
     return  listWidgets;
@@ -66,7 +66,7 @@ class _ContainerOtherProfileInfosState extends State<ContainerOtherProfileInfos>
   returnListHospitalsWidgetText(List<MyHospitals>? list, Locale locale) {
     List<Widget> listWidgets = [];
     list?.forEach((medical) {
-      listWidgets.add(Text('\u2022 ${medical.hospital?.name as String}'));
+      listWidgets.add(Text('\u2022 ${medical.hospital?.name}'));
     });
     return  listWidgets;
   }
