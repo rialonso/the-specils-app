@@ -16,7 +16,7 @@ extension Localization on String {
     },
     special: {
       "en_us": " disabled",
-      "pt_br": " deficiente físico",
+      "pt_br": " especial",
     },
     you: {
       "en_us": " you",
