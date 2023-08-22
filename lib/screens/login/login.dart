@@ -12,6 +12,7 @@ import 'package:the_specials_app/shared/services/functions/functions.dart';
 import 'package:the_specials_app/shared/state_management/logged_user_data/logged_user_data.dart';
 import 'package:the_specials_app/shared/styles/buttons.dart';
 import 'package:the_specials_app/shared/styles/colors.dart';
+import 'package:the_specials_app/shared/values/routes.dart';
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
@@ -154,6 +155,7 @@ class _LoginState extends State<Login> {
 
                       ButtonSecondary(
                           onPressed: () {
+                            Navigator.pushNamed(context, RoutesApp.preRegister);
                             // print(_bloc.saida);
                           },
                           texto: createAccount.i18n),

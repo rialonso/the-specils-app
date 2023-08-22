@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:the_specials_app/screens/list_persons_chats/translate_list_persons_chat.dart';
+import 'package:the_specials_app/shared/components/not_load_itens/not_load_itens.dart';
 import 'package:the_specials_app/shared/components/suggestion_card.dart';
 import 'package:the_specials_app/shared/values/preferences_keys.dart';
 
@@ -34,7 +36,7 @@ class SuggestionCardsController extends GetxController {
     List<Widget> suggestionCardsWidget = [];
     var allCards = suggestionData.data;
     if(allCards == null || allCards.length < 1) {
-      suggestionCardsWidget.add(Text('nao tem nada'));
+      suggestionCardsWidget.add(NotLoadItens(messageToShow: notLoadItensSuggestionMatches.i18n, iconToShow: Icons.chat,));
       return suggestionCardsWidget;
     }
     List<SuggestionData> cardsToShow;
