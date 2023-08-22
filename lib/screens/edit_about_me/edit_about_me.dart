@@ -55,6 +55,9 @@ class _EditAboutMeState extends State<EditAboutMe> {
     'sexual_orientation':
         FormControl<String>(validators: [Validators.required]),
     'about': FormControl<String>(validators: [Validators.required]),
+    'lat': FormControl<double>(validators: [Validators.required]),
+    'lng': FormControl<double>(validators: [Validators.required]),
+
   });
   final _service = ConsumeApisService();
   List<Cid> _listCidsToShow = [];
@@ -135,12 +138,15 @@ class _EditAboutMeState extends State<EditAboutMe> {
     if (userData?.lng != null && userData?.lat != null) {
       listHospitals = await Functions().getHospitals(
           FactoryLocationLatLng(lat: userData?.lat, lng: userData?.lng));
+      form.control('lat').value = userData?.lat;
+      form.control('lng').value = userData?.lng;
       return true;
     } else {
       Position position = await Functions().getCurrentLocation();
       listHospitals = await Functions().getHospitals(FactoryLocationLatLng(
           lat: position.latitude, lng: position.longitude));
-
+      form.control('lat').value = position.latitude;
+      form.control('lng').value = position.longitude;
       return false;
     }
   }
@@ -523,7 +529,7 @@ class _EditAboutMeState extends State<EditAboutMe> {
                                                     '${labelHitName.i18n} ${requiredMsg.i18n}'
                                               })
                                         : const Text(''),
-                                    profileUserDataController.savedUserDataProfile?.data?.birthdate != null
+                                    profileUserDataController.savedUserDataProfile?.data?.birthdate == null
                                         ? ReactiveDatePicker(
                                             formControlName: 'birthdate_date',
                                             firstDate: DateTime(DateTime.now().year - 100, DateTime.now().month, DateTime.now().day),
