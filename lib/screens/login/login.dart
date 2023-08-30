@@ -112,6 +112,7 @@ class _LoginState extends State<Login> {
                         controller: emailController,
                         decoration: InputDecoration(
                           hintText: email.i18n,
+                          contentPadding: const EdgeInsets.symmetric(vertical: 0, horizontal: 15.0),
                         ),
                         validator: (String? value) {
                           if (value == null || value.isEmpty) {
@@ -139,6 +140,8 @@ class _LoginState extends State<Login> {
                               _toggle();
                             },
                           ),
+                          contentPadding: const EdgeInsets.symmetric(vertical: 0, horizontal: 15.0),
+
                         ),
                         validator: (String? value) {
                           if (value == null || value.isEmpty) {
