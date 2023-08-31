@@ -3,6 +3,9 @@ import 'package:the_specials_app/screens/first_page/translation_first_page.dart'
 import 'package:the_specials_app/shared/components/btns/btns_login_create.dart';
 import 'package:the_specials_app/shared/components/logo.dart';
 import 'package:the_specials_app/shared/styles/colors.dart';
+import 'package:the_specials_app/shared/values/routes.dart';
+import 'package:get/get.dart';
+import 'package:the_specials_app/shared/state_management/logged_user_data/logged_user_data.dart';
 
 class FirstPage extends StatefulWidget {
   const FirstPage({Key? key}) : super(key: key);
@@ -12,6 +15,22 @@ class FirstPage extends StatefulWidget {
 }
 
 class _FirstPageState extends State<FirstPage> {
+  final loggedUserDataController = Get.put<LoggedUserDataController>(LoggedUserDataController());
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    initApp();
+  }
+  initApp() async{
+    await loggedUserDataController.getUserData();
+    print(loggedUserDataController!.savedUserData!.status);
+    if(loggedUserDataController!.savedUserData!.status == null) {
+      return;
+    }
+    Navigator.pushNamed(context, RoutesApp.suggestionCards);
+  }
   @override
   Widget build(BuildContext context) {
     return Container(

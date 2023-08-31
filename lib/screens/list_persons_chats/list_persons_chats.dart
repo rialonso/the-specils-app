@@ -34,8 +34,6 @@ class _ListPersonsChatsState extends State<ListPersonsChats> {
     await stmUserMatchesController.getUserMatches();
     userMatches = stmUserMatchesController.savedUserMatches;
     stmUserMatchesController.listUpdated(true);
-    print('list_person 52');
-    print(userMatches?.data?[1].latestMessage?.content);
   }
   @override
   void initState() {

@@ -40,6 +40,19 @@ class _LoginState extends State<Login> {
       _passwordVisible = !_passwordVisible;
     });
   }
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    initApp();
+  }
+  initApp() async{
+    await loggedUserDataController.getUserData();
+    if(loggedUserDataController!.savedUserData!.status == null) {
+      return;
+    }
+    Navigator.pushNamed(context, RoutesApp.suggestionCards);
+  }
   Future<void> _showMyDialog() async {
     return showDialog<void>(
       context: context,
