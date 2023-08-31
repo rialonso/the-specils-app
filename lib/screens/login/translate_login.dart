@@ -11,7 +11,8 @@ const snackBarErrorSavedLogin = "snackBarErrorSavedLogin";
 const buttonSnackBarLogin = "buttonSnackBarLogin";
 const titleLoginDevotee = "titleLoginDevotee";
 const messageLoginDevotee = "messageLoginDevotee";
-
+const signInWithGoogle = "signInWithGoogle";
+const btnContinueLogin =  "btnContinueLogin";
 extension Localization on String {
   static const _t = Translations.from("en_us", {
     login: {
@@ -61,7 +62,15 @@ extension Localization on String {
     messageLoginDevotee: {
       "en_us": "Access the Devotee app, this app is dedicated to people with disabilities",
       "pt_br": 'Acesse o aplicativo Devotee, esse app é dedicado para pessoas portadoras de deficiencia',
-    }
+    },
+    signInWithGoogle: {
+      "en_us": "Sign Up with Google",
+      "pt_br": "Entre com Google"
+    },
+    btnContinueLogin: {
+      "en_us": "Continue",
+      "pt_br": "Continuar"
+    },
   });
 
   String get i18n => localize(this, _t);

@@ -142,7 +142,7 @@ class _ProfileState extends State<Profile> {
                               height: 10,
                             ),
                             Text(
-                              '${profileUserDataController.savedUserDataProfile?.data?.about?.replaceAll(RegExp('[^A-Za-z0-9]'), ' ')}',
+                              profileUserDataController.savedUserDataProfile?.data?.about?.replaceAll(RegExp('[^A-Za-z0-9]'), ' ') ?? '',
                               style: const TextStyle(
                                   fontSize: 18,
                                   color: DefaultColors.blueBrand

@@ -6,6 +6,7 @@ class Env {
   static const String baseMultipartFormData = 'multipart/form-data';
 
   static const String baseURL = 'https://apiv2.devotee.com.br/';
+
   static const String baseURLImage = 'https://devote-v2.s3.sa-east-1.amazonaws.com/';
   static const String login = 'api/login';
   static const String suggestionCards = 'api/cards';
@@ -35,6 +36,9 @@ class Env {
     ),
   );
   static const String postImagesByOrderAddAndDelete = 'api/user/pictures/update-by-order';
+
+  static const String baseURLGoogle = 'https://maps.googleapis.com/maps/';
+  static const String getAddress =  'api/geocode/json';
 
 // static const int webSocketPort = 6001;
   // static const String webSocketCluster = 'devows';

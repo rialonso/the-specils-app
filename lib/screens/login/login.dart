@@ -1,18 +1,25 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
+import 'package:flutter_signin_button/button_list.dart';
+import 'package:flutter_signin_button/button_view.dart';
 import 'package:get/get.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:the_specials_app/screens/edit_pictures/edit_pictures.dart';
 import 'package:the_specials_app/screens/login/translate_login.dart';
 import 'package:the_specials_app/screens/suggestion_matchs/suggestion_matchs.dart';
 import 'package:the_specials_app/shared/blocs/suggestion_cards_bloc.dart';
 import 'package:the_specials_app/shared/components/header_logged_out/header_logged_out.dart';
 import 'package:the_specials_app/shared/services/apis/consume_apis.dart';
 import 'package:the_specials_app/shared/services/factory/login_factory.dart';
+import 'package:the_specials_app/shared/services/factory/sign_in_google.dart';
+import 'package:the_specials_app/shared/services/functions/auth_service.dart';
 import 'package:the_specials_app/shared/services/functions/functions.dart';
 import 'package:the_specials_app/shared/state_management/logged_user_data/logged_user_data.dart';
 import 'package:the_specials_app/shared/styles/buttons.dart';
 import 'package:the_specials_app/shared/styles/colors.dart';
 import 'package:the_specials_app/shared/values/routes.dart';
+import 'package:flutter_signin_button/flutter_signin_button.dart';
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
@@ -60,27 +67,54 @@ class _LoginState extends State<Login> {
     );
   }
   Future<void> _signin(dynamic data) async {
+    print(data);
     dynamic responseLogin = await _service.postLoginApi(LoginFactory(
         email: emailController.text, password: passwordController.text));
+    afterSignIn(responseLogin);
+  }
+  afterSignIn (responseLogin) async {
+    final loggedUserData = loggedUserDataController.savedUserData.data;
     if(responseLogin.status as bool) {
-      if(loggedUserDataController.savedUserData.data?.accountType == 'special') {
-        await _suggestionBloc.getSuggestionCards();
-        await _service.getMatches();
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => SuggestionMatchs()
-            )
-        );
+      if(loggedUserData?.accountType != null ) {
+        if(loggedUserData?.accountType == 'special') {
+          await _suggestionBloc.getSuggestionCards();
+          await _service.getMatches();
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => SuggestionMatchs()
+              )
+          );
+        } else {
+          _showMyDialog();
+        }
       } else {
-        _showMyDialog();
+        await _service.postUpdateProfile(loggedUserDataController.savedUserData?.data?.id, {
+          "account_type": "special"
+        });
+        if(loggedUserData?.profilePicture == null || loggedUserData?.profilePicture?.length == 0) {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) =>  EditPictures(showReturnRoute: false, buttonText: btnContinueLogin.i18n,),
+              ));
+        }
+        if(loggedUserData?.birthdate == null
+            || loggedUserData?.name == null
+            || loggedUserData?.gender == null
+            || loggedUserData?.lat == null
+            || loggedUserData?.lng == null
+            || loggedUserData?.occupation == null
+            || loggedUserData?.sexualOrientation == null) {
+          Navigator.pushNamed(context, RoutesApp.editAboutMe);
+        }
       }
+
 
     } else {
       Functions().openSnackBar(context, DefaultColors.redDefault, snackBarErrorSavedLogin.i18n, buttonSnackBarLogin.i18n);
     }
   }
-
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 
@@ -176,6 +210,23 @@ class _LoginState extends State<Login> {
                               color: DefaultColors.blueBrand, fontSize: 15),
                         ),
                       ),
+                      SignInButton(
+                        Buttons.Google,
+                        text: signInWithGoogle.i18n,
+                        onPressed: () async {
+                            final GoogleSignInAccount? gUser = await GoogleSignIn(clientId: "670097540184-l69jst81har5d985sj5j4l1800ukkm6s.apps.googleusercontent.com").signIn();
+                            final GoogleSignInAuthentication gAuth = await gUser!.authentication;
+                            final responseLogin = await ConsumeApisService().postLoginGoogleApi(GoogleSignInFactory(email: gUser.email, token: gAuth!.idToken as String));
+                            afterSignIn(responseLogin);
+                        },
+                      )
+                      // Button(onPressed: () async {
+                      //   final GoogleSignInAccount? gUser = await GoogleSignIn(clientId: "670097540184-l69jst81har5d985sj5j4l1800ukkm6s.apps.googleusercontent.com").signIn();
+                      //   final GoogleSignInAuthentication gAuth = await gUser!.authentication;
+                      //   final responseLogin = await ConsumeApisService().postLoginGoogleApi(GoogleSignInFactory(email: gUser.email, token: gAuth!.idToken as String));
+                      //   afterSignIn(responseLogin);
+                      //   // _signin(_.data);
+                      // }, texto: 'google', icon: ,)
                     ],
                   ),
                 ),

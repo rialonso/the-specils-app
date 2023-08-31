@@ -52,6 +52,7 @@ class ConsumeApisService {
     return response;
   }
   postLoginApi(params) async {
+
     Future<Response> response = dioPost(Env.login, params);
     return await response.then((response) async{
 
@@ -73,6 +74,30 @@ class ConsumeApisService {
     });
     return 'login return';
   }
+  postLoginGoogleApi(params) async {
+
+    Future<Response> response = dioPost('api/users', params);
+    return await response.then((response) async{
+
+      if(response.statusCode == 200) {
+        var reponseMap = Map<dynamic, dynamic>.from(response.data as Map);
+        var strEncoded = jsonEncode(reponseMap);
+        if(reponseMap['status']) {
+          UserData user = UserData.fromJson(response.data);
+          print('consume API 63: login${response.data}');
+          await loggedUserDataController.saveUserData(user);
+          return user;
+        } else {
+          InvalidCredentials responseInvalidCredentials = Functions().mapInvalidCredentials(strEncoded!);
+          return responseInvalidCredentials;
+        }
+      }
+
+
+    });
+    return 'login return';
+  }
+
   getSuggestionCardsApi() async {
     var token = await LoggedUserDataController().getToken();
     try {
@@ -389,5 +414,11 @@ class ConsumeApisService {
       return '';
     }
   }
-
+  getAddresWithLatLng({queryParameters}) async {
+    Response response = await dio.post(
+        '${Env.baseURLGoogle}${Env.getAddress}',
+        queryParameters: queryParameters,
+    );
+    return response.data;
+  }
 }

@@ -40,12 +40,13 @@ class SuggestionCardsController extends GetxController {
       return suggestionCardsWidget;
     }
     List<SuggestionData> cardsToShow;
-    if(allCards?.length >= 3) {
+    if(allCards?.length >= 1) {
       // print(allCards.removeRangee(3, allCards?.length));
-      allCards.removeRange(3, allCards.length)?.cast<SuggestionData>();
+      allCards.removeRange(1, allCards.length)?.cast<SuggestionData>();
+      // print(allCards[2].toJson());
       cardsToShow = allCards;
     } else {
-      cardsToShow = allCards;
+      cardsToShow = allCards.reversed.toList();
     }
     // allCards?.length >= 3
     //     ? cardsToShow = allCards.removeRange(3, allCards.length).cast<SuggestionData>()

@@ -58,6 +58,7 @@ dependencies:
   image_cropper: ^4.0.1
   flutter_launcher_icons: ^0.13.1
   google_sign_in: ^6.1.4
+  flutter_signin_button: ^2.0.0
 dev_dependencies:
   flutter_test:
     sdk: flutter

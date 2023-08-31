@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:the_specials_app/env/env.dart';
 import 'package:the_specials_app/shared/components/container_other_profile_infos/container_other_profile_infos.dart';
 import 'package:the_specials_app/shared/components/container_profile_infos/container_profile_infos.dart';
+import 'package:the_specials_app/shared/services/apis/consume_apis.dart';
 import 'package:the_specials_app/shared/services/functions/functions.dart';
 import 'package:the_specials_app/shared/state_management/other_profile_data/other_profile_data.dart';
 import 'package:the_specials_app/shared/state_management/user_data_profile/user_data_profile.dart';
@@ -23,12 +24,12 @@ class _OthersProfileState extends State<OthersProfile> {
   final otherProfileDataController = Get.put<OtherProfileDataController>(OtherProfileDataController());
   CarouselController buttonCarouselController = CarouselController();
   var currentPos = 0;
-
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     otherProfileDataController.getProfileUserData();
+
   }
   isLoopActive() {
     var profilePictureLength = otherProfileDataController.savedUserDataProfile?.data?.profilePicture?.length;

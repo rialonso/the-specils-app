@@ -56,6 +56,8 @@ class _SuggestionCardsState extends State<SuggestionCards> {
   openOtherProfile() async {
     int userId = widget.suggestionCardsData.id as int;
     await _service.getOtherProfile(userId);
+    // final addres = await ConsumeApisService().getAddresWithLatLng(queryParameters: { "latlng": '${otherProfileUserDataController.savedUserDataProfile?.data?.lat}, ${otherProfileUserDataController.savedUserDataProfile?.data?.lng}', "key": "AIzaSyBKHT84rPIDzgFPNQQmnDEEun9x61GV6GY"});
+    // addres.results[0].address_components[3].long_name
     await otherProfileUserDataController.getProfileUserData();
     Navigator.pushNamed(context, RoutesApp.othersProfiles);
   }
