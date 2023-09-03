@@ -50,7 +50,11 @@ class _ChatState extends State<Chat> {
       );
     }
   }
-
+  loading() {
+    return     Container(
+        color: Colors.transparent,
+        child:  Center(child: CircularProgressIndicator(color: DefaultColors.purpleBrand, backgroundColor: Colors.transparent,)));
+  }
   @override
   Widget build(BuildContext context) {
     scrollingMessages() {
@@ -169,7 +173,7 @@ class _ChatState extends State<Chat> {
                 reverse: true,
                   child: GetBuilder<STMMessagesController>(
                     builder: (_) => (!_.listUpdated.value)?
-                    const Text('loading') :  Column(
+                     loading() :  Column(
                       children: stmMessagesController.createBaloonChat(_.savedMessages),
                     ),
 

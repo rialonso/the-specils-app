@@ -37,8 +37,8 @@ class _SuggestionCardsState extends State<SuggestionCards> {
 
   likeOrDislike(String likeOrDislike) async {
     var params = LikeDislikeFactory(user_id: widget.suggestionCardsData!.id, type: likeOrDislike);
-    await _likeDislikeBloc.postLikeDislike(params);
-    await _suggestionCardsBloc.getSuggestionCards();
+     _likeDislikeBloc.postLikeDislike(params);
+     suggestionCardsController.removeItemFromList(widget.suggestionCardsData!.id);
   }
   transformAge() {
     DateTime currentDate = DateTime.now();

@@ -103,7 +103,7 @@ class _LikedMeState extends State<LikedMe> {
                         height: MediaQuery.of(context).size.width * 0.2,
                         width: MediaQuery.of(context).size.width,
                         child: BlurryContainer(
-                          blur: 5,
+                          blur: 0,
                           borderRadius: BorderRadius.circular(10),
                           color: DefaultColors.greyMedium[1]!,
                            child: Padding(

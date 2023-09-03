@@ -32,31 +32,29 @@ class SuggestionCardsController extends GetxController {
     saveSuggestionCards(savedSuggestionCardsData!);
   }
   createSuggestionCards (dynamic suggestionData) {
-
     List<Widget> suggestionCardsWidget = [];
     var allCards = suggestionData.data;
     if(allCards == null || allCards.length < 1) {
       suggestionCardsWidget.add(NotLoadItens(messageToShow: notLoadItensSuggestionMatches.i18n, iconToShow: Icons.chat,));
       return suggestionCardsWidget;
     }
-    List<SuggestionData> cardsToShow;
-    if(allCards?.length >= 1) {
-      // print(allCards.removeRangee(3, allCards?.length));
-      allCards.removeRange(1, allCards.length)?.cast<SuggestionData>();
-      // print(allCards[2].toJson());
-      cardsToShow = allCards;
-    } else {
-      cardsToShow = allCards.reversed.toList();
-    }
-    // allCards?.length >= 3
-    //     ? cardsToShow = allCards.removeRange(3, allCards.length).cast<SuggestionData>()
-    //     : cardsToShow = allCards;
-    // cardsToShow = allCards;
+    List<SuggestionData> cardsToShow = checkLengthAllCard(allCards);
+    // cardsToShow = allCards.reversed.toList();
+
     cardsToShow.forEach((suggestionCardData) {
       return suggestionCardsWidget.add(SuggestionCards(suggestionCardsData: suggestionCardData));
     });
     saveSuggestionCardsToShow(cardsToShow);
     return  suggestionCardsWidget;
+  }
+  checkLengthAllCard(List<SuggestionData> allCards) {
+    List<SuggestionData>  localCards = allCards;
+    if(localCards?.length !=  null && localCards.length >= 3) {
+      localCards.removeRange(3, localCards.length);
+      return localCards.reversed.toList();
+    } else {
+       return localCards.reversed.toList();
+    }
   }
   void saveSuggestionCardsToShow(List<dynamic> suggestionCardsData) async{
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -106,10 +104,45 @@ class SuggestionCardsController extends GetxController {
     SuggestionCardsData suggestionCards = SuggestionCardsData.fromJson(mapUser);
     return suggestionCards;
   }
+  removeItemFromList(id) async {
+    List<dynamic> savedSuggestionCards = await _getSuggestionCardsToShow() ;
+    List<dynamic> savedAllSuggestionCards = await _getAllSuggestionCards();
+    print(savedAllSuggestionCards.length);
+
+    savedSuggestionCards.removeWhere((item) => SuggestionData.fromJson(item).id == id);
+    savedAllSuggestionCards.removeWhere((item) => SuggestionData.fromJson(item).id == id);
+    saveSuggestionCardsToShow(savedSuggestionCards);
+    saveAllSuggestionCards(savedAllSuggestionCards);
+
+    listUpdated(true);
+      List<SuggestionData> suggestionAllCardList = (savedSuggestionCards)
+          .map((data) => SuggestionData.fromJson(data))
+          .toList();
+    if(suggestionAllCardList.isEmpty) {
+      List<SuggestionData> allCardsNew = (savedAllSuggestionCards)
+          .map((data) => SuggestionData.fromJson(data))
+          .toList();
+      List<SuggestionData> newCardsToShow = checkLengthAllCard(allCardsNew);
+      savedSuggestionCardsData = SuggestionCardsData(SuggestionCardsData.new,status: savedSuggestionCardsData?.status,
+          currentPage: savedSuggestionCardsData?.currentPage,
+          data:  newCardsToShow);
+    } else {
+      savedSuggestionCardsData = SuggestionCardsData(SuggestionCardsData.new,status: savedSuggestionCardsData?.status,
+          currentPage: savedSuggestionCardsData?.currentPage,
+          data: suggestionAllCardList );
+    }
+    print('suggestion Cards 124');
+    print(savedSuggestionCardsData?.data);
+    listUpdated(false);
+    update();
+
+  }
   Future<dynamic> _getSuggestionCardsToShow() async{
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? jsonSuggestionCards = prefs.getString(PreferencesKeys.suggestionCardsToShow);
     List<dynamic> mapUser =  jsonDecode(jsonSuggestionCards!);
+    // print(mapUser);
+    // List<SuggestionData> suggestionCardsData = mapUser.cast<SuggestionData>();
     return mapUser;
   }
 
@@ -117,6 +150,8 @@ class SuggestionCardsController extends GetxController {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? jsonSuggestionCards = prefs.getString(PreferencesKeys.allSuggestionCardsToShow);
     List<dynamic> mapUser = json.decode(jsonSuggestionCards!);
+    // List<SuggestionData> suggestionCardsData = mapUser.cast<SuggestionData>();
+
     return mapUser;
   }
 }

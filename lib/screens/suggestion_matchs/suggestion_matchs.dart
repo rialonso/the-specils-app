@@ -6,6 +6,7 @@ import 'package:the_specials_app/shared/components/menu_logged/menu_logged.dart'
 import 'package:the_specials_app/shared/components/suggestion_card.dart';
 import 'package:the_specials_app/shared/state_management/logged_user_data/logged_user_data.dart';
 import 'package:the_specials_app/shared/state_management/suggestion_cards/suggestion_cards.dart';
+import 'package:the_specials_app/shared/styles/colors.dart';
 
 
 class SuggestionMatchs extends StatefulWidget {
@@ -36,8 +37,10 @@ class _SuggestionMatchsState extends State<SuggestionMatchs> {
   waitGetUserData() async {
     await loggedUserDataController.getUserData();
   }
-  teste() {
-    return Text('loading');
+  loading() {
+    return     Container(
+        color: Colors.transparent,
+        child:  Center(child: CircularProgressIndicator(color: DefaultColors.purpleBrand, backgroundColor: Colors.transparent,)));
   }
 
   @override
@@ -76,7 +79,7 @@ class _SuggestionMatchsState extends State<SuggestionMatchs> {
           padding: const EdgeInsets.all(25.0),
           child: GetBuilder<SuggestionCardsController>(
             builder: (_) => (suggestionCardsController.listUpdated.value ) ?
-            teste() :
+            loading() :
             Stack(
               children: suggestionCardsController.createSuggestionCards(suggestionCardsController.savedSuggestionCardsData),
             ),
