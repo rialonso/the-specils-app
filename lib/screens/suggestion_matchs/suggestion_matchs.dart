@@ -1,11 +1,14 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:the_specials_app/screens/suggestion_matchs/translate_suggestion_matchs.dart';
 import 'package:the_specials_app/shared/blocs/suggestion_cards_bloc.dart';
 import 'package:the_specials_app/shared/components/menu_logged/menu_logged.dart';
 import 'package:the_specials_app/shared/components/suggestion_card.dart';
+import 'package:the_specials_app/shared/services/apis/consume_apis.dart';
 import 'package:the_specials_app/shared/state_management/logged_user_data/logged_user_data.dart';
 import 'package:the_specials_app/shared/state_management/suggestion_cards/suggestion_cards.dart';
+import 'package:the_specials_app/shared/styles/buttons.dart';
 import 'package:the_specials_app/shared/styles/colors.dart';
 
 
@@ -26,7 +29,7 @@ class _SuggestionMatchsState extends State<SuggestionMatchs> {
 
   final SuggestionCardsBloc _bloc = SuggestionCardsBloc();
   final SuggestionCardsBloc _suggestionBloc = SuggestionCardsBloc();
-
+  final ConsumeApisService _service = ConsumeApisService();
   waitSuggestionCards() async {
     if(suggestionCardsController.savedSuggestionCardsData == null) {
       suggestionCardsData = await suggestionCardsController.getSuggestionCards();
@@ -80,9 +83,29 @@ class _SuggestionMatchsState extends State<SuggestionMatchs> {
           child: GetBuilder<SuggestionCardsController>(
             builder: (_) => (suggestionCardsController.listUpdated.value ) ?
             loading() :
+            (suggestionCardsController.savedSuggestionCardsData?.data?.length == 0 && !suggestionCardsController.listDontHaveMoreOptions.value) ?
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Flexible(child: Text(resetDislikesText.i18n,style: TextStyle(fontSize: 20),)),
+                    const SizedBox(height: 15,),
+                    ButtonPrimary(onPressed: () async {
+                      await _service.postResetDislikes();
+                      final localSuggestionCards = await _service.getSuggestionCardsApi();
+                      // print('if after');
+                      print(suggestionCardsController.savedSuggestionCardsData?.data?.length);
+                      if(localSuggestionCards.length == 0) {
+                        suggestionCardsController.listDontHaveMoreOptions(true);
+                        suggestionCardsController.update();
+                        // print(suggestionCardsController.listDontHaveMoreOptions.value);
+                      }
+                    }, texto: resetDislikes.i18n)
+                  ],
+                ) :
             Stack(
               children: suggestionCardsController.createSuggestionCards(suggestionCardsController.savedSuggestionCardsData),
-            ),
+            )
           ),
 
 

@@ -206,11 +206,13 @@ class _ChatState extends State<Chat> {
                                     border: InputBorder.none,
                                     suffixIcon: IconButton(
                                       onPressed: () async {
+                                        print('message saved 209 chat');
+                                        print(stmMessagesController.savedMessages);
                                         await _service.postMessage(FactorySendMessage(
-                                            matchId: stmMessagesController.savedMessages?.data?[0].matchId,
+                                            matchId: stmMessagesController.matchIdChat,
                                             content: form.control('message').value,
                                             type: 'text'
-                                        ), queryParameters: {'match_id': stmMessagesController.savedMessages?.data?[0].matchId});
+                                        ), queryParameters: {'match_id': stmMessagesController.matchIdChat});
                                         // Timer(const Duration(milliseconds: 500), () {
                                           form.control('message').value = '';
                                         // });

@@ -22,6 +22,7 @@ class Env {
   static const String getMatches = 'api/matches';
   static const String getMessagesMatchId = 'api/match/messages';
   static const String postMessage = 'api/match/messages';
+  static const String resetDislikes = 'api/reset-dislikes';
 
   static InterfaceWebSocket webSocket = InterfaceWebSocket(
     key: '1hfEn3KQ0G',
@@ -29,10 +30,14 @@ class Env {
     port: 6001,
     cluster: "devows",
     events: Channels(
-      chat: "new-message"
+      chat: "new-message",
+      matches: 'new-match'
+
     ),
     channels: Channels(
-        chat: "match."
+      chat: "match.",
+      matches: 'matches.'
+
     ),
   );
   static const String postImagesByOrderAddAndDelete = 'api/user/pictures/update-by-order';

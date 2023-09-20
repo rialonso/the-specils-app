@@ -13,6 +13,7 @@ import 'package:the_specials_app/shared/values/preferences_keys.dart';
 class STMMessagesController extends GetxController {
   // static SuggestionCardsController get to => Get.find();
   InterfaceResponseMessages? savedMessages;
+  late int matchIdChat;
 
   final listUpdated = false.obs;
   void saveMessages(InterfaceResponseMessages suggestionCardsData) async{
@@ -36,6 +37,8 @@ class STMMessagesController extends GetxController {
   getMessages() async{
     InterfaceResponseMessages savedSuggestionCards = await _getMessages();
     savedMessages = savedSuggestionCards;
+    print('stm_messages 39');
+    print(savedMessages?.data);
     listUpdated(true);
     update();
     return savedMessages;

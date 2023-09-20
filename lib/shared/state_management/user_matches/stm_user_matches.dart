@@ -22,13 +22,13 @@ class STMUserMatchesController extends GetxController {
     // print(suggestionCardsData?.data?.length);
   }
   getUserMatches() async{
-    InterfaceUserMatches savedSuggestionCards = await _getUserMatches();
-    print('stm 22');
-    print(savedSuggestionCards.toJson());
-    savedUserMatches = savedSuggestionCards;
     listUpdated(false);
-    // // print(suggestionCardsController.savedSuggestionCardsData?.toJson());// print(cards);
+
+    InterfaceUserMatches savedSuggestionCards = await _getUserMatches();
+    savedUserMatches = savedSuggestionCards;
+    listUpdated(true);
     update();
+
     return savedUserMatches;
   }
   createCardsMatches(dynamic listTargetUser) {
@@ -39,7 +39,10 @@ class STMUserMatchesController extends GetxController {
       return cardsMatchesWidget;
     }
     allCards.forEach((targetUser) {
-      return cardsMatchesWidget.add(CardMatches(match: targetUser));
+      if(targetUser.targetUser.accountType == 'special') {
+        return cardsMatchesWidget.add(CardMatches(match: targetUser));
+      }
+      return;
     });
     // saveSuggestionCardsToShow(cardsToShow);
     return  cardsMatchesWidget;

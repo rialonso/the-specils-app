@@ -1,6 +1,9 @@
+import 'dart:math';
+
 import 'package:blurrycontainer/blurrycontainer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:swipable_stack/swipable_stack.dart';
 import 'package:the_specials_app/env/env.dart';
 import 'package:the_specials_app/screens/suggestion_matchs/translate_suggestion_matchs.dart';
 import 'package:the_specials_app/shared/blocs/likedislike_bloc.dart';
@@ -32,13 +35,16 @@ class _SuggestionCardsState extends State<SuggestionCards> {
 
   LoggedUserDataController loggedUserDataController = Get.put(LoggedUserDataController());
   final suggestionCardsController = Get.put<SuggestionCardsController>(SuggestionCardsController());
+  late final SwipableStackController _controller;
+
+  void _listenController() => setState(() {});
 
   // SuggestionCardsController s = Get.put(SuggestionCardsController());
 
   likeOrDislike(String likeOrDislike) async {
     var params = LikeDislikeFactory(user_id: widget.suggestionCardsData!.id, type: likeOrDislike);
-     _likeDislikeBloc.postLikeDislike(params);
-     suggestionCardsController.removeItemFromList(widget.suggestionCardsData!.id);
+    suggestionCardsController.removeItemFromList(widget.suggestionCardsData!.id);
+    _likeDislikeBloc.postLikeDislike(params);
   }
   transformAge() {
     DateTime currentDate = DateTime.now();
@@ -72,106 +78,178 @@ class _SuggestionCardsState extends State<SuggestionCards> {
     }
   }
   @override
-  Widget build(BuildContext context) => ClipRRect(
-    borderRadius: BorderRadius.circular(20),
-    child: Container(
-      width: MediaQuery.of(context).size.width * 1,
-      height: MediaQuery.of(context).size.height * 0.79,
-      decoration: BoxDecoration(
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _controller = SwipableStackController()..addListener(_listenController);
 
-        image: DecorationImage(
-          image:  validateImageAndReturn(),
-          fit: BoxFit.cover,
-          alignment: const Alignment(-0.3, 0),
-        ),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(10.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            const SizedBox(height: 1),
-            BlurryContainer(
-              blur: 5,
-              borderRadius: BorderRadius.circular(10),
-              color: DefaultColors.greyMedium[1]!,
+  }
+  @override
+  void dispose() {
+    super.dispose();
+    _controller
+      ..removeListener(_listenController)
+      ..dispose();
+  }
+  @override
+  Widget build(BuildContext context) =>
+      SwipableStack(
+        onSwipeCompleted: (index, direction) {
+          final isRight = direction == SwipeDirection.right;
+          final isLeft = direction == SwipeDirection.left;
+          if(isRight) {
+            likeOrDislike('like');
+          } else if(isLeft) {
+            likeOrDislike('dislike');
 
-              child: Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Column(
+          }
+        },
+        detectableSwipeDirections: const {
+          SwipeDirection.right,
+          SwipeDirection.left,
+        },
+        horizontalSwipeThreshold: 0.8,
+        verticalSwipeThreshold: 0.8,
+        controller: _controller,
+        stackClipBehaviour: Clip.antiAlias,
+        overlayBuilder: (context, properties) {
+          final opacity = min(properties.swipeProgress, 1.0);
+          final isRight = properties.direction == SwipeDirection.right;
+          if(isRight){
+            return Row(
 
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    InkWell(
-                      onTap: () {
-                        openOtherProfile();
-                      },
-                      child: Column(
-                        children: [
-                          Row(
-                            children: [
-                              Flexible(
-                                child: Text(
-                                  '${widget.suggestionCardsData.name}, ${transformAge()}',
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 24,
-                                    fontWeight: FontWeight.w700,
-                                  ),
-                                  textAlign: TextAlign.left,
+              children: [
+                Opacity(
+                  opacity: isRight ? opacity : 0,
+                  child: SvgPicture.asset('assets/images/like-stamp.svg'),
+                ),
+              ],
+            );
+          }
+          return Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Opacity(
+                opacity: !isRight ? opacity : 0,
+                child: SvgPicture.asset(
+                  'assets/images/nope-stamp.svg',
+
+                ),
+              ),
+            ],
+          );
+        },
+        builder: (BuildContext context, swipeProperty) {
+          return ClipRRect(
+              borderRadius: BorderRadius.circular(20),
+              child: SafeArea(
+                child: Container(
+                      width: MediaQuery.of(context).size.width * 1,
+                      height: MediaQuery.of(context).size.height * 0.79,
+                      decoration: BoxDecoration(
+
+                        image: DecorationImage(
+                          image:  validateImageAndReturn(),
+                          fit: BoxFit.cover,
+                          alignment: const Alignment(-0.3, 0),
+                        ),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const SizedBox(height: 1),
+                            BlurryContainer(
+                              blur: 5,
+                              borderRadius: BorderRadius.circular(10),
+                              color: DefaultColors.greyMedium[1]!,
+
+                              child: Padding(
+                                padding: const EdgeInsets.all(10.0),
+                                child: Column(
+
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    InkWell(
+                                      onTap: () {
+                                        openOtherProfile();
+                                      },
+                                      child: Column(
+                                        children: [
+                                          Row(
+                                            children: [
+                                              Flexible(
+                                                child: Text(
+                                                  '${widget.suggestionCardsData.name}, ${transformAge()}',
+                                                  style: const TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 24,
+                                                    fontWeight: FontWeight.w700,
+                                                  ),
+                                                  textAlign: TextAlign.left,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          const SizedBox(height: 20),
+                                          Row(
+                                            children: [
+                                              SvgPicture.asset(
+                                                'assets/images/mode_of_travel.svg',
+                                                width: 30,
+                                                height: 30,
+                                                color: Colors.white,
+                                              ),
+                                              const SizedBox(width: 10),
+                                              Text(
+                                                '${widget.suggestionCardsData.distance?.toStringAsFixed(1)} ${kmFromYou.i18n}',
+                                                style: const TextStyle(
+                                                  fontSize: 20,
+                                                  color: Colors.white,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+
+                                    const SizedBox(height: 20),
+                                    Row(
+
+                                      children: [
+                                        Flexible(
+                                          child: ButtonDislike(onPressed: () async {
+                                            _controller.next(swipeDirection: SwipeDirection.left,);
+                                            // likeOrDislike('dislike');
+                                            // suggestionCardsController.getSuggestionCardsToShow();
+                                            // suggestionCardsController.removeLastCard();
+                                          }),
+                                        ),
+                                        const SizedBox(width: 10),
+                                        Flexible(
+                                          child: ButtonLike(onPressed: () async {
+                                            _controller.next(swipeDirection: SwipeDirection.right,);
+
+                                            // likeOrDislike('like');
+                                          }),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
                                 ),
                               ),
-                            ],
-                          ),
-                          const SizedBox(height: 20),
-                          Row(
-                            children: [
-                              SvgPicture.asset(
-                                'assets/images/mode_of_travel.svg',
-                                width: 30,
-                                height: 30,
-                                color: Colors.white,
-                              ),
-                              const SizedBox(width: 10),
-                              Text(
-                                '${widget.suggestionCardsData.distance?.toStringAsFixed(1)} ${kmFromYou.i18n}',
-                                style: const TextStyle(
-                                  fontSize: 20,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
+                            ),
+                          ],
+                        ),
                       ),
                     ),
 
-                    const SizedBox(height: 20),
-                    Row(
+              )
+          );
+        },
+      );
 
-                      children: [
-                        Flexible(
-                          child: ButtonDislike(onPressed: () async {
-                            likeOrDislike('dislike');
-                            // suggestionCardsController.getSuggestionCardsToShow();
-                            // suggestionCardsController.removeLastCard();
-                          }),
-                        ),
-                        const SizedBox(width: 10),
-                        Flexible(
-                          child: ButtonLike(onPressed: () async {
-                            likeOrDislike('like');
-                          }),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    ),
-  );
 }

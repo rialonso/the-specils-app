@@ -90,6 +90,11 @@ class _LoginState extends State<Login> {
     if(responseLogin.status as bool) {
       if(loggedUserData?.accountType != null ) {
         if(loggedUserData?.accountType == 'special') {
+          if(loggedUserData?.targetAccountType != "special") {
+            await _service.postUpdateProfile(loggedUserDataController.savedUserData?.data?.id, {
+              "target_account_type": "special"
+            });
+          }
           await _suggestionBloc.getSuggestionCards();
           await _service.getMatches();
           Navigator.push(
@@ -103,7 +108,8 @@ class _LoginState extends State<Login> {
         }
       } else {
         await _service.postUpdateProfile(loggedUserDataController.savedUserData?.data?.id, {
-          "account_type": "special"
+          "account_type": "special",
+          "target_account_type": "special"
         });
         if(loggedUserData?.profilePicture == null || loggedUserData?.profilePicture?.length == 0) {
           Navigator.push(

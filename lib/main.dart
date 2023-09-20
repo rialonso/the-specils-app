@@ -1,8 +1,10 @@
 
 import 'package:camera/camera.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:i18n_extension/i18n_widget.dart';
+import 'package:laravel_flutter_pusher/laravel_flutter_pusher.dart';
 import 'package:the_specials_app/screens/camera_preview/camera_preview.dart';
 import 'package:the_specials_app/screens/change_password/change_password.dart';
 import 'package:the_specials_app/screens/chat/chat.dart';
@@ -22,10 +24,13 @@ import 'package:the_specials_app/screens/pre-register/pre-register.dart';
 import 'package:the_specials_app/screens/profile/profile.dart';
 import 'package:the_specials_app/screens/suggestion_matchs/suggestion_matchs.dart';
 import 'package:the_specials_app/screens/user_configurations/user_config.dart';
+import 'package:the_specials_app/shared/services/apis/consume_apis.dart';
 import 'package:the_specials_app/shared/state_management/logged_user_data/logged_user_data.dart';
 import 'package:the_specials_app/shared/state_management/state_manament.dart';
 import 'package:the_specials_app/shared/styles/colors.dart';
 import 'package:the_specials_app/shared/values/routes.dart';
+
+import 'env/env.dart';
 
 void main() {
   runApp(const MyApp());
@@ -39,11 +44,12 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  final loggedUserData = Get.put<LoggedUserDataController>(LoggedUserDataController());
+  final LoggedUserDataController loggedUserData = Get.put<LoggedUserDataController>(LoggedUserDataController());
 
   final stateManagementAll = Get.put<StateManagementAllController>(StateManagementAllController());
 
   final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+  final ConsumeApisService _service = ConsumeApisService();
 
   verifyLoggedUserData() async {
     UserData userData = await loggedUserData.getUserData();
@@ -55,11 +61,39 @@ class _MyAppState extends State<MyApp> {
       Navigator.pushNamed(Get.key.currentContext as BuildContext, RoutesApp.login);
     }
   }
+  getNewMatches() async {
+    await loggedUserData.getUserData();
+    var pusherOptions = PusherOptions(
+      cluster: Env.webSocket.cluster,
+      host: Env.webSocket.url as String,
+      encrypted: true,
+      port:  Env.webSocket.port as int,
+    );
+    LaravelFlutterPusher pusher = LaravelFlutterPusher(Env.webSocket.key as String, pusherOptions, enableLogging: true);
+    pusher.connect();
 
+    pusher
+        .subscribe('${Env.webSocket.channels?.matches}${loggedUserData.savedUserData.data?.id}')
+        .bind(Env.webSocket.events?.matches as String, (event) async{
+      // if (kDebugMode) {
+      //   print('newMATCH');
+      //   print(event['payload']);
+      // }
+       _service.getMatches();
+      Navigator.push(context,ListPersonsChats() as Route<Object?>);
+
+    });
+    // Navigator.pushNamed(context, RoutesApp.chat,arguments: {'matchData':otherProfile});
+  }
+  @override
+  void initState() {
+    super.initState();
+  }
   @override
   void didUpdateWidget(MyApp oldWidget) {
     super.didUpdateWidget(oldWidget);
     verifyLoggedUserData();
+    getNewMatches();
   }
 
   @override

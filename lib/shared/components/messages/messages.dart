@@ -58,20 +58,35 @@ class _MessagesState extends State<Messages> with TickerProviderStateMixin{
               children: [
                 ConstrainedBox(
                   constraints: BoxConstraints(minWidth: 20, maxWidth: MediaQuery.of(context).size.width / 2),
-                  child: FittedBox(
-                    fit: BoxFit.fitWidth,
-                    child: Container(
-                      alignment:  orientation == orientationEnd ? AlignmentDirectional.centerEnd : AlignmentDirectional.centerStart,
-                      decoration: BoxDecoration(
-                        color: orientation == orientationEnd ? DefaultColors.purpleBrand: DefaultColors.blueBrand,
-                        borderRadius: BorderRadius.circular(borderRadius),
+                  child: Row(
+                    mainAxisAlignment:orientation == orientationEnd ? MainAxisAlignment.end : MainAxisAlignment.start,
+                    children: [
+                      Flexible(
+                        child: Row(
+                          mainAxisAlignment:orientation == orientationEnd ? MainAxisAlignment.end : MainAxisAlignment.start,
 
+                          children: [
+                            Flexible(
+                              child: IntrinsicWidth(
+
+                                child: Container(
+                                  alignment:  orientation == orientationEnd ? AlignmentDirectional.centerEnd : AlignmentDirectional.centerStart,
+                                  decoration: BoxDecoration(
+                                    color: orientation == orientationEnd ? DefaultColors.purpleBrand: DefaultColors.blueBrand,
+                                    borderRadius: BorderRadius.circular(borderRadius),
+
+                                  ),
+                                  child: Padding(
+                                    padding: EdgeInsets.all(paddingContentMessage),
+                                    child: content,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                      child: Padding(
-                        padding: EdgeInsets.all(paddingContentMessage),
-                        child: content,
-                      ),
-                    ),
+                    ],
                   ),
                 ),
               ],
@@ -154,30 +169,32 @@ class _MessagesState extends State<Messages> with TickerProviderStateMixin{
        GetBuilder<STMAudioController>(builder:
        (_) {
          if(_.listUpdated.value) {
-           return Row(
-             children: [
-               IconButton(
-                 icon: Icon(
-                   stmAudioController.audioPlay && stmAudioController.savedAudio?.idAudioPlay == widget.messageData.id? Icons.stop_circle_sharp: Icons.play_arrow,
-                   color: Colors.white,
-                 ),
-                 onPressed: () async{
-                   audioControllerPlayAndPause();
+           return IntrinsicWidth(
+             child: Row(
+               children: [
+                 IconButton(
+                   icon: Icon(
+                     stmAudioController.audioPlay && stmAudioController.savedAudio?.idAudioPlay == widget.messageData.id? Icons.stop_circle_sharp: Icons.play_arrow,
+                     color: Colors.white,
+                   ),
+                   onPressed: () async{
+                     audioControllerPlayAndPause();
 
-                 },
-                 iconSize: 35,
+                   },
+                   iconSize: 35,
 
-               ),
-               SizedBox(
-                 width: 150,
-                 child: LinearProgressIndicator(
-                   color: Colors.white,
-                   valueColor: orientation == orientationEnd ? const AlwaysStoppedAnimation<Color>(DefaultColors.blueBrand): const AlwaysStoppedAnimation<Color>(DefaultColors.purpleBrand),
-                   value: controller.value,
-                   semanticsLabel: 'Linear progress indicator',
                  ),
-               ),
-             ],
+                 SizedBox(
+                   width: MediaQuery.of(context).size.width * 0.29,
+                   child: LinearProgressIndicator(
+                     color: Colors.white,
+                     valueColor: orientation == orientationEnd ? const AlwaysStoppedAnimation<Color>(DefaultColors.blueBrand): const AlwaysStoppedAnimation<Color>(DefaultColors.purpleBrand),
+                     value: controller.value,
+                     semanticsLabel: 'Linear progress indicator',
+                   ),
+                 ),
+               ],
+             ),
            );
          }
          return Text('');
@@ -219,8 +236,10 @@ class _MessagesState extends State<Messages> with TickerProviderStateMixin{
       case TypesMessages.typeText:
         if(widget.messageData.content != null) {
           if(widget.messageData.userId != loggedUserDataController.savedUserData?.data?.id) {
+            return Row(children: [Expanded(child: returnTextMessage(orientationStart),)],);
             return returnTextMessage(orientationStart);
           } else {
+            return Row(children: [Expanded(child: returnTextMessage(orientationEnd),)],);
             return returnTextMessage(orientationEnd);
           }
         } else {
@@ -266,15 +285,12 @@ class _MessagesState extends State<Messages> with TickerProviderStateMixin{
   }
 
   Widget validateMessageUserOrMatch() {
-    if(widget.messageData.matchId == loggedUserDataController.savedUserData?.data?.id) {
-      return Container(
-        child: validateTypeMessage(),
+      return Row(
+        children: [
+          Expanded(child: validateTypeMessage()),
+        ],
       );
-    } else {
-      return Container(
-        child: validateTypeMessage(),
-      );
-    }
+
   }
   @override
   void dispose() {

@@ -10,6 +10,7 @@ import 'package:the_specials_app/shared/interfaces/responses/google_address_latl
 import 'package:the_specials_app/shared/services/apis/consume_apis.dart';
 import 'package:the_specials_app/shared/services/factory/like_dislike_factory.dart';
 import 'package:the_specials_app/shared/state_management/other_profile_data/other_profile_data.dart';
+import 'package:the_specials_app/shared/state_management/suggestion_cards/suggestion_cards.dart';
 import 'package:the_specials_app/shared/state_management/user_data_profile/user_data_profile.dart';
 import 'package:the_specials_app/shared/styles/buttons.dart';
 import 'package:the_specials_app/shared/styles/colors.dart';
@@ -27,6 +28,8 @@ class _ContainerOtherProfileInfosState extends State<ContainerOtherProfileInfos>
   final LikeDislikeBloc _likeDislikeBloc = LikeDislikeBloc();
   final SuggestionCardsBloc _suggestionCardsBloc = SuggestionCardsBloc();
   final profileUserDataController = Get.put<OtherProfileDataController>(OtherProfileDataController());
+  final suggestionCardsController = Get.put<SuggestionCardsController>(SuggestionCardsController());
+
   Data? otherProfileData;
   var address = '';
 
@@ -139,8 +142,14 @@ class _ContainerOtherProfileInfosState extends State<ContainerOtherProfileInfos>
   }
   likeOrDislike(String likeOrDislike) async {
     var params = LikeDislikeFactory(user_id: profileUserDataController.savedUserDataProfile!.data!.id, type: likeOrDislike);
-    await _likeDislikeBloc.postLikeDislike(params);
-    await _suggestionCardsBloc.getSuggestionCards();
+    suggestionCardsController.removeItemFromList(otherProfileData!.id);
+    _likeDislikeBloc.postLikeDislike(params);
+
+    if(likeOrDislike == "super-match") {
+      // Navigator.pushNamed(context, RoutesApp.listPersonsChats);
+      return;
+
+    }
     Navigator.pushNamed(context, RoutesApp.suggestionCards);
   }
   @override
@@ -229,21 +238,36 @@ class _ContainerOtherProfileInfosState extends State<ContainerOtherProfileInfos>
                   const SizedBox(
                     height: 10,
                   ),
-                  Row(
-
+                  Column(
                     children: [
-                      Flexible(
-                        child: ButtonDislike(onPressed: () async {
-                          likeOrDislike('dislike');
-                          // suggestionCardsController.getSuggestionCardsToShow();
-                          // suggestionCardsController.removeLastCard();
-                        }),
+                      Row(
+                        children: [
+                          Flexible(
+                            child: ButtonDislike(onPressed: () async {
+                              likeOrDislike('dislike');
+                              // suggestionCardsController.getSuggestionCardsToShow();
+                              // suggestionCardsController.removeLastCard();
+                            }),
+                          ),
+                          const SizedBox(width: 10),
+                          Flexible(
+                            child: ButtonLike(onPressed: () async {
+                              likeOrDislike('like');
+                            }),
+                          ),
+                        ],
                       ),
-                      const SizedBox(width: 10),
-                      Flexible(
-                        child: ButtonLike(onPressed: () async {
-                          likeOrDislike('like');
-                        }),
+                      const SizedBox(height: 10),
+                      Row(
+                        children: [
+                          Flexible(
+                            child: ButtonSendMessageAnyPerson(onPressed: () async {
+                              likeOrDislike('super-match');
+                              // suggestionCardsController.getSuggestionCardsToShow();
+                              // suggestionCardsController.removeLastCard();
+                            }, texto: sendMessage.i18n,),
+                          ),
+                        ],
                       ),
                     ],
                   ),

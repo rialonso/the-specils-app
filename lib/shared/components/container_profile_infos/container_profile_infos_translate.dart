@@ -5,6 +5,7 @@ const myCids = "myCids";
 const myMedicalProcedures = "myMedicalProcedures";
 const myDrugs = "myDrugs";
 const myHospitals = "myHospitals";
+const sendMessage = "sendMessage";
 
 extension Localization on String {
   static const _t = Translations.from("en_us", {
@@ -31,6 +32,10 @@ extension Localization on String {
     myHospitals: {
       "en_us": "Hospitals",
       "pt_br": "Hospitais"
+    },
+    sendMessage: {
+      "en_us": "Send Message",
+      "pt_br": "Enviar Mensagem"
     },
   });
 

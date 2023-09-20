@@ -54,6 +54,13 @@ class _CardMatchesState extends State<CardMatches> {
     }
     return const SizedBox();
   }
+  String validateSizeMessage(String text) {
+    String localText = text;
+    if(localText.length >= 15) {
+      return '${text.substring(0, 15)}...';
+    }
+    return localText;
+  }
   validateTypeLastMessage() {
     // print('card_matches 58 messageType: ${widget.match.latestMessage?.type}');
     if(widget.match.latestMessage?.type == TypesMessages.typeText) {
@@ -65,13 +72,18 @@ class _CardMatchesState extends State<CardMatches> {
             const SizedBox(
               width: 5,
             ),
-            Text(
-              widget.match.latestMessage?.content as String,
-              style: const TextStyle(
-                  fontSize: 20,
-                  color: DefaultColors.greyMedium
-              ),
 
+            Flexible(
+              child: Text(
+                validateSizeMessage(widget.match.latestMessage?.content as String),
+                style: const TextStyle(
+                    fontSize: 20,
+                    color: DefaultColors.greyMedium,
+                  overflow: TextOverflow.fade,
+
+                ),
+
+              ),
             ),
           ],
         );
@@ -196,22 +208,26 @@ class _CardMatchesState extends State<CardMatches> {
                         const SizedBox(
                           width: 15,
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 10),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                  widget.match.targetUser?.name as String,
-                                style: const TextStyle(
-                                  color: DefaultColors.blueBrand,
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold
+                        
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.only(top: 10),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                    widget.match.targetUser?.name as String,
+                                  style: const TextStyle(
+                                    color: DefaultColors.blueBrand,
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold
+                                  ),
                                 ),
-                              ),
-                              validateTypeLastMessage(),
-                            ],
+                                validateTypeLastMessage()
+
+                              ],
+                            ),
                           ),
                         )
                       ],

@@ -71,4 +71,13 @@ class DefaultColors {
       500: Color(_redSoft),
     },
   );
+  static const _gold = 0xFFD4AF37;
+
+  static const MaterialColor gold = MaterialColor(
+    _gold,
+    <int, Color>{
+      500: Color(_gold),
+    },
+  );
+
 }

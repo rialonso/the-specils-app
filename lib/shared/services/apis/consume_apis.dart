@@ -393,7 +393,10 @@ class ConsumeApisService {
         print(response.data);
       }
       InterfaceResponseMessages messages = InterfaceResponseMessages.fromJson(response.data);
+      print('consume apis 396');
+      print(messages.data);
       stmMessagesController.saveMessages(messages);
+      stmMessagesController.matchIdChat = queryParameters['match_id'];
       return messages;
     }
   }
@@ -420,5 +423,19 @@ class ConsumeApisService {
         queryParameters: queryParameters,
     );
     return response.data;
+  }
+  postResetDislikes() async {
+    var token = await LoggedUserDataController().getToken();
+    Response response = await dio.post(
+        '${Env.baseURL}${Env.resetDislikes}',
+        options: Options(headers: {
+          HttpHeaders.contentTypeHeader: Env.baseApplicationJson,
+          HttpHeaders.acceptHeader: Env.baseApplicationJson,
+          'Authorization': 'Bearer $token',
+        }),
+    );
+    if(response.statusCode == 200) {// await stmMessage/sController.addNewMessagesPusherSubscription(MessageData.fromJson(response.data));
+      return '';
+    }
   }
 }

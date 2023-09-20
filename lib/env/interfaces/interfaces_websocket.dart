@@ -44,16 +44,21 @@ class InterfaceWebSocket {
 
 class Channels {
   String? chat;
+  String? matches;
 
-  Channels({this.chat});
+  Channels({this.chat, this.matches});
 
   Channels.fromJson(Map<String, dynamic> json) {
     chat = json['chat'];
+    matches = json['matches'];
+
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['chat'] = chat;
+    data['matches'] = matches;
+
     return data;
   }
 }

@@ -122,6 +122,30 @@ class ButtonDislike extends StatelessWidget {
     );
   }
 }
+class ButtonSendMessageAnyPerson extends StatelessWidget {
+  final VoidCallback onPressed;
+  final String texto;
+
+  const ButtonSendMessageAnyPerson(
+      {Key? key, required this.onPressed, this.texto = 'Insert Text'})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton(
+      onPressed: onPressed,
+      style: ElevatedButton.styleFrom(
+        minimumSize: const Size.fromHeight(60),
+        backgroundColor: DefaultColors.gold,
+        side: const BorderSide(width: 1.0, color: DefaultColors.gold),
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10.0)
+        ),
+      ),
+      child: Text(texto, style: const TextStyle(color: DefaultColors.greyMedium, fontSize: 20),),);
+  }
+}
+
 class ButtonMenu extends StatelessWidget {
   final VoidCallback onPressed;
   final String image;

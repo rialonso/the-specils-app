@@ -22,6 +22,7 @@ class _LikedMeState extends State<LikedMe> {
   final _service = ConsumeApisService();
   final likedMeController = Get.put<LikedMeController>(LikedMeController());
   final loggedUserDataController = Get.put<LoggedUserDataController>(LoggedUserDataController());
+  var imgVariable;
 
 
   waitGetLikedMe() async {
@@ -31,7 +32,7 @@ class _LikedMeState extends State<LikedMe> {
   changeBlurLiked() {
     double? blur;
     if(loggedUserDataController.savedUserData?.data?.planType == 'free') {
-      blur = 5;
+      blur = 0;
     } else {
       blur = 0;
     }
@@ -40,10 +41,10 @@ class _LikedMeState extends State<LikedMe> {
   calculateHoursAgo(String updateAt ) {
     DateTime? dateLiked = DateTime.tryParse(updateAt);
     DateTime currentDate = DateTime.now();
-    var diffInMs = dateLiked!.month - currentDate.month;
-    var diffInDays = dateLiked.day - currentDate.day;
-    var diffInHours = dateLiked.hour - currentDate.hour;
-    var diffInMinutes = dateLiked.minute - currentDate.minute;
+    var diffInMs = (dateLiked!.month - currentDate.month).abs();
+    var diffInDays = (dateLiked.day - currentDate.day).abs();
+    var diffInHours = (dateLiked.hour - currentDate.hour).abs();
+    var diffInMinutes = (dateLiked.minute - currentDate.minute).abs();
 
     if (dateLiked.compareTo(currentDate) == 0 ) {
       if (diffInHours < 1) {
@@ -64,6 +65,19 @@ class _LikedMeState extends State<LikedMe> {
       return '$diffInDays ${days.i18n} ${ago.i18n}';
     }
   }
+  validateImageAndReturn(likedMeCard) {
+
+    var profilePicture = likedMeCard.user?.profilePicture;
+    if(profilePicture!.isNotEmpty) {
+      imgVariable = NetworkImage(
+        '${Env.baseURLImage}${profilePicture[0].path?.replaceAll(r"\", r"")}',
+      );
+    } else {
+      imgVariable = const AssetImage(
+        'assets/images/profile-picture.png',
+      );
+    }
+  }
   createLikedMeData (dynamic likedData) {
     List<Widget> suggestionCardsWidget = [];
     var allCards = likedData.data;
@@ -75,83 +89,96 @@ class _LikedMeState extends State<LikedMe> {
       return  suggestionCardsWidget;
 
     }
+    print(allCards);
     allCards.forEach((likedMeCard) {
-      return suggestionCardsWidget.add(
-        ClipRRect(
-          borderRadius: BorderRadius.circular(20),
-          child: Container(
-            height: MediaQuery.of(context).size.width * 0.7,
-            width: MediaQuery.of(context).size.width,
-            decoration: BoxDecoration(
+      // print(likedMeCard.user.account_type);
+      if(likedMeCard.user.accountType == 'special') {
+        validateImageAndReturn(likedMeCard);
+        return suggestionCardsWidget.add(
+          ClipRRect(
+            borderRadius: BorderRadius.circular(20),
+            child: Container(
+              height: MediaQuery.of(context).size.width * 0.7,
+              width: MediaQuery.of(context).size.width,
+              decoration: BoxDecoration(
 
-              image: DecorationImage(
-                image: NetworkImage('${Env.baseURLImage}${likedMeCard.user?.profilePicture?[0]?.path?.replaceAll(r"\", r"")}') ,
-                fit: BoxFit.cover,
-                alignment: const Alignment(-0.3, 0),
-              ),
-            ),
-            child: Stack(
-              children: [
-                Padding(
-
-                  padding: const EdgeInsets.all(10),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text(''),
-                      SizedBox(
-                        height: MediaQuery.of(context).size.width * 0.2,
-                        width: MediaQuery.of(context).size.width,
-                        child: BlurryContainer(
-                          blur: 0,
-                          borderRadius: BorderRadius.circular(10),
-                          color: DefaultColors.greyMedium[1]!,
-                           child: Padding(
-                             padding: const EdgeInsets.all(10.0),
-                             child: Column(
-                               crossAxisAlignment: CrossAxisAlignment.start,
-                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                               children: [
-                                 Text(
-                                   likedMeCard?.user?.name != null ? likedMeCard?.user?.name : '',
-                                   style: const TextStyle(
-                                     color: Colors.white,
-                                     fontSize: 15,
-                                     fontWeight: FontWeight.w600
-                                   ),
-                                   textAlign: TextAlign.start,
-                                 ),
-                                 Text(
-                                   calculateHoursAgo(likedMeCard?.updatedAt as String),
-                                   style: const TextStyle(
-                                     color: Colors.white,
-                                     fontSize: 15,
-                                     fontWeight: FontWeight.w600,
-                                   ),
-                                 ),
-                               ],
-                             ),
-
-                           ),
-                        ),
-                      ),
-                    ],
-                  ),
+                image: DecorationImage(
+                    image: imgVariable,
+                    fit: BoxFit.cover,
+                    alignment: const Alignment(-0.3, 0),
+                    onError: (ob, fk){
+                      print('erro imagem');
+                      setState(){
+                        imgVariable = AssetImage('assets/images/profile-picture.png');
+                      }
+                    }
                 ),
-                BlurryContainer(
+              ),
+              child: Stack(
+                children: [
+                  Padding(
+
+                    padding: const EdgeInsets.all(10),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(''),
+                        SizedBox(
+                          height: MediaQuery.of(context).size.width * 0.2,
+                          width: MediaQuery.of(context).size.width,
+                          child: BlurryContainer(
+                            blur: 0,
+                            borderRadius: BorderRadius.circular(10),
+                            color: DefaultColors.greyMedium[1]!,
+                            child: Padding(
+                              padding: const EdgeInsets.all(10.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  Text(
+                                    likedMeCard?.user?.name != null ? likedMeCard?.user?.name : '',
+                                    style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.w600
+                                    ),
+                                    textAlign: TextAlign.start,
+                                  ),
+                                  Text(
+                                    calculateHoursAgo(likedMeCard?.updatedAt as String),
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ],
+                              ),
+
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  BlurryContainer(
                     blur: changeBlurLiked(),
                     child: SizedBox(
                       height: MediaQuery.of(context).size.width * 0.7,
                       width: MediaQuery.of(context).size.width,
                       child: const Text(''),
                     ),
-                ),
-              ],
+                  ),
+                ],
+              ),
             ),
-          ),
 
-        ),
-      );
+          ),
+        );
+      }
+      return;
+
     });
     return  suggestionCardsWidget;
   }
