@@ -65,8 +65,12 @@ class _LikedMeState extends State<LikedMe> {
       return '$diffInDays ${days.i18n} ${ago.i18n}';
     }
   }
+  loading() {
+    return     Container(
+        color: Colors.transparent,
+        child:  Center(child: CircularProgressIndicator(color: DefaultColors.purpleBrand, backgroundColor: Colors.transparent,)));
+  }
   validateImageAndReturn(likedMeCard) {
-
     var profilePicture = likedMeCard.user?.profilePicture;
     if(profilePicture!.isNotEmpty) {
       imgVariable = NetworkImage(
@@ -91,7 +95,6 @@ class _LikedMeState extends State<LikedMe> {
     }
     print(allCards);
     allCards.forEach((likedMeCard) {
-      // print(likedMeCard.user.account_type);
       if(likedMeCard.user.accountType == 'special') {
         validateImageAndReturn(likedMeCard);
         return suggestionCardsWidget.add(
@@ -108,9 +111,9 @@ class _LikedMeState extends State<LikedMe> {
                     alignment: const Alignment(-0.3, 0),
                     onError: (ob, fk){
                       print('erro imagem');
-                      setState(){
+                      setState(() {
                         imgVariable = AssetImage('assets/images/profile-picture.png');
-                      }
+                      });
                     }
                 ),
               ),
@@ -237,7 +240,7 @@ class _LikedMeState extends State<LikedMe> {
                             runSpacing: 10,
                             children: createLikedMeData(likedMeController.savedLikedMe),
                           )
-                          : Text('akskasksksaaskask')
+                          : loading()
                   ),
                 ),
               ],

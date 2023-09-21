@@ -31,13 +31,14 @@ class _CardMatchesState extends State<CardMatches> {
   final loggedUserDataController = Get.put<LoggedUserDataController>(LoggedUserDataController());
 
   final ConsumeApisService _service = ConsumeApisService();
+  var imgVariable;
 
   validateImageAndReturn() {
     var profilePicture = widget.match.targetUser?.profilePicture;
     if(profilePicture!.isNotEmpty) {
-      return NetworkImage('${Env.baseURLImage}${profilePicture[0].path?.replaceAll(r"\", r"")}');
+      imgVariable = NetworkImage('${Env.baseURLImage}${profilePicture[0].path?.replaceAll(r"\", r"")}');
     } else {
-      return const AssetImage(
+      imgVariable = const AssetImage(
         'assets/images/profile-picture.png',
       );
     }
@@ -162,12 +163,24 @@ class _CardMatchesState extends State<CardMatches> {
     });
     Navigator.pushNamed(context, RoutesApp.chat,arguments: {'matchData':otherProfile});
   }
-
+  userDisabled() {
+    if(widget.match.targetUser?.active == 0) {
+      return Text(
+        '(${userDisabledMsg.i18n})',
+        style: const TextStyle(
+            color: DefaultColors.purpleBrand,
+            fontSize: 15,
+            fontWeight: FontWeight.bold
+        ),);
+    }
+    return const SizedBox(width: 0,);
+  }
   @override
   Widget build(BuildContext context) {
     return  SingleChildScrollView(
       child: GetBuilder<STMUserMatchesController>(
         builder: (_) {
+          validateImageAndReturn();
           if (widget.match.targetUser?.accountType == 'special') {
             // print(profileUserDataController.userDataUpdated.value);
             return ElevatedButton(
@@ -198,9 +211,15 @@ class _CardMatchesState extends State<CardMatches> {
                             height: 80,
                             decoration: BoxDecoration(
                               image: DecorationImage(
-                                image: validateImageAndReturn(),
+                                image: imgVariable,
                                 fit: BoxFit.cover,
                                 alignment: const Alignment(-0.3, 0),
+                                  onError: (ob, fk){
+                                    print('erro imagem');
+                                    setState(() {
+                                      imgVariable = AssetImage('assets/images/profile-picture.png');
+                                    });
+                                  }
                               ),
                             ),
                           ),
@@ -216,13 +235,20 @@ class _CardMatchesState extends State<CardMatches> {
                               mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
-                                    widget.match.targetUser?.name as String,
-                                  style: const TextStyle(
-                                    color: DefaultColors.blueBrand,
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold
-                                  ),
+                                Row(
+                                  children: [
+                                    Text(
+                                        widget.match.targetUser?.name as String,
+                                      style: const TextStyle(
+                                        color: DefaultColors.blueBrand,
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold
+                                      ),
+                                    ),
+                                    const SizedBox(width: 10,),
+                                    userDisabled()
+
+                                  ],
                                 ),
                                 validateTypeLastMessage()
 

@@ -1,6 +1,8 @@
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:laravel_flutter_pusher/laravel_flutter_pusher.dart';
 import 'package:the_specials_app/screens/suggestion_matchs/translate_suggestion_matchs.dart';
 import 'package:the_specials_app/shared/blocs/suggestion_cards_bloc.dart';
 import 'package:the_specials_app/shared/components/menu_logged/menu_logged.dart';
@@ -10,6 +12,9 @@ import 'package:the_specials_app/shared/state_management/logged_user_data/logged
 import 'package:the_specials_app/shared/state_management/suggestion_cards/suggestion_cards.dart';
 import 'package:the_specials_app/shared/styles/buttons.dart';
 import 'package:the_specials_app/shared/styles/colors.dart';
+
+import '../../env/env.dart';
+import '../../shared/values/routes.dart';
 
 
 class SuggestionMatchs extends StatefulWidget {
@@ -40,6 +45,30 @@ class _SuggestionMatchsState extends State<SuggestionMatchs> {
   waitGetUserData() async {
     await loggedUserDataController.getUserData();
   }
+  getNewMatches() async {
+    await loggedUserDataController.getUserData();
+    var pusherOptions = PusherOptions(
+      cluster: Env.webSocket.cluster,
+      host: Env.webSocket.url as String,
+      encrypted: true,
+      port:  Env.webSocket.port as int,
+    );
+    LaravelFlutterPusher pusher = LaravelFlutterPusher(Env.webSocket.key as String, pusherOptions, enableLogging: true);
+    pusher.connect();
+
+    pusher
+        .subscribe('${Env.webSocket.channels?.matches}${loggedUserDataController.savedUserData.data?.id}')
+        .bind(Env.webSocket.events?.matches as String, (event) async{
+      if (kDebugMode) {
+        print('newMATCH');
+        print(event['payload']);
+      }
+      await _service.getMatches();
+      Navigator.pushNamed(context, RoutesApp.listPersonsChats);
+
+    });
+    // Navigator.pushNamed(context, RoutesApp.chat,arguments: {'matchData':otherProfile});
+  }
   loading() {
     return     Container(
         color: Colors.transparent,
@@ -50,7 +79,10 @@ class _SuggestionMatchsState extends State<SuggestionMatchs> {
   void initState() {
     super.initState();
     WidgetsBinding.instance
-        .addPostFrameCallback((_) => waitSuggestionCards());
+        .addPostFrameCallback((_) {
+          waitSuggestionCards();
+          getNewMatches();
+        });
   }
   @override
   void didUpdateWidget(SuggestionMatchs oldWidget) {

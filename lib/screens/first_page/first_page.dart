@@ -28,32 +28,9 @@ class _FirstPageState extends State<FirstPage> {
     // TODO: implement initState
     super.initState();
     initApp();
-    getNewMatches();
+    // getNewMatches();
   }
-  getNewMatches() async {
-    await loggedUserDataController.getUserData();
-    var pusherOptions = PusherOptions(
-      cluster: Env.webSocket.cluster,
-      host: Env.webSocket.url as String,
-      encrypted: true,
-      port:  Env.webSocket.port as int,
-    );
-    LaravelFlutterPusher pusher = LaravelFlutterPusher(Env.webSocket.key as String, pusherOptions, enableLogging: true);
-    pusher.connect();
 
-    pusher
-        .subscribe('${Env.webSocket.channels?.matches}${loggedUserDataController.savedUserData.data?.id}')
-        .bind(Env.webSocket.events?.matches as String, (event) async{
-      if (kDebugMode) {
-        print('newMATCH');
-        print(event['payload']);
-      }
-      _service.getMatches();
-      Navigator.pushNamed(context, RoutesApp.listPersonsChats);
-
-    });
-    // Navigator.pushNamed(context, RoutesApp.chat,arguments: {'matchData':otherProfile});
-  }
 
   initApp() async{
     await loggedUserDataController.getUserData();
